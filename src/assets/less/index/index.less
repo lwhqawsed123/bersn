@@ -1,0 +1,115 @@
+.index_content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .bd_map {
+        width: 100%;
+        height: 100%;
+    }
+
+    .selectCard {
+        position: absolute;
+        top: 30px;
+        left: 14%;
+        z-index: 99;
+        width: 36%;
+        height: 45px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        overflow: hidden;
+        -moz-box-shadow: 2px 2px 5px #ccc;
+        -webkit-box-shadow: 2px 2px 5px #ccc;
+        box-shadow: 2px 2px 5px #ccc;
+
+        .select1 {
+            height: 100%;
+            width: 15px;
+            border: none;
+            background-color: red;
+        }
+
+        .select_interval {
+            width: 1px;
+            height: 25px;
+            background-color: #D8D8D8;
+        }
+
+        .search_button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 45px;
+            height: 45px;
+            background-color: #F05820;
+        }
+       
+    }
+
+    .box-card {
+        // background-color: pink;
+        position: absolute;
+        left: 0;
+        bottom: 170px;
+        z-index: 66;
+        width: 100%;
+        height: 272px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        -moz-box-shadow: 2px 2px 5px #ccc;
+        -webkit-box-shadow: 2px 2px 5px #ccc;
+        box-shadow: 2px 2px 5px #ccc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .echarts_box {
+            padding: 12px 20px;
+            box-sizing: border-box;
+            width: 18%;
+            height: 100%;
+            background-color: #fff;
+            position: relative;
+
+            .box_title_red {
+                display: block;
+                width: 2px;
+                height: 10px;
+                background: rgba(242, 98, 4, 1);
+                position: absolute;
+                top: 14px;
+                left: -2px;
+            }
+
+            .echarts_box_title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                .echarts_box_title_name {
+                    font-size: 14px;
+                    color: #999999;
+                }
+
+                div {
+                    display: flex;
+                    align-items: center;
+
+                    .echarts_box_title_edit {
+                        color: #666666;
+                    }
+
+                    .echarts_box_title_icon {
+                        margin-left: 6px;
+                    }
+                }
+            }
+            .echarts_content{
+                width: 100%;
+                height: 180px;
+                margin-top: 40px;
+            }
+        }
+    }
+}
