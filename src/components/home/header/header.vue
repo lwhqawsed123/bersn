@@ -1,8 +1,7 @@
 <template>
   <div class="el_header">
     <div class="top_logo">
-      <!-- <img src="" alt="" class="logo"> -->
-      <div class="logo">123</div>
+      <img src="../../../assets/img/index/logo.png" alt=""  class="logo">
       <span class="logo_line"></span>
       <img src="../../../assets/img/index/fenlei-2.png" alt class="logo_icon" />
     </div>

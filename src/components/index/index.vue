@@ -1,6 +1,8 @@
 <template>
   <div class="index_content">
+    <el-button @click="changeMap" style="position: absolute;left:300px;z-index:999">Check</el-button>
     <baidu-map
+    v-if="showMap"
       class="bd_map"
       :center="center"
       :zoom="zoom"
@@ -168,6 +170,7 @@
 import echarts from "echarts";
 import street_lamp_icon from "../../assets/img/index/路灯.png";
 import concentrator_icon from "../../assets/img/index/集中器.png";
+import http from '../../utils/request'
 export default {
   name: "",
   props: [""],
@@ -175,12 +178,12 @@ export default {
     return {
       center: { lng: 114.025, lat: 22.546 },
       zoom: 15,
-      street_lamp_icon: street_lamp_icon,
-      street_lamp_icon_status: true,
-      concentrator_icon: concentrator_icon,
-      markerPoint: [],
-      street_lamp_list: [],
-      concentrator_list: [],
+      showMap:true,
+      street_lamp_icon: street_lamp_icon,  // 路灯icon
+      street_lamp_icon_status: true,   // 图标显示控制
+      concentrator_icon: concentrator_icon, // 集中器icon
+      street_lamp_list: [],     // 所有路灯
+      concentrator_list: [],    // 所有集中器
       label_style: {
         "font-size": "9px",
         color: "#fff",
@@ -325,6 +328,10 @@ export default {
   },
 
   methods: {
+    changeMap(){
+
+      this.showMap=!this.showMap
+    },
     handler({ BMap, map }) {
       // console.log(BMap);
       // this.center.lng = 116.404;

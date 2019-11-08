@@ -8,14 +8,25 @@ module.exports = {
   dev: {
 
     // Paths
+    env: require('./dev.env'), // 
+    // port: 8090, //
+    autoOpenBrowser: true,  //
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: { //
+      '/api':{
+        target:'http://47.106.141.162:8888/api',
+        changeOrigin:true,
+        pathRewrite:{
+          '^/api':''
+        }
+      }
+    },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    // host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    host:'localhost',
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
@@ -31,9 +42,10 @@ module.exports = {
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
+    // cacheBusting: true,  //
 
-    cssSourceMap: true
+    // cssSourceMap: true    //
+    cssSourceMap: false    
   },
 
   build: {
