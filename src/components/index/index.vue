@@ -2,7 +2,7 @@
   <div class="index_content">
     <el-button @click="changeMap" style="position: absolute;left:300px;z-index:999">Check</el-button>
     <baidu-map
-    v-if="showMap"
+      v-if="showMap"
       class="bd_map"
       :center="center"
       :zoom="zoom"
@@ -29,54 +29,61 @@
         :dragging="true"
         :icon="{url: concentrator_icon, size: {width: 24, height: 23}}"
       ></bm-marker>
-      <bm-label content="15" v-for="(item,index) in label_for_concentrator" :key="index" :position="{lng:item.lng,lat:item.lat}" :labelStyle='label_style' title="Hover me" />
+      <bm-label
+        content="15"
+        v-for="(item,index) in label_for_concentrator"
+        :key="index"
+        :position="{lng:item.lng,lat:item.lat}"
+        :labelStyle="label_style"
+        title="Hover me"
+      />
     </baidu-map>
     <div class="selectCard">
       <el-select
-        v-model="value"
-        placeholder="请选择"
+        v-model="selected.district"
+        placeholder="请选择地区"
         popper-class="select1"
         @change="selectChange"
         style="width:30%"
         size="small"
       >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in districtOptions"
+          :key="item.id"
+          :label="item.optText"
+          :value="item.optValue"
         ></el-option>
       </el-select>
       <span class="select_interval"></span>
       <el-select
-        v-model="value2"
-        placeholder="请选择"
+        v-model="selected.road"
+        placeholder="请选择道路"
         popper-class="select1"
         @change="selectChange"
         style="width:30%"
         size="small"
       >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in roadOptions"
+          :key="item.id"
+          :label="item.optText"
+          :value="item.optValue"
         ></el-option>
       </el-select>
       <span class="select_interval"></span>
       <el-select
-        v-model="value3"
-        placeholder="请选择"
+        v-model="selected.ctrCode"
+        placeholder="请选择集中器"
         popper-class="select1"
         @change="selectChange"
         style="width:30%"
         size="small"
       >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in ctrCodeOptions"
+          :key="item.id"
+          :label="item.optText"
+          :value="item.optValue"
         ></el-option>
       </el-select>
       <button @click="search" class="search_button">
@@ -161,6 +168,164 @@
         <!-- table -->
       </el-card>
     </div>
+    <!-- Dialog -->
+    <el-card class="dialog_card first_card" v-if="showDialog_card">
+      <div class="clearfix dialog_card_header">
+        <div class="header_left">
+          <img src="../../assets/img/index/tishi(1).png" alt class="header_left_icon" />
+          <span class="header_left_span_Num">20330D08BF08</span>
+          <span class="header_left_span_warning">警告</span>
+          <img
+            src="../../assets/img/index/tishi(3).png"
+            alt
+            class="header_left_icon header_left_icon_warning"
+          />
+          <span class="header_left_span_success">正常</span>
+        </div>
+        <div class="header_right">
+          <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+          <span class="header_right_time">2019-09-04 10:15:55</span>
+        </div>
+      </div>
+      <!-- 弹框表格1 -->
+      <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+        <el-table-column prop="date" label="调光值"></el-table-column>
+        <el-table-column prop="name" label="温度"></el-table-column>
+        <el-table-column prop="address" label="电压"></el-table-column>
+        <el-table-column prop="address" label="电流"></el-table-column>
+        <el-table-column prop="address" label="功率"></el-table-column>
+        <el-table-column prop="address" label="功率因数"></el-table-column>
+        <el-table-column prop="address" label="亮灯时常"></el-table-column>
+        <el-table-column prop="address" label="累计电量"></el-table-column>
+      </el-table>
+      <!-- 弹框表格2 -->
+      <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+        <el-table-column prop="date" label="灯杆"></el-table-column>
+        <el-table-column prop="name" label="区域"></el-table-column>
+        <el-table-column prop="address" label="道路"></el-table-column>
+        <el-table-column prop="address" label="照明类型"></el-table-column>
+        <el-table-column prop="address" label="集中器"></el-table-column>
+        <el-table-column prop="address" label="经度"></el-table-column>
+        <el-table-column prop="address" label="纬度"></el-table-column>
+      </el-table>
+      <!-- 弹框表格3 -->
+      <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+        <el-table-column prop="date" label="光源类型"></el-table-column>
+        <el-table-column prop="name" label="电源型号"></el-table-column>
+        <el-table-column prop="address" label="标称功率"></el-table-column>
+      </el-table>
+      <!-- 光源调节 -->
+      <div class="light_controller">
+        <span class="light_controller_status">状态：</span>
+        <el-switch
+          v-model="lightController.lightStatus"
+          active-color="#F26204"
+          inactive-color="#dddddd"
+          width="32"
+        ></el-switch>
+        <img src="../../assets/img/index/tishi.png" alt class="light_controller_icon" />
+        <span>调光值：</span>
+        <div class="intensity_control">
+          <div class="slider_inner_line"></div>
+          <div class="slider_out_line" :style="{width:30+'%'}">
+            <el-slider v-model="lightController.intensityControl" :max="30"></el-slider>
+          </div>
+        </div>
+        <div class="intensity_inputnumber">
+          <el-input-number
+            v-model="lightController.intensityControl"
+            controls-position="right"
+            @change="lightChange"
+            :min="1"
+            :max="30"
+          ></el-input-number>
+        </div>
+        <span>%</span>
+      </div>
+      <!-- 按钮 -->
+      <div class="button_bottom_box">
+        <button class="button_bottom bottom_cancel" @click="showDialog_card=false">取消</button>
+        <button class="button_bottom bottom_submit">确认</button>
+      </div>
+    </el-card>
+    <!-- Dialog2 -->
+    <div class="mengban" v-if="mengban">
+      <!-- 集中器 -->
+      <el-card class="dialog_card concentrator_card" v-if="concentrator_Dialog_card">
+        <div class="clearfix dialog_card_header">
+          <div class="header_left">
+            <img src="../../assets/img/index/集中器.png" alt class="header_left_icon" />
+            <span class="header_left_span_Num">198021</span>
+            <span class="header_left_span_success">正常</span>
+          </div>
+          <div class="header_right">
+            <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+            <span class="header_right_time">2019-09-04 10:15:55</span>
+          </div>
+        </div>
+        <!-- 弹框表格1 -->
+        <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+          <el-table-column prop="date" label="区域"></el-table-column>
+          <el-table-column prop="name" label="道路"></el-table-column>
+          <el-table-column prop="address" label="集中器地址"></el-table-column>
+          <el-table-column prop="address" label="SIM卡号"></el-table-column>
+        </el-table>
+        <!-- 弹框表格2 -->
+        <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+          <el-table-column prop="date" label="纬度"></el-table-column>
+          <el-table-column prop="name" label="经度"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
+          <el-table-column prop="address" label="备注"></el-table-column>
+        </el-table>
+
+        <!-- 按钮 -->
+        <div class="button_bottom_box">
+          <button class="button_bottom bottom_submit">关闭</button>
+        </div>
+      </el-card>
+      <!-- 路灯 -->
+      <el-card class="dialog_card street_lamp_card" v-if="street_lamp_Dialog_card">
+        <div class="clearfix dialog_card_header">
+          <div class="header_left"></div>
+          <div class="header_right">
+            <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+            <span class="header_right_time">2019-09-04 10:15:55</span>
+          </div>
+        </div>
+        <!-- 弹框表格1 -->
+        <el-table
+          :data="[1,1,1,,1,1,1,1,1,1]"
+          style="width: 100%"
+          height="220"
+          header-cell-class-name="table_header_color"
+        >
+          <el-table-column prop="date" label="状态"></el-table-column>
+          <el-table-column prop="name" label="控制器编号"></el-table-column>
+          <el-table-column prop="address" label="灯杆编号"></el-table-column>
+          <el-table-column prop="address" label="集中器名称"></el-table-column>
+          <el-table-column prop="address" label="操作">
+            <template>
+              <el-button size="mini" class="el-icon-edit-outline"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 按钮 -->
+        <div class="button_bottom_box">
+          <button class="button_bottom bottom_submit">关闭</button>
+        </div>
+      </el-card>
+    </div>
+    <!-- 右下角warning -->
+    <div class="warning_right_bottom">
+      <div class="warning_box">
+        <img src="../../assets/img/index/xianshi_jinggaotianchong.png" alt />
+        <span>集中器警告</span>
+      </div>
+      <div class="warning_box" v-if="false">
+        <img src="../../assets/img/index/tishi.png" alt />
+        <span>集中器警告</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -170,7 +335,7 @@
 import echarts from "echarts";
 import street_lamp_icon from "../../assets/img/index/路灯.png";
 import concentrator_icon from "../../assets/img/index/集中器.png";
-import http from '../../utils/request'
+import { select_road } from "../../api/http/index.js";
 export default {
   name: "",
   props: [""],
@@ -178,16 +343,24 @@ export default {
     return {
       center: { lng: 114.025, lat: 22.546 },
       zoom: 15,
-      showMap:true,
-      street_lamp_icon: street_lamp_icon,  // 路灯icon
-      street_lamp_icon_status: true,   // 图标显示控制
+      showMap: true,
+      street_lamp_icon: street_lamp_icon, // 路灯icon
+      street_lamp_icon_status: true, // 图标显示控制
       concentrator_icon: concentrator_icon, // 集中器icon
-      street_lamp_list: [],     // 所有路灯
-      concentrator_list: [],    // 所有集中器
+      street_lamp_list: [], // 所有路灯
+      concentrator_list: [], // 所有集中器
+      selected: {
+        district: "", // 地区
+        road: "", // 道路
+        ctrCode: "" // 集中器编号
+      },
+      districtOptions: [], // 地区下拉框
+      // roadOptions:[], // 道路下拉框
+      ctrCodeOptions: [], // 集中器下拉框
       label_style: {
         "font-size": "9px",
         color: "#fff",
-        padding: '2px 4px 2px 2px',
+        padding: "2px 4px 2px 2px",
         "border-radius": "50%",
         border: "4px solid #fff",
         "background-color": "#5BD88B",
@@ -275,7 +448,15 @@ export default {
         { value: 335, name: "直接访问" },
         { value: 310, name: "邮件营销" },
         { value: 234, name: "联盟广告" }
-      ]
+      ],
+      lightController: {
+        lightStatus: true,
+        intensityControl: 5
+      },
+      showDialog_card: false,
+      mengban: false,
+      concentrator_Dialog_card: false,
+      street_lamp_Dialog_card: false
     };
   },
 
@@ -305,6 +486,29 @@ export default {
       } else {
         return [];
       }
+    },
+    // 计算当前可选的道路
+    roadOptions: function() {
+      if (this.selected.district) {
+        var arr = [];
+        this.districtOptions.forEach(item => {
+          if (item.optValue == this.selected.district) {
+            item.children.forEach(item2 => {
+              arr.push(item2);
+            });
+          }
+        });
+      } else {
+        var arr = [];
+        this.districtOptions.forEach(item => {
+          if (item.children != 0) {
+            item.children.forEach(item2 => {
+              arr.push(item2);
+            });
+          }
+        });
+      }
+      return arr;
     }
   },
 
@@ -317,7 +521,14 @@ export default {
     //   this.center.lng = 114.025;
     //   this.center.lat = 22.546;
     // }, 5000);
-    this.initEcharts({}, "light_source");
+    this.initEcharts(
+      [
+        { value: 335, name: "直接访问" },
+        { value: 310, name: "邮件营销" },
+        { value: 234, name: "联盟广告" }
+      ],
+      "light_source"
+    );
     this.setEchartsPie("echarts", [
       { value: 300, name: "课程报名" },
       { value: 350, name: "服装收费" },
@@ -325,12 +536,21 @@ export default {
       { value: 100, name: "其它收费" }
     ]);
     this.getMarker();
+    this.getRoad();
   },
 
   methods: {
-    changeMap(){
-
-      this.showMap=!this.showMap
+    // 页面加载时获取下拉框内容
+    async getRoad() {
+      let res = await select_road();
+      if (res.data.success) {
+        this.districtOptions = res.data.content;
+      } else {
+        this.$message.error(res.data.msgCode);
+      }
+    },
+    changeMap() {
+      this.showMap = !this.showMap;
     },
     handler({ BMap, map }) {
       // console.log(BMap);
@@ -355,6 +575,10 @@ export default {
       this.zoom = e.target.getZoom();
     },
     search() {},
+    // 刷新弹框表单
+    refresh() {},
+    // 亮度调节
+    lightChange() {},
     // 页面加载时获取所有marker标记点
     getMarker() {
       let list = [];
@@ -387,7 +611,43 @@ export default {
     // echarts图表
     initEcharts(data, elID) {
       var mycharts = echarts.init(document.getElementById(elID));
+      let total = 0;
+      data.forEach(item => {
+        total += item.value;
+      });
       var option = {
+        title: {
+          text: ["{value|" + total + "}", "个"].join(""),
+          left: 30,
+          top: 75,
+          zlevel: 10,
+          rich: {
+            value: {
+              color: "#F05820",
+              fontSize: 10,
+              fontWeight: "normal",
+              lineHeight: 40
+            },
+            name: {
+              color: "#909399",
+              lineHeight: 20
+            }
+          },
+          backgroundColor: "#fff",
+          textStyle: {
+            width: 50,
+            height: 40,
+            backgroundColor: "#fff",
+            rich: {
+              value: {
+                color: "#333333",
+                fontSize: 20,
+                fontWeight: "bold",
+                lineHeight: 20
+              }
+            }
+          }
+        },
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b}: {c} ({d}%)"
@@ -424,7 +684,12 @@ export default {
             label: {
               normal: {
                 show: false,
-                position: "center"
+                position: "center",
+                color: function(params) {
+                  //自定义颜色
+                  var colorList = ["#00FFFF", "#00FF00", "#FFFF00"];
+                  return colorList[params.dataIndex];
+                }
               },
               emphasis: {
                 show: true,
@@ -439,13 +704,10 @@ export default {
                 show: false
               }
             },
-            data: [
-              { value: 335, name: "直接访问" },
-              { value: 310, name: "邮件营销" },
-              { value: 234, name: "联盟广告" }
-            ]
+            data: data
           }
-        ]
+        ],
+        color: ["#5BD88B", "#FFCE5D", "#FF5353"]
       };
       mycharts.setOption(option);
     },
@@ -466,9 +728,9 @@ export default {
           text: ["{value|￥" + total + "}", "{name|总金额}"].join("\n"),
           rich: {
             value: {
-              color: "#303133",
+              color: "#F05820",
               fontSize: 10,
-              fontWeight: "bold",
+              fontWeight: "normal",
               lineHeight: 40
             },
             name: {
@@ -477,13 +739,13 @@ export default {
             }
           },
           top: "center",
-          left: "145",
+          left: "60",
           textAlign: "center",
           textStyle: {
             rich: {
               value: {
-                color: "#303133",
-                fontSize: 40,
+                color: "#F05820",
+                fontSize: 20,
                 fontWeight: "bold",
                 lineHeight: 40
               },
@@ -516,7 +778,7 @@ export default {
             name: "访问来源",
             type: "pie",
             radius: ["60%", "64%"],
-            center: ['25%', "50%"],
+            center: ["25%", "50%"],
             stillShowZeroSum: false,
             avoidLabelOverlap: false,
             zlevel: 1,

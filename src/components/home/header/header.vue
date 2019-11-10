@@ -12,7 +12,7 @@
       <!-- <img src="" alt=""> -->
       <span class="user_icon"></span>
       <span class="user_name">Chrissie</span>
-      <img src="../../../assets/img/index/tuichu-2.png" alt="" class="logout">
+      <img src="../../../assets/img/index/tuichu-2.png" alt="" class="logout" @click="loginOut">
     </div>
   </div>
 </template>
@@ -33,7 +33,12 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    loginOut() {
+      window.localStorage.removeItem('token')
+      this.$router.push("/login");
+    },
+  },
 
   watch: {}
 };
