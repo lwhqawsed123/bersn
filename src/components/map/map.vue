@@ -100,23 +100,10 @@ export default {
     this.getGGMarker();
     this.GG_initMap();
     this.set_GG_street_lamp();
-    this.getaxios()
   },
 
   methods: {
-    getaxios(){
-      http({
-        url:"/index/login",
-        method:'POST',
-        data:{
-          account:'admin',
-          loginpwd:'e10adc3949ba59abbe56e057f20f883e'
-        }
-      }).then(res=>{
-        console.log(res);
-        
-      })
-    },
+ 
 
     // 初始化谷歌地图
     GG_initMap() {

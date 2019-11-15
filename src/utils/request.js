@@ -14,8 +14,8 @@ const http = axios.create({
     baseURL: '/api', // api的base_url
     timeout: 15000, // 请求超时时间
     headers: {
-        'Content-Type': 'application/x-www.from-urlencoded'
-    },
+        'Content-Type': 'application/x-www.from-urlencoded; charset=UTF-8'
+    }
    
 })
 // http.defaults.transformRequest = data => {

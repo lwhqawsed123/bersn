@@ -17,6 +17,7 @@
         height: 45px;
         background-color: #fff;
         display: flex;
+        justify-content: space-between;
         align-items: center;
         border-radius: 4px;
         overflow: hidden;
@@ -35,13 +36,16 @@
             width: 1px;
             height: 25px;
             background-color: #D8D8D8;
+            cursor: pointer;
         }
 
         .search_button {
-            position: absolute;
-            right: 0;
-            top: 0;
+            cursor: pointer;
+            // position: absolute;
+            // right: 0;
+            // top: 0;
             width: 45px;
+            min-width: 45px;
             height: 45px;
             background-color: #F05820;
         }
@@ -69,6 +73,7 @@
             padding: 12px 20px;
             box-sizing: border-box;
             width: 18%;
+            min-width: 260px;
             height: 100%;
             background-color: #fff;
             position: relative;
@@ -81,6 +86,7 @@
                 position: absolute;
                 top: 14px;
                 left: -2px;
+
             }
 
             .echarts_box_title {
@@ -100,6 +106,36 @@
 
                     .echarts_box_title_edit {
                         color: #666666;
+                        cursor: pointer;
+
+                        &:hover {
+                            color: #5bbad3;
+                        }
+                    }
+                    .echarts_box_title_Notedit{
+                        color: #bebaba;
+                    }
+                    .echarts_box_title_edit1 {
+                        color: #666666;
+
+
+                        span {
+                            &:first-child {
+                                cursor: pointer;
+
+                                &:hover {
+                                    color: #5bbad3;
+                                }
+                            }
+
+                            &:last-child {
+                                cursor: pointer;
+
+                                &:hover {
+                                    color: #5bbad3;
+                                }
+                            }
+                        }
                     }
 
                     .echarts_box_title_icon {
@@ -113,6 +149,70 @@
                 height: 180px;
                 margin-top: 40px;
             }
+            .echarts_four{
+                margin-top: 28px;
+            }
+
+            .concentrator_code_icon {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 4px;
+                margin-right: 3px;
+                vertical-align: middle;
+                line-height: 20px;
+            }
+
+            .concentrator_code_jiantou {
+                margin-left: 3px;
+                width: 8px;
+                height: 4px;
+                cursor: pointer;
+            }
+
+            .controller_biaoji {
+                color: #999999;
+                cursor: pointer;
+
+                &:hover {
+                    color: #52adef;
+                }
+            }
+
+            .el-table td,
+            .el-table th {
+                padding: 5px 0;
+            }
+
+            .el-table__row .el-table_1_column_1 .cell {
+                padding-left: 0;
+            }
+
+            .lamp_post_list {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                line-height: 30px;
+                color: #706e6e;
+                box-sizing: border-box;
+                .lamp_post_list_text{
+                    margin-right: 15px;
+                }
+            }
+
+            .inside_ligth {
+                // display: flex;
+                // justify-content: right;
+                line-height: 20px;
+                text-align: right;
+            }
+
+            .controller_inside {
+                padding: 0 10px;
+            }
+            .el-table .active-row {
+                background: rgb(150, 226, 179);
+              }
         }
     }
 
@@ -168,6 +268,9 @@
 
                 .header_left_span_success {
                     color: #1ACC56;
+                }
+                .header_left_span_error{
+                    color: #FF3F3F;
                 }
             }
 
@@ -324,6 +427,10 @@
                 color: #FFFFFF;
                 margin-left: 10px;
                 margin-right: 32px;
+                cursor: pointer;
+                &:hover{
+                    background: rgb(236, 129, 90)
+                }
             }
         }
     }
@@ -339,21 +446,29 @@
         z-index: 999;
     }
 
-    .mengban {
-        position: absolute;
-        width: 1250px;
-        height: 360px;
-        top: 182px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
+    .concentrator_dialogVisible {
+        // position: absolute;
+        // width: 1250px;
+        // height: 360px;
+        // top: 182px;
+        // left: 50%;
+        // transform: translateX(-50%);
+        // z-index: 999;
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        .el-dialog__body{
+            padding:0
+        }
+        .el-dialog__header{
+            display: none;
+        }
         .concentrator_card {
-            width: 554px;
+            width: 100%;
             height: 358px;
+            .table_two{
+                margin-top: 20px;
+            }
         }
 
         .street_lamp_card {
@@ -373,7 +488,7 @@
         width: 120px;
         background-color: pink;
         z-index: 11111;
-        
+
         .warning_box {
             width: 120px;
             height: 44px;
@@ -381,24 +496,26 @@
             display: flex;
             align-items: center;
             box-sizing: border-box;
-            &:nth-child(2){
+
+            &:nth-child(2) {
                 margin-top: 10px;
             }
+
             img {
                 width: 16px;
                 height: 14px;
                 margin-left: 8px;
                 margin-right: 10px;
             }
-    
+
             span {
                 font-size: 14px;
                 color: #FF3F3F;
             }
-            
+
         }
-        
-    
-    
+
+
+
     }
 }

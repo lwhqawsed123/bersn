@@ -21,7 +21,7 @@ export default new Router({
           path: '/map',
           name: 'map',
           component: () => import('@/components/map/map.vue')
-        },
+        }
 
       ]
     },
@@ -29,6 +29,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: () => import('@/components/login/login.vue')
+    },
+    {
+      path: '/socket',
+      name: 'socket',
+      component: () => import('@/components/websocket/websocket.vue')
     }
   ]
 })
