@@ -1,31 +1,48 @@
 <template>
   <div class="el_header">
+    <Menu @menu="getMenuStatus" />
     <div class="top_logo">
-      <img src="../../../assets/img/index/logo.png" alt=""  class="logo">
+      <img src="../../../assets/img/index/logo.png" alt class="logo" />
       <span class="logo_line"></span>
-      <img src="../../../assets/img/index/fenlei-2.png" alt class="logo_icon" />
+      <img src="../../../assets/img/index/fenlei-2.png" alt class="logo_icon" @click="openMenu" />
     </div>
     <div class="top_right">
-      <span class="national"></span>
-      <span class="language">中文(简体)</span>
-      <img src="../../../assets/img/index/三角形(2).png" alt="" class="choose_language">
+      <el-dropdown @command="choose_Language">
+        <span class="choose_Language">
+          <span class="national"></span>
+          <span class="language">{{language}}</span>
+          <img src="../../../assets/img/index/三角形(2).png" alt class="choose_jiantou" />
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="中文(简体)">中文(简体)</el-dropdown-item>
+          <el-dropdown-item command="English">English</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
       <!-- <img src="" alt=""> -->
       <span class="user_icon"></span>
       <span class="user_name">Chrissie</span>
-      <img src="../../../assets/img/index/tuichu-2.png" alt="" class="logout" @click="loginOut">
+      <img src="../../../assets/img/index/tuichu-2.png" alt class="logout" @click="loginOut" />
     </div>
   </div>
 </template>
 
 <script>
+import Bus from "../../../utils/bus/bus";
+import Menu from "../menu/menu";
 export default {
   name: "",
   props: [""],
   data() {
-    return {};
+    return {
+      menuStatus: false,
+      language: "中文(简体)"
+    };
   },
 
-  components: {},
+  components: {
+    Menu
+  },
 
   computed: {},
 
@@ -35,9 +52,22 @@ export default {
 
   methods: {
     loginOut() {
-      window.localStorage.removeItem('token')
+      window.localStorage.removeItem("token");
       this.$router.push("/login");
     },
+    openMenu() {
+      if (this.$route.name == "index") {
+        this.menuStatus = !this.menuStatus;
+        Bus.$emit("openMenu", this.menuStatus);
+      }
+    },
+    getMenuStatus(menuStatus) {
+      this.menuStatus = menuStatus;
+    },
+    choose_Language(value) {
+      this.language = value;
+      Bus.$emit("language", value);
+    }
   },
 
   watch: {}

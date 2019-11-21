@@ -18,9 +18,16 @@ export default new Router({
           component: () => import('@/components/index/index.vue')
         },
         {
-          path: '/map',
-          name: 'map',
-          component: () => import('@/components/map/map.vue')
+          path: '/mgt',
+          name: 'mgt',
+          component: () => import('@/components/mgt/mgt.vue'),
+          children:[
+            {
+              path: '/mgt/brand',
+              name: 'brand',
+              component: () => import('@/components/mgt/brand/brand.vue')
+            },
+          ]
         }
 
       ]

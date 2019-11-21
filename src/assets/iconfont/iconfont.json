@@ -1,0 +1,44 @@
+{
+  "id": "1519801",
+  "name": "be'rsn",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5288592",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "6427824",
+      "name": "资产",
+      "font_class": "ziyuan",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "7339804",
+      "name": "统计",
+      "font_class": "tongji",
+      "unicode": "e69f",
+      "unicode_decimal": 59039
+    },
+    {
+      "icon_id": "8765211",
+      "name": "菜单-2",
+      "font_class": "caidan-",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "9744344",
+      "name": "监控面板-面性",
+      "font_class": "jiankongmianban-mianxing",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    }
+  ]
+}

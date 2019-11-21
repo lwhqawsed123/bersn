@@ -7,11 +7,13 @@ import './assets/css/base.css'
 import Element from 'element-ui'
 // 导入 饿了么框架的css文件
 import 'element-ui/lib/theme-chalk/index.css';
+// 导入字体图标
+import './assets/iconfont/iconfont.css'
 // import './utils/iconfont/iconfont.css'
-import BMap from 'vue-baidu-map'
-Vue.use(BMap, {
-  ak: 'b0hqKLX0sjyi9RtYkpAZQu9yGP73unL7'
-})
+// import BMap from 'vue-baidu-map'
+// Vue.use(BMap, {
+//   ak: 'b0hqKLX0sjyi9RtYkpAZQu9yGP73unL7'
+// })
 // import 'vue-google-maps/dist/vue-google-maps.css'
 // import VueGoogleMaps from 'vue-google-maps'
 // Vue.use(VueGoogleMaps, {

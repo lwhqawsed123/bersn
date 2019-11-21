@@ -80,3 +80,27 @@ export const get_concentrator_byid = (options) => {
         data
     })
 }
+
+// id查询灯杆
+export const get_lamp_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    return request({
+        url: `/index/map/pole`,
+        method,
+        data
+    })
+}
+
+// id查询灯源
+export const get_lamp_linght_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    return request({
+        url: `/lamp/find`,
+        method,
+        data
+    })
+}
