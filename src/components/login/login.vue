@@ -2,7 +2,7 @@
   <div class="login_bg">
     <div class="login_box">
       <div class="logo"></div>
-      <div class="title">智慧城市照明监控管理平台</div>
+      <div class="title">{{$t("login.title")}}</div>
       <div class="uesr_info">
         <el-form ref="loginForm" :model="loginForm" :rules="rules" id="loginForm">
           <el-form-item label prop="account">
@@ -13,7 +13,7 @@
                 prefix-icon="icon"
                 v-model="loginForm.account"
                 class="user_name"
-                placeholder="请输入账号"
+                :placeholder="$t('login.account')"
                 name="account"
               ></el-input>
             </div>
@@ -26,7 +26,7 @@
                 v-model="loginForm.loginpwd"
                 type="password"
                 class="login_input user_password"
-                placeholder="请输入密码"
+                :placeholder="$t('login.password')"
                 @keyup.enter.native="logonTo"
                 name="loginpwd"
               ></el-input>
@@ -41,6 +41,7 @@
                 name="lang"
                 placeholder="语言"
                 popper-class="language"
+                @change="changeLanguage"
               >
                 <el-option
                   v-for="item in languageList"
@@ -52,7 +53,7 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="logonTo" class="login_button">登录</el-button>
+            <el-button type="primary" @click="logonTo" class="login_button">{{$t("login.login")}}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -74,36 +75,61 @@ export default {
       loginForm: {
         account: "",
         loginpwd: "",
-        lang: window.localStorage.getItem("lang") || "ZH_CN"
+        lang: window.localStorage.getItem("locale") || "zh"
       },
       languageList: [
-        { value: "ZH_CN", label: "中文 (简体)" },
-        { value: "English", label: "English" }
+        { value: "zh", label: "中文 (简体)" },
+        { value: "en", label: "English" }
       ],
-      icon: icon,
-      rules: {
-        account: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        loginpwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        lang: [{ required: true, message: "请选择语言", trigger: "blur" }]
-      }
+      icon: icon
     };
   },
 
   components: {},
 
-  computed: {},
+  computed: {
+    rules(){
+       const rules={
+        account: [
+          {
+            required: true,
+            message: this.$t("login.enterUsername"),
+            trigger: "blur",
+          }
+        ],
+        loginpwd: [
+          {
+            required: true,
+            message: this.$t("login.enterPassword"),
+            trigger: "blur"
+          }
+        ],
+        lang: [
+          {
+            required: true,
+            message: this.$t("login.chooseLanguage"),
+            trigger: "blur"
+          }
+        ]
+      }
+      return rules
+    }
+  },
 
   beforeMount() {},
 
-  mounted() {},
+  mounted() {
+    // this.setFormRules()
+  },
 
   methods: {
     logonTo() {
       this.$refs["loginForm"].validate(async valid => {
         if (valid) {
+          this.loginForm.loginpwd=md5(this.loginForm.loginpwd)
           let from = new FormData();
           from.append("account", this.loginForm.account);
-          from.append("loginpwd", md5(this.loginForm.loginpwd));
+          from.append("loginpwd", this.loginForm.loginpwd);
           let res = await http_login({ data: from });
 
           if (res.data.success) {
@@ -113,17 +139,50 @@ export default {
           } else {
             this.$message.error(res.data.msgCode);
           }
-          // console.log(this.$refs.loginForm);
-          // this.loginForm.loginpwd=md5(this.loginForm.loginpwd)
-          // let from=new FormData(document.getElementById('loginForm'))
         } else {
           return false;
         }
       });
+    },
+    // 切换语言
+    changeLanguage(val) {
+      localStorage.setItem("locale", val);
+      this.$i18n.locale = val;
+    },
+    // 设置rules
+    setFormRules(){
+      this.rules={
+        account: [
+          {
+            required: true,
+            message: `${this.$t("login.enterUsername")}`,
+            trigger: "blur"
+          }
+        ],
+        loginpwd: [
+          {
+            required: true,
+            message: `${this.$t("login.enterPassword")}`,
+            trigger: "blur"
+          }
+        ],
+        lang: [
+          {
+            required: true,
+            message: this.$t("login.chooseLanguage"),
+            trigger: "blur"
+          }
+        ]
+      }
     }
   },
 
-  watch: {}
+  watch: {
+    //监听语言切换
+    // "$i18n.locale": function() {
+    //   this.setFormRules();
+    // }
+  }
 };
 </script>
 <style lang='less' >

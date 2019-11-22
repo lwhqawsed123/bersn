@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import qs from 'qs'
-axios.defaults.withCredentials = true
 // const http = axios.create({
 //     baseURL: '/api', // api的base_url
 //     timeout: 15000, // 请求超时时间
@@ -10,9 +9,12 @@ axios.defaults.withCredentials = true
 //         'Content-Type':'application/x-www.from-urlencoded'
 //     }
 // })
+
+axios.defaults.withCredentials = true           //
 const http = axios.create({
     baseURL: '/api', // api的base_url
-    timeout: 15000, // 请求超时时间
+    // baseURL: 'http://lamp.eclight.com', // api的base_url
+    timeout: 70000, // 请求超时时间
     headers: {
         'Content-Type': 'application/x-www.from-urlencoded; charset=UTF-8'
     }

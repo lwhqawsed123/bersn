@@ -1,6 +1,6 @@
 <template>
   <div class="test">
-    <el-button @click="websocketonmessage">请求</el-button>
+    <el-button >请求</el-button>
   </div>
 </template><script>
 export default {
@@ -12,7 +12,7 @@ export default {
     this.initWebSocket();
   },
   destroyed() {
-    // this.websock.close(); //离开路由之后断开websocket连接
+    this.websock.close(); //离开路由之后断开websocket连接
   },
   methods: {
     initWebSocket() {
@@ -27,8 +27,8 @@ export default {
     },
     websocketonopen() {
       //连接建立之后执行send方法发送数据
-      let actions = { test: "12345" };
-      this.websocketsend(JSON.stringify(actions));
+      // let actions = { test: "12345" };
+      // this.websocketsend(JSON.stringify(actions));
       console.log('发送数据1');
       
     },
@@ -44,7 +44,7 @@ export default {
     },
     websocketsend(Data) {
       //数据发送
-      this.websock.send(Data);
+      // this.websock.send(Data);
     },
     websocketclose(e) {
       //关闭

@@ -322,8 +322,8 @@ export default {
       });
     },
     // 打开修改品牌弹框
-    async openeditBrand(id) {
-      let data = { id: id };
+    async openeditBrand(row) {
+      let data = { id: row.brandId };
       let res = await get_brand_byid({ data });
       if (res.data.success) {
         this.brandeditShow = true;
@@ -356,14 +356,14 @@ export default {
       });
     },
     // 删除品牌
-    deleteBrand(id) {
+    deleteBrand(row) {
       this.$confirm("是否删除该品牌?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(async () => {
-          let data = { id: id };
+          let data = { id: row.brandId };
           let res = await delete_brand({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -383,6 +383,9 @@ export default {
       // 灯具
       this.lightIsShow = false;
       this.lightForm = {};
+      // 光源
+      this.annexIsShow = false;
+      this.annexForm = {};
     },
     // ============灯具===================
     // 获取所有灯具数据
@@ -445,9 +448,9 @@ export default {
       });
     },
     // 打开修改弹框
-    async openeditLight(id) {
+    async openeditLight(row) {
       this.light_title = "灯具修改";
-      let data = { id: id };
+      let data = { id: row.brandId };
       let res = await get_light_byid({ data });
       if (res.data.success) {
         this.getAllSelect();
@@ -458,14 +461,14 @@ export default {
       }
     },
     // 删除灯具
-    deleteLight(id) {
+    deleteLight(row) {
       this.$confirm("是否删除该灯具?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(async () => {
-          let data = { id: id };
+          let data = { id: row.brandId };
           let res = await delete_light({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -501,7 +504,9 @@ export default {
       }
     },
     // 打开修改
-    openeditAnnex(){},
+    openeditAnnex(){
+
+    },
     // 修改
 
     // 打开新增
@@ -519,7 +524,7 @@ export default {
   watch: {}
 };
 </script>
-<style lang='less'>
+<style lang='less' scope>
 .form_box {
   width: 100%;
   padding: 0 60px;
@@ -528,7 +533,8 @@ export default {
     margin-bottom: 10px;
   }
   .el-form-item__error {
-    left: 80%;
+    left: unset;
+    right: 0;
   }
   .el-form-item__label {
     line-height: 9px !important ;

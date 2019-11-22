@@ -5,7 +5,7 @@ export const select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     return request({
-        url: `/select/road`,
+        url: `/api/select/road`,
         method
     })
 }
@@ -15,7 +15,7 @@ export const luminGroup = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/select/luminGroup`,
+        url: `/api/select/luminGroup`,
         method,
         data
     })
@@ -26,7 +26,7 @@ export const map_search = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/index/map/search`,
+        url: `/api/index/map/search`,
         method,
         data
     })
@@ -37,7 +37,7 @@ export const edit_concentrator = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/index/marker/concent`,
+        url: `/api/index/marker/concent`,
         method,
         data
     })
@@ -48,7 +48,7 @@ export const merker_pole = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/index/marker/pole`,
+        url: `/api/index/marker/pole`,
         method,
         data
     })
@@ -60,7 +60,7 @@ export const merker_pole_array = (options) => {
     var method = options.method || 'POST'
     var data = options.data || []
     return request({
-        url: `/index/marker/batchPole`,
+        url: `/api/index/marker/batchPole`,
         method,
         data,
         headers: {
@@ -75,7 +75,7 @@ export const get_concentrator_byid = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/concent/find`,
+        url: `/api/concent/find`,
         method,
         data
     })
@@ -87,7 +87,7 @@ export const get_lamp_byid = (options) => {
     var method = options.method || 'POST'
     var data = options.data || {}
     return request({
-        url: `/index/map/pole`,
+        url: `/api/index/map/pole`,
         method,
         data
     })
@@ -98,9 +98,75 @@ export const get_lamp_linght_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
     return request({
-        url: `/lamp/find`,
+        url: `/monitor/cmd/query/lampData`,
         method,
-        data
+        data:form
+    })
+}
+// 关闭光源
+export const close_lamp_linght_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/control/lamp/close`,
+        method,
+        data:form
+    })
+}
+
+// 开启光源
+export const open_lamp_linght_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/control/lamp/open`,
+        method,
+        data:form
+    })
+}
+// 单灯调光
+export const dimming_lamp_linght_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/control/lamp`,
+        method,
+        data:form
+    })
+}
+
+// 群体调光(传单灯id也可以控制单灯)
+export const dimming_lamp_linght_all = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/control/groupLamp`,
+        method,
+        data:form
     })
 }

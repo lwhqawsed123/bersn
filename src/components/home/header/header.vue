@@ -66,7 +66,12 @@ export default {
     },
     choose_Language(value) {
       this.language = value;
-      Bus.$emit("language", value);
+      // Bus.$emit("language", value);
+      if(value&&value=='English'){
+        localStorage.setItem('locale','zh')
+      }else{
+        localStorage.setItem('locale','en')
+      }
     }
   },
 

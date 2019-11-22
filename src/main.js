@@ -23,6 +23,8 @@ import './assets/iconfont/iconfont.css'
 //     useBetaRenderer: false,
 //   },
 // })
+
+import i18n from './lang/i18n'
 Vue.config.productionTip = false
 Vue.use(Element)
 /* eslint-disable no-new */
@@ -30,6 +32,7 @@ Vue.use(Element)
 
 new Vue({
   el: '#app',
+  i18n,
   router,
   components: { App },
   template: '<App/>',

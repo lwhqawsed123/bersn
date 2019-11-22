@@ -5,7 +5,7 @@ export const http_login=(options)=>{
     var method=options.method||'POST'
     var data=options.data||{}
     return request({
-        url:`/index/login`,
+        url:`/api/index/login`,
         method,
         data,
         headers:{

@@ -164,28 +164,60 @@
       </el-card>
     </div>
     <!-- 灯源Dialog -->
-    <el-dialog class="dialog_card first_card concentrator_dialogVisible"  :visible.sync="linght_Dialog_card"
-      width="45%"
-      :modal="false">
+    <el-dialog
+      class="dialog_card first_card concentrator_dialogVisible"
+      :visible.sync="linght_Dialog_card"
+      width="866px"
+      :modal="false"
+      v-loading="lamp_loading"
+      ref="single_lamp"
+    >
       <div class="clearfix dialog_card_header">
         <div class="header_left">
-          <img src="../../assets/img/index/tishi(1).png" alt class="header_left_icon" />
-          <span class="header_left_span_Num">20330D08BF08</span>
-          <span class="header_left_span_warning">警告</span>
           <img
+            v-if="linght_Dialog_item_obj.ackState=='SUCCESS'"
+            src="../../assets/img/index/tishi(3).png"
+            alt
+            class="header_left_icon"
+          />
+          <img
+            v-if="linght_Dialog_item_obj.ackState!='SUCCESS'"
+            src="../../assets/img/index/tishi(1).png"
+            alt
+            class="header_left_icon"
+          />
+          <span class="header_left_span_Num">{{linght_Dialog_item_obj.ccuid}}</span>
+          <span
+            v-if="linght_Dialog_item_obj.ackState!='SUCCESS'"
+            class="header_left_span_warning"
+          >警告</span>
+          <span
+            v-if="linght_Dialog_item_obj.ackState=='SUCCESS'"
+            class="header_left_span_success"
+          >正常</span>
+          <!-- <img
             src="../../assets/img/index/tishi(3).png"
             alt
             class="header_left_icon header_left_icon_warning"
-          />
-          <span class="header_left_span_success">正常</span>
+          />-->
+          <!-- <span class="header_left_span_success">正常</span> -->
         </div>
         <div class="header_right">
-          <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+          <img
+            src="../../assets/img/index/shuaxin.png"
+            alt
+            class="refresh_icon"
+            @click="get_linght_by_id(single_linght_lampId)"
+          />
           <span class="header_right_time">2019-09-04 10:15:55</span>
         </div>
       </div>
       <!-- 弹框表格1 -->
-      <el-table :data="linght_Dialog_item" style="width: 100%" header-cell-class-name="table_header_color">
+      <el-table
+        :data="linght_Dialog_item"
+        style="width: 100%"
+        header-cell-class-name="table_header_color"
+      >
         <el-table-column prop="date" label="调光值"></el-table-column>
         <el-table-column prop="name" label="温度"></el-table-column>
         <el-table-column prop="address" label="电压"></el-table-column>
@@ -196,7 +228,11 @@
         <el-table-column prop="address" label="累计电量"></el-table-column>
       </el-table>
       <!-- 弹框表格2 -->
-      <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+      <el-table
+        :data="linght_Dialog_item"
+        style="width: 100%"
+        header-cell-class-name="table_header_color"
+      >
         <el-table-column prop="date" label="灯杆"></el-table-column>
         <el-table-column prop="name" label="区域"></el-table-column>
         <el-table-column prop="address" label="道路"></el-table-column>
@@ -206,7 +242,11 @@
         <el-table-column prop="address" label="纬度"></el-table-column>
       </el-table>
       <!-- 弹框表格3 -->
-      <el-table :data="[]" style="width: 100%" header-cell-class-name="table_header_color">
+      <el-table
+        :data="linght_Dialog_item"
+        style="width: 100%"
+        header-cell-class-name="table_header_color"
+      >
         <el-table-column prop="date" label="光源类型"></el-table-column>
         <el-table-column prop="name" label="电源型号"></el-table-column>
         <el-table-column prop="address" label="标称功率"></el-table-column>
@@ -222,14 +262,14 @@
         <img src="../../assets/img/index/tishi.png" alt class="light_controller_icon" />
         <span>调光值：</span>
         <div class="intensity_control">
-            <el-slider v-model="lightController.intensityControl" :max="100"></el-slider>
+          <el-slider v-model="lightController.intensityControl" :max="100"></el-slider>
         </div>
         <div class="intensity_inputnumber">
           <el-input-number
             v-model="lightController.intensityControl"
             controls-position="right"
             @change="lightChange"
-            :min="1"
+            :min="0"
             :max="100"
           ></el-input-number>
         </div>
@@ -238,13 +278,13 @@
       <!-- 按钮 -->
       <div class="button_bottom_box">
         <button class="button_bottom bottom_cancel" @click="linght_Dialog_card=false">取消</button>
-        <button class="button_bottom bottom_submit">确认</button>
+        <button class="button_bottom bottom_submit" @click="set_light_by_id()">确认</button>
       </div>
     </el-dialog>
     <!-- 集中器Dialog2 -->
     <el-dialog
       :visible.sync="concentrator_dialogVisible"
-      width="30%"
+      width="554px"
       :modal="false"
       class="concentrator_dialogVisible"
     >
@@ -258,7 +298,12 @@
             <span v-if="!concentrator_dialog_item.workState" class="header_left_span_error">警告</span>
           </div>
           <div class="header_right">
-            <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+            <img
+              src="../../assets/img/index/shuaxin.png"
+              alt
+              class="refresh_icon"
+              @click="getconcentratorbyid(concentrator_dialog_item.concentId)"
+            />
             <span class="header_right_time">{{concentrator_dialog_item.createTime}}</span>
           </div>
         </div>
@@ -296,13 +341,13 @@
     <el-dialog
       class="concentrator_dialogVisible dialog_card street_lamp_card"
       :visible.sync="street_lamp_Dialog_card"
-      width="30%"
+      width="554px"
       :modal="false"
     >
       <div class="clearfix dialog_card_header">
         <div class="header_left"></div>
         <div class="header_right">
-          <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="refresh" />
+          <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="get_lamp_by_id(lamp_Marker_dialog_item.poleId)" />
           <span class="header_right_time">{{lamp_Marker_dialog_item.createTime}}</span>
         </div>
       </div>
@@ -326,8 +371,12 @@
         </el-table-column>
         <el-table-column prop="concentName" label="集中器名称"></el-table-column>
         <el-table-column label="操作" align="center">
-          <template>
-            <el-button size="mini" class="el-icon-edit-outline"></el-button>
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              class="el-icon-edit-outline"
+              @click="open_Lamp_Dialog(scope.row.concentId,scope.row.lampId)"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -348,7 +397,7 @@
       </div>
     </div>
     <!-- 弹出菜单 -->
-    <Menu :drawer='drawer' />
+    <Menu :drawer="drawer" />
   </div>
 </template>
 
@@ -365,6 +414,7 @@ import concentrator_icon from "../../assets/img/index/集中器.png"; // 集中�
 import shangsanjiao from "../../assets/img/index/三角形(1).png";
 import xiasanjiao from "../../assets/img/index/三角形@2x(2).png";
 import Bus from "../../utils/bus/bus";
+import { Loading } from "element-ui";
 
 import {
   select_road,
@@ -375,16 +425,20 @@ import {
   merker_pole_array,
   get_concentrator_byid,
   get_lamp_byid,
-  get_lamp_linght_byid
+  get_lamp_linght_byid,
+  close_lamp_linght_byid,
+  open_lamp_linght_byid,
+  dimming_lamp_linght_byid,
+  dimming_lamp_linght_all
 } from "../../api/http/index.js";
-import MyOverlay from "./MyOverlay";
 export default {
   name: "",
   props: [""],
   data() {
     return {
-      language:true,
-      drawer:false,
+      // language:true,
+      language: localStorage.getItem("locale") == "zh" ? true : false,
+      drawer: false,
       _map: "",
       GG_map: "",
       center: { lng: 114.025, lat: 22.546 },
@@ -441,7 +495,7 @@ export default {
         lightStatus: true,
         intensityControl: 5
       },
-      
+
       // 集中器和灯源警告状态
       concentMonitor_warning: false,
       lightLamp_warning: false,
@@ -454,14 +508,21 @@ export default {
       street_lamp_Dialog_card: false, //
       lamp_Marker_dialog_item: {},
       // 灯源弹框
+      lamp_loading: false,
+      single_lamp_loading: false,
       linght_Dialog_card: false,
-      linght_Dialog_item:{},
+      linght_Dialog_item: [],
+      linght_Dialog_item_obj: {},
+      single_linght_lampId: "",
+      single_concent_Id: "",
       fn: "", // 储存点击事件函数
       lampFn: "", // 储存点击事件函数
       cursor: "", // 储存鼠标图标
 
       // =====WebSocket=======
-      WebSocket_path: "ws://47.106.141.162:8888/scoket/webServer/123",
+      // WebSocket_path: "ws://47.106.141.162:8888/scoket/webServer/123",
+      WebSocket_path:
+        "ws://websocket.eclight.com/scoket/webServer/e10adc3949ba59abbe56e057f20f883e",
       socket: "",
       // ========echarts===========
       // 1
@@ -471,39 +532,48 @@ export default {
       // 3
       alarmStatistics: {},
       // 4
-      lightRateStatistics: {}
+      lightRateStatistics: {},
+      // 语言
+      yuyan: ""
     };
   },
 
   components: {
     // BaiduMap,
     // BmMarker
-    MyOverlay
   },
 
   computed: {
-    newLanguage:function(){
-      return this.language
+    newLanguage: function() {
+      return this.language;
+    },
+    languageZh: function() {
+      let language = localStorage.getItem("locale");
+      console.log(this.yuyan);
+      if (language == "zh") {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
 
   beforeMount() {},
   created() {
-    Bus.$on('language',language=>{
-      if(language=='中文(简体)'){
-      this.language=true
-      }else{
-      this.language=false
-      }
-      
-      console.log(this.language);
-    })
+    // Bus.$on('language',language=>{
+    //   if(language=='中文(简体)'){
+    //   this.language=true
+    //   }else{
+    //   this.language=false
+    //   }
+    //   console.log(this.language);
+    // })
   },
-  watch:{
-    newLanguage:function(newVal){
+  watch: {
+    newLanguage: function(newVal) {
       // console.log(newVal);
-      
-    }
+    },
+    languageZh(val) {}
   },
   mounted() {
     this.getRoad(); // 道路
@@ -885,17 +955,24 @@ export default {
       } else {
         this.centerAndZoom(point, this.maxZoom);
       }
-
+      this.getconcentratorbyid(id);
+    },
+    // 根据id获取集中器信息
+    async getconcentratorbyid(id) {
+      console.log(id);
+      let loadingInstance = Loading.service();
       let from = new FormData();
       from.append("id", id);
       let res = await get_concentrator_byid({ data: from });
       if (res.data.success) {
+        loadingInstance.close();
         this.concentrator_dialogVisible = true;
         this.concentrator_dialog_item = res.data.content;
         let arr = [];
         arr[0] = res.data.content;
         this.concentrator_dialog_array = arr;
       } else {
+        loadingInstance.close();
         this.$message.error(res.data.msgCode);
       }
     },
@@ -906,32 +983,110 @@ export default {
       } else {
         this.centerAndZoom(point, this.maxZoom);
       }
+      this.get_lamp_by_id(id)
+    },
+    // 根据灯杆id获取信息
+    async get_lamp_by_id(id) {
+      let loadingInstance = Loading.service();
       let from = new FormData();
       from.append("poleId", id);
       let res = await get_lamp_byid({ data: from });
       if (res.data.success) {
+        loadingInstance.close();
+        this.single_concent_Id = res.data.content.concentId;
         if (res.data.content.lampList.length == 1) {
-          this.get_linght_by_id(res.data.content.lampList[0].lampId)
+          this.get_linght_by_id(res.data.content.lampList[0].lampId);
         } else {
           this.street_lamp_Dialog_card = true;
           this.lamp_Marker_dialog_item = res.data.content;
         }
       } else {
+        loadingInstance.close();
         this.$message.error(res.data.msgCode);
       }
     },
     // 根据id获取灯源信息
-    async get_linght_by_id(id){
-      let form=new FormData()
-      form.append('id',id)
-      let res =await get_lamp_linght_byid({data:form})
-      if (res.data.success) {
-          this.linght_Dialog_card = true;
-          this.linght_Dialog_item = res.data.content;
-      } else {
-        this.$message.error(res.data.msgCode);
+    async get_linght_by_id(lampId) {
+      let data = {
+        lampId: lampId
+      };
+      this.single_linght_lampId = lampId;
+      let options = { target: this.$refs.single_lamp };
+      let loadingInstance = Loading.service();
+      let res = await get_lamp_linght_byid({ data });
+      if (res) {
+        this.linght_Dialog_card = true;
+        loadingInstance.close();
+        this.linght_Dialog_item_obj = res.data;
+        this.linght_Dialog_item = res.data.fnResults || [];
       }
-      
+      if (res.data.ackState != "SUCCESS") {
+        this.$message.error(res.data.ackState);
+      }
+    },
+    // 灯源列表打开单灯
+    open_Lamp_Dialog(lampId) {
+      this.street_lamp_Dialog_card = false;
+      this.get_linght_by_id(lampId);
+    },
+    // ====灯源调整=====
+    set_light_by_id() {
+      //  lightController: {
+      //   // 光源亮度
+      //   lightStatus: true,
+      //   intensityControl: 5
+      // },
+      // DISCONNECTED, SUCCESS, FAILURE, TIME_OUT, ERROR, BUSY;
+
+      // if (!this.lightController.lightStatus) {
+      //   let data = {
+      //     lampId: row[0].lampId
+      //   };
+      //   close_lamp_linght_byid({ data }).then(res => {
+      //     console.log(res);
+      //     if (res.data.ackState == "SUCCESS") {
+      //       this.$message.success("关闭成功");
+      //     } else {
+      //       this.$message.error(res.data.ackState);
+      //     }
+      //   });
+      // } else {
+      //   let data = {
+      //     lampId: row[0].lampId
+      //   };
+      //   open_lamp_linght_byid({ data }).then(res => {
+      //     console.log(res);
+      //     if (res.data.ackState == "SUCCESS") {
+      //       this.$message.success("关闭成功");
+      //     } else {
+      //       this.$message.error(res.data.ackState);
+      //     }
+      //   });
+      // }
+
+      this.lamp_loading = true;
+      let dateStart = new Date().getTime();
+      let data = {
+        conId: this.linght_Dialog_item_obj.concentId,
+        lampId: this.single_linght_lampId,
+        dimming: this.lightController.intensityControl
+      };
+
+      dimming_lamp_linght_all({ data }).then(res => {
+        console.log(res);
+        let dateEnd = new Date().getTime();
+        let time = (dateEnd - dateStart) / 1000;
+
+        if (res.data.ackState == "SUCCESS") {
+          this.$message.success("关闭成功");
+          this.lamp_loading = false;
+          alert("成功:耗时: " + time + "s");
+        } else {
+          this.lamp_loading = false;
+          this.$message.error(res.data.ackState);
+          alert("失败:耗时: " + time + "s");
+        }
+      });
     },
 
     // ===========左下角集中器列表==============
@@ -1890,7 +2045,6 @@ export default {
       // this.concentMonitor = concentMonitor;
       // this.alarmStatistics = alarmStatistics;
       // this.lightRateStatistics = lightRateStatistics;
-      console.log(lampMonitor);
 
       let echarts_data1 = [];
       if (lampMonitor && lampMonitor.monitorStateList.length != 0) {
@@ -2018,8 +2172,6 @@ export default {
     },
     // 地图缩放
     GG_zoomend(zoom) {
-      console.log(zoom);
-
       if (zoom <= this.shrinkZoom) {
         this.clearMarkers(); // 清除
         this.set_label_overlay(); // 仅集中器(数字)

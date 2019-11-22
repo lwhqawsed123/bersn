@@ -9,23 +9,32 @@ module.exports = {
 
     // Paths
     env: require('./dev.env'), // 
-    // port: 8090, //
+    port: 8080, //
     autoOpenBrowser: true,  //
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: { //
+    proxyTable: { //为了跨域,更改完之后要重新打包
       '/api':{
-        target:'http://47.106.141.162:8888/api',
+        target:'http://47.106.141.162:8888',
         changeOrigin:true,
         pathRewrite:{
           '^/api':''
         }
       }
     },
+    //  proxyTable: { //为了跨域
+    //   '/api':{
+    //     target:'http://lamp.eclight.com/api',
+    //     changeOrigin:true,
+    //     pathRewrite:{
+    //       '^/api':''
+    //     }
+    //   }
+    // },
 
     // Various Dev Server settings
     // host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    // port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     host:'localhost',
     errorOverlay: true,
     notifyOnErrors: true,

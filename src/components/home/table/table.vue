@@ -27,14 +27,14 @@
             src="../../../assets/img/mgt/bianji.png"
             style="cursor: pointer;"
             alt
-            @click="open_editBrand(scope.row.brandId)"
+            @click="open_editBrand(scope.row)"
           />
           <img
             class="delete"
             src="../../../assets/img/mgt/删除.png"
             style="margin-left:15px;cursor: pointer;"
             alt
-            @click="T_delete(scope.row.brandId)"
+            @click="T_delete(scope.row)"
           />
         </template>
       </el-table-column>
@@ -107,15 +107,15 @@ export default {
       }
     },
     // 修改品牌
-    open_editBrand(id) {
+    open_editBrand(row) {
       if (this._edit) {
-        this._edit(id);
+        this._edit(row);
       }
     },
     // 删除品牌
-    T_delete(id) {
+    T_delete(row) {
       if (this._delete) {
-        this._delete(id);
+        this._delete(row);
       }
     }
   },

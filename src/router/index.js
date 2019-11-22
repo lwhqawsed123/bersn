@@ -27,6 +27,11 @@ export default new Router({
               name: 'brand',
               component: () => import('@/components/mgt/brand/brand.vue')
             },
+            {
+              path: '/mgt/road',
+              name: 'road',
+              component: () => import('@/components/mgt/road/road.vue')
+            },
           ]
         }
 

@@ -5,14 +5,14 @@
         <span>首页</span>
       </div>
       <div class="menu_content">
-        <el-menu class="el-menu-vertical-demo" active-text-color="#F26204" >
+        <el-menu class="el-menu-vertical-demo" active-text-color="#F26204" router>
           <div class="asset_title">
             <span class="iconfont icon-ziyuan iconfont_color iconfont_asset"></span>
             <span class="menu_title">资产管理</span>
           </div>
           <el-submenu index='1'>
             <template slot="title">照明设施属性管理</template>
-            <el-menu-item index="1-1">品牌型号管理</el-menu-item>
+            <el-menu-item index="/mgt/brand">品牌型号管理</el-menu-item>
             <el-menu-item index="1-2">区域道路管理</el-menu-item>
             <el-menu-item index="1-3">照明区域管理</el-menu-item>
           </el-submenu>
