@@ -7,6 +7,8 @@
       :_edit="openeditBrand"
       :_delete="deleteBrand"
       :pageChange="getAllBrand"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :total="brandTotal"
       :openAdd="openAddBrand"
     />
@@ -16,12 +18,14 @@
       :columnArray="[
       {prop:'lightModel',label:'灯光型号'},
       {prop:'lampCategory',label:'光源类型'},
-      {prop:'brandId',label:'品牌'},
+      {prop:'brandName',label:'品牌'},
       {prop:'standardPower',label:'标称功率'},
       {prop:'avgLife',label:'额定寿命'},
       {prop:'procurementPrice',label:'采购单价'},
       {prop:'remark',label:'备注'},
       ]"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :total="lightTotal"
       :pageChange="getAllLight"
       :openAdd="openAddLight"
@@ -34,7 +38,7 @@
       :columnArray="[
       {prop:'annexModel',label:'电源型号'},
       {prop:'lampCategory',label:'光源类型'},
-      {prop:'brandId',label:'品牌'},
+      {prop:'brandName',label:'品牌'},
       {prop:'annexType',label:'配套电器类型'},
       {prop:'dimmingType',label:'调光类型'},
       {prop:'dimmingAttribute',label:'调光属性'},
@@ -43,6 +47,8 @@
       :_edit="openeditAnnex"
       :_delete="deleteAnnex"
       :pageChange="getAllAnnex"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :total="annexTotal"
       :openAdd="openAddAnnex"
     />
@@ -524,7 +530,7 @@ export default {
   watch: {}
 };
 </script>
-<style lang='less' scope>
+<style lang='less' >
 .form_box {
   width: 100%;
   padding: 0 60px;

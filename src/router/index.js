@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { Message } from 'element-ui';
 
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 Vue.use(Router)
 
 export default new Router({
@@ -32,6 +36,26 @@ export default new Router({
               name: 'road',
               component: () => import('@/components/mgt/road/road.vue')
             },
+            {
+              path: '/mgt/lumin',
+              name: 'lumin',
+              component: () => import('@/components/mgt/lumin/lumin.vue')
+            },
+            {
+              path: '/mgt/concent',
+              name: 'concent',
+              component: () => import('@/components/mgt/concent/concent.vue'),
+            },
+            {
+              path: '/mgt/concent/detail',
+              name: 'detail',
+              component: () => import('@/components/mgt/detail/detail.vue')
+            },
+            {
+              path: '/mgt/pole',
+              name: 'pole',
+              component: () => import('@/components/mgt/pole/pole.vue')
+            }
           ]
         }
 

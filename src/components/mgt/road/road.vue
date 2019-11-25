@@ -7,6 +7,8 @@
       :_edit="openeditregion"
       :_delete="deleteregion"
       :pageChange="getAllregion"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :total="regionTotal"
       :openAdd="openAddregion"
     />
@@ -15,13 +17,15 @@
       :tableData="roadArray"
       :columnArray="[
       {prop:'roadName',label:'道路名称'},
-      {prop:'regionId',label:'区域'},
+      {prop:'regionName',label:'区域'},
       {prop:'roadGrade',label:'道路级别'},
       {prop:'roadLength',label:'道路长度(Km)'},
       {prop:'poleAmount',label:'灯杆数量'},
       {prop:'lampAmount',label:'光源数量'},
       {prop:'remark',label:'备注'},
       ]"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :total="roadTotal"
       :pageChange="getAllroad"
       :openAdd="openAddroad"
@@ -38,7 +42,7 @@
           label-width="80px"
           label-position="top"
         >
-          <el-form-item label="品牌名称" prop="regionName">
+          <el-form-item label="区域名称" prop="regionName">
             <el-input v-model="regionForm.regionName"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
@@ -58,37 +62,35 @@
           label-width="80px"
           label-position="top"
         >
-          <el-form-item label="光源型号" prop="roadModel">
-            <el-input v-model="roadForm.roadModel"></el-input>
+          <el-form-item label="道路名称" prop="roadName">
+            <el-input v-model="roadForm.roadName"></el-input>
           </el-form-item>
-          <el-form-item label="品牌" prop="brandId">
-            <el-select v-model="roadForm.brandId" placeholder="请选择品牌" class="brand_select">
+          <el-form-item label="区域" prop="regionId">
+            <el-select
+              v-model="roadForm.regionId"
+              placeholder="请选择区域"
+              class="region_select brand_select"
+            >
               <el-option
                 v-for="item in regionOptions"
-                :key="item.brandId"
-                :label="item.brandName"
-                :value="item.brandId"
+                :key="item.regionId"
+                :label="item.regionName"
+                :value="item.regionId"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="光源类型" prop="lampCategory">
-            <el-select v-model="roadForm.lampCategory" placeholder="请选择光源类型" class="brand_select">
+          <el-form-item label="道路等级" prop="roadGrade">
+            <el-select v-model="roadForm.roadGrade" placeholder="请选择道路等级" class="brand_select">
               <el-option
-                v-for="item in lampOptions"
+                v-for="item in roadOptions"
                 :key="item.id"
                 :label="item.optText"
                 :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="标称功率" prop="standardPower">
-            <el-input v-model="roadForm.standardPower"></el-input>
-          </el-form-item>
-          <el-form-item label="额定寿命" prop="avgLife">
-            <el-input v-model="roadForm.avgLife"></el-input>
-          </el-form-item>
-          <el-form-item label="采购单价" prop="procurementPrice">
-            <el-input v-model="roadForm.procurementPrice"></el-input>
+          <el-form-item label="道路长度" prop="roadLength">
+            <el-input v-model="roadForm.roadLength"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
             <el-input type="textarea" :rows="4" class="textarea_ps" v-model="roadForm.remark"></el-input>
@@ -118,7 +120,7 @@ export default {
   data() {
     return {
       requiredMsg: "不能为空",
-      // ===========品牌===========
+      // ===========区域===========
       //       regionArray
       // openeditregion
       // deleteregion
@@ -137,28 +139,27 @@ export default {
       regionTotal: 0, // 总数
       regionRules: {
         regionName: [
-          { required: true, message: "请输入品牌名称", trigger: "blur" }
+          { required: true, message: "请输入区域名称", trigger: "blur" }
         ]
       },
-      // =============灯具=========
+      // =============道路=========
       roadIsShow: false, // 新增弹框
       roadSubmit: function() {}, // 提交
       road_title: "", // 标题
       roadForm: {},
-      regionOptions: [], // 品牌下拉列表
-      lampOptions: [], // 光源类型下拉列表
+      regionOptions: [], // 区域下拉列表
+      roadOptions: [], // 道路等级下拉列表
       roadArray: [], // 列表
       roadTotal: 0, // 总数
       roadRules: {
-        roadModel: [{ required: true, message: "不能为空", trigger: "blur" }],
-        brandId: [{ required: true, message: "不能为空", trigger: "change" }],
-        lampCategory: [
+        roadName: [{ required: true, message: "不能为空", trigger: "blur" }],
+        regionId: [{ required: true, message: "不能为空", trigger: "change" }],
+        roadGrade: [
           { required: true, message: "不能为空", trigger: "change" }
         ],
-        standardPower: [
+        roadLength: [
           { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        avgLife: [{ required: true, message: "不能为空", trigger: "blur" }]
+        ]
       }
     };
   },
@@ -175,12 +176,11 @@ export default {
   mounted() {
     this.getAllregion();
     this.getAllroad();
-    this.getAllAnnex();
   },
 
   methods: {
-    // ============品牌==================
-    // 获取所有品牌数据
+    // ============区域==================
+    // 获取所有区域数据
     async getAllregion(currentPage = 1, size = 5) {
       let data = {
         pageNo: currentPage,
@@ -196,11 +196,11 @@ export default {
     },
     // 打开新增弹框
     openAddregion() {
-        this.region_title='新增区域'
+      this.region_title = "新增区域";
       this.regionSubmit = this.addregion;
       this.regionisShow = true;
     },
-    // 新增品牌
+    // 新增区域
     addregion() {
       this.$refs["regionForm"].validate(async valid => {
         if (valid) {
@@ -218,21 +218,21 @@ export default {
         }
       });
     },
-    // 打开修改品牌弹框
+    // 打开修改区域弹框
     async openeditregion(row) {
       let data = { id: row.regionId };
 
       let res = await get_region_byid({ data });
       if (res.data.success) {
         this.regionisShow = true;
-        this.region_title='区域修改'
+        this.region_title = "区域修改";
         this.regionSubmit = this.editregion;
         this.regionForm = res.data.content;
       } else {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 修改品牌
+    // 修改区域
     editregion() {
       let data = {
         regionId: this.regionForm.regionId,
@@ -255,9 +255,9 @@ export default {
         }
       });
     },
-    // 删除品牌
+    // 删除区域
     deleteregion(row) {
-      this.$confirm("是否删除该品牌?", "提示", {
+      this.$confirm("是否删除该区域?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -278,12 +278,12 @@ export default {
     colseDialog() {
       this.regionisShow = false;
       this.regionForm = {};
-      // 灯具
+      // 道路
       this.roadIsShow = false;
       this.roadForm = {};
     },
-    // ============灯具===================
-    // 获取所有灯具数据
+    // ============道路===================
+    // 获取所有道路数据
     async getAllroad(currentPage = 1, size = 5) {
       let data = {
         pageNo: currentPage,
@@ -297,9 +297,9 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增灯具
+    // 打开新增道路
     openAddroad() {
-      this.road_title = "灯具增加";
+      this.road_title = "道路增加";
       this.getAllSelect();
       this.roadSubmit = this.addroad;
       this.roadIsShow = true;
@@ -311,7 +311,7 @@ export default {
         this.regionOptions = res.data.rows;
         get_annex_select().then(res => {
           if (res.data.success) {
-            this.lampOptions = res.data.content;
+            this.roadOptions = res.data.content;
           } else {
             this.$message.error(res.data.msgCode);
           }
@@ -320,7 +320,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 新增品牌
+    // 新增区域
     addroad() {
       this.$refs["road_Form"].validate(async valid => {
         if (valid) {
@@ -344,20 +344,21 @@ export default {
     },
     // 打开修改弹框
     async openeditroad(row) {
-      this.road_title = "灯具修改";
-      let data = { id: row.brandId };
+      this.road_title = "道路修改";
+      let data = { id: row.roadId };
       let res = await get_road_byid({ data });
       if (res.data.success) {
         this.getAllSelect();
+        this.roadSubmit = this.addroad;
         this.roadForm = res.data.content;
         this.roadIsShow = true;
       } else {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 删除灯具
+    // 删除道路
     deleteroad(row) {
-      this.$confirm("是否删除该灯具?", "提示", {
+      this.$confirm("是否删除该道路?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -379,7 +380,7 @@ export default {
   watch: {}
 };
 </script>
-<style lang='less' scope>
+<style lang='less' >
 .form_box {
   width: 100%;
   padding: 0 60px;

@@ -6,7 +6,8 @@ import router from './router'
 import './assets/css/base.css'
 import Element from 'element-ui'
 // 导入 饿了么框架的css文件
-import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-chalk/index.css';
+import './assets/css/element.css'
 // 导入字体图标
 import './assets/iconfont/iconfont.css'
 // import './utils/iconfont/iconfont.css'

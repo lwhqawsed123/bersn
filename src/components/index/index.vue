@@ -9,6 +9,7 @@
         :options="districtOptions"
         :props="{value:'optValue',label:'optText', expandTrigger: 'hover',checkStrictly: true }"
         @change="roadChange"
+        class="select123"
       ></el-cascader>
 
       <span class="select_interval"></span>
@@ -347,7 +348,12 @@
       <div class="clearfix dialog_card_header">
         <div class="header_left"></div>
         <div class="header_right">
-          <img src="../../assets/img/index/shuaxin.png" alt class="refresh_icon" @click="get_lamp_by_id(lamp_Marker_dialog_item.poleId)" />
+          <img
+            src="../../assets/img/index/shuaxin.png"
+            alt
+            class="refresh_icon"
+            @click="get_lamp_by_id(lamp_Marker_dialog_item.poleId)"
+          />
           <span class="header_right_time">{{lamp_Marker_dialog_item.createTime}}</span>
         </div>
       </div>
@@ -597,6 +603,7 @@ export default {
       let res = await select_road();
       if (res.data.success) {
         this.districtOptions = res.data.content;
+        this.districtOptions = this.remmoveEmpty(this.districtOptions);
       } else {
         this.$message.error(res.data.msgCode);
       }
@@ -611,6 +618,7 @@ export default {
       let res = await luminGroup({ data: from });
       if (res.data.success) {
         this.luminGroupOptions = res.data.content;
+        this.luminGroupOptions = this.remmoveEmpty(this.luminGroupOptions);
       } else {
         this.$message.error(res.data.msgCode);
       }
@@ -983,7 +991,7 @@ export default {
       } else {
         this.centerAndZoom(point, this.maxZoom);
       }
-      this.get_lamp_by_id(id)
+      this.get_lamp_by_id(id);
     },
     // 根据灯杆id获取信息
     async get_lamp_by_id(id) {
@@ -2495,6 +2503,19 @@ export default {
 
       // })
       // }, 1000);
+    },
+    // 删除数组中为空的children
+    remmoveEmpty(arr) {
+      arr.forEach(item => {
+        if (item.children) {
+          if (item.children.length === 0) {
+            delete item.children;
+          } else {
+            this.remmoveEmpty(item.children);
+          }
+        }
+      });
+      return arr;
     }
   },
   destroyed() {
@@ -2505,8 +2526,10 @@ export default {
 };
 </script>
 <style lang='less' >
-@import "../../assets/less/index/index.less";
-.el-input__inner {
-  border: none !important;
+.selectCard {
+  .el-input__inner {
+    border: 0px;
+  }
 }
+@import "../../assets/less/index/index.less";
 </style>

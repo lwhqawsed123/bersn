@@ -75,7 +75,17 @@ export default {
     }
   },
 
-  watch: {}
+  watch: {
+    $route(to,from){
+      
+      if(to.path!=='/index'){
+        this.menuStatus=false
+        Bus.$emit("openMenu", this.menuStatus);
+      console.log(to);
+        
+      }
+    }
+  }
 };
 </script>
 <style lang='less' scoped>
