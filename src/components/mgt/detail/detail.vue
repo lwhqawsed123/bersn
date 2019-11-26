@@ -27,31 +27,32 @@
       :tableData="lightArray"
       :columnArray="[
       {prop:'termUid',label:'控制器编号'},
-      {prop:'concentName',label:'区域'},
+      {prop:'regionName',label:'区域'},
       {prop:'roadName',label:'道路'},
-      {prop:'lightId',label:'灯杆编号'},
-      {prop:'luminId',label:'照明类型'},
-      {prop:'lng',label:'照明分组'}
+      {prop:'poleCode',label:'灯杆编号'},
+      {prop:'categoryName',label:'照明类型'},
+      {prop:'luminName',label:'照明分组'}
       ]"
       :size="10"
       :sizes="[10,20,30,40]"
       :total="lightTotal"
       :pageChange="getAllLight"
+      :_delete='pushLamp'
       :operation="true"
       :tongbu="true"
     ></Table>
     <!-- 终端信息 -->
     <Table
       :table_title="'终端信息'"
-      :tableData="versionInfo"
+      :tableData="termInfo"
       :columnArray="[
-      {prop:'termUid',label:'设备编号'},
-      {prop:'concentName',label:'软件版本'},
-      {prop:'roadName',label:'软件发布日期'},
-      {prop:'lightId',label:'配置容量信息码'},
-      {prop:'luminId',label:'通信协议版本'},
-      {prop:'lng',label:'硬件版本'},
-      {prop:'lat',label:'硬件发布日期'}
+      {prop:'deviceCode',label:'设备编号'},
+      {prop:'softVersion',label:'软件版本'},
+      {prop:'softPublishDate',label:'软件发布日期'},
+      {prop:'storeInfoCode',label:'配置容量信息码'},
+      {prop:'procotolVersion',label:'通信协议版本'},
+      {prop:'hardVersion',label:'硬件版本'},
+      {prop:'hardPublishDate',label:'硬件发布日期'}
       ]"
       :noPagination="true"
       :operation="true"
@@ -60,13 +61,13 @@
     <!-- 主站IP地址和端口 -->
     <Table
       :table_title="'主站IP地址和端口'"
-      :tableData="[1]"
+      :tableData="IPArray"
       :columnArray="[
-      {prop:'termUid',label:'IP地址'},
-      {prop:'concentName',label:'端口'},
-      {prop:'roadName',label:'IP地址'},
-      {prop:'lightId',label:'备用端口'},
-      {prop:'luminId',label:'APN'}
+      {prop:'mainIp',label:'IP地址'},
+      {prop:'mainPort',label:'端口'},
+      {prop:'secIp',label:'备用IP地址'},
+      {prop:'secPort',label:'备用端口'},
+      {prop:'apn',label:'APN'}
       ]"
       :noPagination="true"
       :tongbu="true"
@@ -140,22 +141,22 @@
           label-width="80px"
           label-position="top"
         >
-          <el-form-item label="ip地址" prop="IP">
-            <el-input v-model="IPForm.IPName"></el-input>
+          <el-form-item label="ip地址" prop="mainIp">
+            <el-input v-model="IPForm.mainIp"></el-input>
           </el-form-item>
 
-          <el-form-item label="端口" prop="port">
-            <el-input v-model="IPForm.addressField"></el-input>
+          <el-form-item label="端口" prop="mainPort">
+            <el-input v-model="IPForm.mainPort"></el-input>
           </el-form-item>
-          <el-form-item label="备用ip" prop="stand-by">
-            <el-input v-model="IPForm.simcard"></el-input>
+          <el-form-item label="备用ip" prop="secIp">
+            <el-input v-model="IPForm.secIp"></el-input>
           </el-form-item>
 
-          <el-form-item label="备用端口" prop="stand-by">
-            <el-input v-model="IPForm.address"></el-input>
+          <el-form-item label="备用端口" prop="secPort">
+            <el-input v-model="IPForm.secPort"></el-input>
           </el-form-item>
-          <el-form-item label="APN" prop="APN">
-            <el-input v-model="IPForm.address"></el-input>
+          <el-form-item label="APN" prop="apn">
+            <el-input v-model="IPForm.apn"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -172,7 +173,7 @@ import {
   edit_concent,
   get_select_road,
   get_all_light,
-  get_concentVersionInfo
+  push_lamp
 } from "../../../api/http/detail";
 export default {
   name: "",
@@ -181,19 +182,17 @@ export default {
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
-      concentId: 12,
+      concentId: 11,
       concentisShow: false, // 新增弹框
       concentForm: {
-        // 新增
-        concentName: "",
-        remark: ""
       },
       concent_title: "", // 标题
       concentSubmit: function() {}, // 提交的默认函数
       concentArray: [], // 列表
       concentTotal: 0, // 总数
       concentRules: {
-        concentId: [{ required: true, message: "不能为空", trigger: "blur" }],
+        concentName: [{ required: true, message: "不能为空", trigger: "blur" }],
+        roadId: [{ required: true, message: "不能为空", trigger: "change" }],
         addressField: [
           { required: true, message: "不能为空", trigger: "blur" }
         ],
@@ -210,18 +209,20 @@ export default {
       lightArray: [],
       lightTotal: 0,
       // =======终端信息===
-      versionInfo: [],
+      termInfo: [],
       //=====IP和端口======
       IPisShow: false,
+      IPArray:[],
       IP_title: "主站ip地址和端口编辑",
       IPSubmit: function() {},
       IPRules: {
-        IP: [{ required: true, message: "不能为空", trigger: "blur" }],
-        addressField: [
+        mainIp: [{ required: true, message: "不能为空", trigger: "blur" }],
+        mainPort: [
           { required: true, message: "不能为空", trigger: "blur" }
         ],
-        simcard: [{ required: true, message: "不能为空", trigger: "blur" }],
-        address: [{ required: true, message: "不能为空", trigger: "blur" }]
+        secIp: [{ required: true, message: "不能为空", trigger: "blur" }],
+        secPort: [{ required: true, message: "不能为空", trigger: "blur" }],
+        apn: [{ required: true, message: "不能为空", trigger: "blur" }],
       },
       IPForm: {}
     };
@@ -241,7 +242,6 @@ export default {
     if (this.concentId) {
       this.getConcentById();
       this.getAllLight();
-      this.getVersionInfo();
     }
   },
   mounted() {},
@@ -254,7 +254,6 @@ export default {
         id: this.concentId
       };
       let res = await get_concent_byid({ data });
-      console.log(data);
 
       if (res.data.success) {
         if (edit) {
@@ -263,6 +262,14 @@ export default {
           let arr = [];
           arr[0] = res.data.content;
           this.concentArray = arr;
+          
+          let arr1 = [];
+          arr1[0] = res.data.content.siteIpPort.data;
+          this.IPArray = arr1;
+
+           let arr2 = [];
+          arr2[0] = res.data.content.termInfo.data;
+          this.termInfo = arr2;
         }
       } else {
         this.$message.error("服务器未响应");
@@ -281,7 +288,7 @@ export default {
       this.$refs["concentForm"].validate(async valid => {
         if (valid) {
           let data = {
-            id: this.concentForm.concentId,
+            concentId: this.concentForm.concentId,
             roadId: this.concentForm.roadId,
             addressField: this.concentForm.addressField,
             concentName: this.concentForm.concentName,
@@ -292,8 +299,10 @@ export default {
             remark: this.concentForm.remark
           };
           console.log(data);
-
+          
           let res = await edit_concent({ data });
+          console.log(res);
+          
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
             this.colseDialog();
@@ -325,15 +334,18 @@ export default {
         })
         .catch(() => {});
     },
-    // 获取集中器终端信息
-    async getVersionInfo() {
+    // 同步光源信息
+    async pushLamp() {
       let data = {
         conId: this.concentId
       };
-      let res = await get_concentVersionInfo({ data });
+      console.log(data);
+      
+      let res = await push_lamp({ data });
       console.log(res);
       if (res.data.ackState == "SUCCESS") {
-        this.versionInfo = res.data.fnResults[0].data;
+        // this.versionInfo = res.data.fnResults[0].data;
+        this.$message.success(res.data.ackState)
       } else {
         this.$message.error(res.data.ackState);
       }
@@ -341,11 +353,11 @@ export default {
     // 获取集中器内所有光源
     async getAllLight(currentPage = 1, size = 5) {
       let data = {
+        concentId:this.concentId,
         pageNo: currentPage,
         pageSize: size
       };
       let res = await get_all_light({ data });
-      console.log(res);
       if (res) {
         this.lightTotal = res.data.total;
         this.lightArray = res.data.rows;
@@ -355,7 +367,7 @@ export default {
     // 关闭窗口
     colseDialog() {
       this.concentisShow = false;
-      this.concentForm = {};
+      this.$refs['concentForm'].resetFields();
       // ===ip===
       this.IPisShow=false
     },

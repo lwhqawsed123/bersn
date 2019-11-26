@@ -18,8 +18,9 @@
     >
       <el-table-column v-if="workState" label="工作状态" prop="workState">
         <template slot-scope="scope">
-          <span v-if="scope.row.workState" class="success">正常</span>
-          <span v-if="!scope.row.workState" class="warning">警告</span>
+          <span v-if="scope.row.workState=='NORMAL'" class="success">正常</span>
+          <span v-if="scope.row.workState=='ALARM'" class="warning">警告</span>
+          <span v-if="scope.row.workState=='OFFLINE'" class="offline">离线</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -71,9 +72,9 @@ export default {
     "openAdd",      // 打开新增弹框(右上)
     "delete_button",  // 是否显示删除按钮(右上) 不显示为true
     "_delete",        // 删除
-    "noPagination",   // 是否显示页码
-    "workState",      // 是否显示工作状态
-    "operation",      // 是否显示操作栏
+    "noPagination",   // 是否 不显示页码
+    "workState",      // 是否 不显示工作状态
+    "operation",      // 是否 不显示操作栏
     "tongbu"          // 是否为同步按钮(右上)
   ],
   data() {
@@ -90,7 +91,6 @@ export default {
   beforeMount() {},
 
   mounted() {
-    console.log(this.delete_button);
     
   },
   watch: {

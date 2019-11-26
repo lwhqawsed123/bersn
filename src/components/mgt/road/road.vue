@@ -56,7 +56,7 @@
     <Mydialog :isShow="roadIsShow" :tittle="road_title" :width="'600px'" :submit="roadSubmit">
       <div class="form_box">
         <el-form
-          ref="road_Form"
+          ref="roadForm"
           :rules="roadRules"
           :model="roadForm"
           label-width="80px"
@@ -128,11 +128,7 @@ export default {
       // regionTotal
       // openAddregion
       regionisShow: false, // 新增弹框
-      regionForm: {
-        // 新增
-        regionName: "",
-        remark: ""
-      },
+      regionForm: {},
       region_title: "", // 标题
       regionSubmit: function() {}, // 提交的默认函数
       regionArray: [], // 列表
@@ -154,12 +150,8 @@ export default {
       roadRules: {
         roadName: [{ required: true, message: "不能为空", trigger: "blur" }],
         regionId: [{ required: true, message: "不能为空", trigger: "change" }],
-        roadGrade: [
-          { required: true, message: "不能为空", trigger: "change" }
-        ],
-        roadLength: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ]
+        roadGrade: [{ required: true, message: "不能为空", trigger: "change" }],
+        roadLength: [{ required: true, message: "不能为空", trigger: "blur" }]
       }
     };
   },
@@ -276,11 +268,15 @@ export default {
     },
     // 关闭窗口
     colseDialog() {
+      if (this.regionisShow) {
+        this.$refs["regionForm"].resetFields();
+      } else {
+        this.$refs["roadForm"].resetFields();
+      }
+      // 区域
       this.regionisShow = false;
-      this.regionForm = {};
       // 道路
       this.roadIsShow = false;
-      this.roadForm = {};
     },
     // ============道路===================
     // 获取所有道路数据
@@ -309,13 +305,13 @@ export default {
       let res = await get_all_region();
       if (res) {
         this.regionOptions = res.data.rows;
-        get_annex_select().then(res => {
-          if (res.data.success) {
-            this.roadOptions = res.data.content;
-          } else {
-            this.$message.error(res.data.msgCode);
-          }
-        });
+        // get_annex_select().then(res => {
+        //   if (res.data.success) {
+        //     this.roadOptions = res.data.content;
+        //   } else {
+        //     this.$message.error(res.data.msgCode);
+        //   }
+        // });
       } else {
         this.$message.error("服务器未响应");
       }

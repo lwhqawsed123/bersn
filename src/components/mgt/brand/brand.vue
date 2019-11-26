@@ -261,7 +261,7 @@ export default {
       annexArray: [], // 列表
       annexTotal: 0, // 总数
       annexRules: {
-        lightModel: [{ required: true, message: "不能为空", trigger: "blur" }],
+        annexModel: [{ required: true, message: "不能为空", trigger: "blur" }],
         brandId: [{ required: true, message: "不能为空", trigger: "change" }],
         lampCategory: [
           { required: true, message: "不能为空", trigger: "change" }
@@ -382,16 +382,26 @@ export default {
     },
     // 关闭窗口
     colseDialog() {
-      this.brandisShow = false;
-      this.brandeditShow = false;
-      this.editBrandForm = {};
-      this.brandForm = {};
+      // 品牌新增
+      if (this.brandisShow) {
+        this.$refs["brandForm"].resetFields();
+        this.brandisShow = false;
+      }
+      // 品牌修改
+      if (this.brandeditShow) {
+        this.$refs["editBrand_Form"].resetFields();
+        this.brandeditShow = false;
+      }
       // 灯具
-      this.lightIsShow = false;
-      this.lightForm = {};
+      if (this.lightIsShow) {
+        this.lightIsShow = false;
+        this.$refs["light_Form"].resetFields();
+      }
       // 光源
-      this.annexIsShow = false;
-      this.annexForm = {};
+      if (this.annexIsShow) {
+        this.annexIsShow = false;
+        this.$refs["annex_Form"].resetFields();
+      }
     },
     // ============灯具===================
     // 获取所有灯具数据
@@ -486,15 +496,7 @@ export default {
         .catch(() => {});
     },
     //==========光源==============
-    //   add_annex
-    // get_all_annex
-    // get_annex_byid
-    // delete_annex
-
-    // openeditAnnex
-    // deleteAnnex
-    // getAllAnnex
-    // openAddAnnex
+  
     // 获取列表
     async getAllAnnex(currentPage = 1, size = 5) {
       let data = {
@@ -510,21 +512,19 @@ export default {
       }
     },
     // 打开修改
-    openeditAnnex(){
-
-    },
+    openeditAnnex() {},
     // 修改
 
     // 打开新增
-    openAddAnnex(){
+    openAddAnnex() {
       this.annex_title = "电源增加";
-      this.getAllSelect()
+      this.getAllSelect();
       this.annexSubmit = this.addAnnex;
       this.annexIsShow = true;
     },
     // 新增
     // 删除
-    deleteAnnex(){}
+    deleteAnnex() {}
   },
 
   watch: {}

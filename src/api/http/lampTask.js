@@ -1,6 +1,6 @@
 import request from '../../utils/request.js'
-// 新增集中器
-export const add_concent = (options) => {
+// 新增照明类型
+export const add_lampTask = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -9,14 +9,14 @@ export const add_concent = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/save`,
+        url: `/api/lampTask/save`,
         method,
         data: form
     })
 }
 
-// 查询所有集中器
-export const get_all_concent = (options) => {
+// 查询所有照明类型
+export const get_all_lampTask = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -25,13 +25,13 @@ export const get_all_concent = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/loadData`,
+        url: `/api/lampTask/loadData`,
         method,
         data: form
     })
 }
-// 根据id查询集中器
-export const get_concent_byid = (options) => {
+// 根据id查询照明类型
+export const get_lampTask_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -40,29 +40,29 @@ export const get_concent_byid = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/find`,
-        method,
-        data: form
-    })
-}
-
-// 删除集中器
-export const delete_concent = (options) => {
-    var options = options || {}
-    var method = options.method || 'POST'
-    var data = options.data || {}
-    var form = new FormData()
-    Object.keys(data).forEach(item => {
-        form.append(item, data[item])
-    })
-    return request({
-        url: `/api/concent/delete`,
+        url: `/api/lampTask/find`,
         method,
         data: form
     })
 }
 
-// 删除集中器
+// 删除照明类型
+export const delete_lampTask = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/api/lampTask/delete`,
+        method,
+        data: form
+    })
+}
+
+// 道路列表
 export const get_select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -71,3 +71,5 @@ export const get_select_road = (options) => {
         method
     })
 }
+
+

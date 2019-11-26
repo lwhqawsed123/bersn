@@ -70,7 +70,7 @@ export const get_all_light = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/lamp/loadData`,
+        url: `/api/concent/loadLamp`,
         method,
         data: form
     })
@@ -88,6 +88,22 @@ export const get_concentVersionInfo = (options) => {
     })
     return request({
         url: `/monitor/cmd/query/concentVersionInfo`,
+        method,
+        data: form
+    })
+}
+
+// 同步光源信息
+export const push_lamp = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/pushLamp/archives`,
         method,
         data: form
     })

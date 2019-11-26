@@ -1,0 +1,185 @@
+.dialog_header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    text-align: left;
+    border-bottom: 1px solid #f2f2f2;
+
+    .dialog_header_title {
+        margin-left: 27px;
+        font-size: 16px;
+        line-height: 45px;
+    }
+
+    .dialog_header_right {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        display: flex;
+        height: 100%;
+        align-items: center;
+
+        .dialog_header_refresh {
+            margin-right: 15px;
+            font-size: 16px;
+            cursor: pointer;
+
+            &:hover {
+                color: #5cb6ff;
+            }
+        }
+
+        .dialog_header_time {
+            font-size: 16px;
+            color: rgba(51, 51, 51, 1);
+            margin-right: 23px;
+        }
+
+        .close_icon {
+            font-size: 16px;
+            cursor: pointer;
+
+            &:hover {
+                color: #5cb6ff;
+            }
+        }
+    }
+}
+
+.light_controller {
+    display: flex;
+    align-items: center;
+    height: 65px;
+    width: 100%;
+    border-bottom: 2px solid #f2f2f2;
+    padding: 0 80px 0 44px;
+    box-sizing: border-box;
+
+    .light_controller_status {
+        margin-right: 6px;
+    }
+
+    .el-switch__core {
+        height: 10px;
+    }
+
+    .el-switch__core:after {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        // margin-top: -7px;
+        border: 1px solid #f26204;
+    }
+
+    .light_controller_icon {
+        margin-left: 11px;
+        margin-right: 40px;
+    }
+
+    .intensity_control {
+        width: 460px;
+        position: relative;
+
+        // .slider_inner_line {
+        //     position: absolute;
+        //     left: 0;
+        //     top: 50%;
+        //     transform: translateY(-50%);
+        //     z-index: -1;
+        //     height: 4px;
+        //     width: 100%;
+        //     background-color: #FFF4EC;
+        // }
+       
+
+    }
+
+    .intensity_inputnumber {
+        width: 46px;
+        height: 25px;
+        border-radius: 4px;
+        border: 1px solid rgba(212, 212, 212, 1);
+        position: relative;
+        box-sizing: border-box;
+        margin-left: 20px;
+        margin-right: 5px;
+
+        .el-input-number {
+            width: 100%;
+            height: 100%;
+            line-height: 20px;
+
+            .el-input-number__decrease {
+                line-height: 10px;
+                height: 10px;
+                width: 17px;
+            }
+
+            .el-input-number__increase {
+                line-height: 10px;
+                width: 17px;
+                height: 10px;
+            }
+
+            .el-input {
+                width: 20px;
+                height: 100%;
+
+                .el-input__inner {
+                    padding: 0;
+                    width: 20px;
+                    height: 100%;
+                    line-height: 20px;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+.my_intensity_control {
+    .slider_out_line {}
+
+    .el-slider__button {
+        border: 1px solid #f26204;
+    }
+
+    .el-slider__runway {
+        background-color: #fff4ec;
+    }
+
+    .el-slider__bar {
+        background-color: #f26204;
+    }
+}
+
+.line_footer {
+    position: absolute;
+    left: 0;
+    bottom: 76px;
+    width: 100%;
+    height: 1px;
+    background-color: #f2f2f2;
+    display: block;
+}
+
+.el-button--primary {
+    color: #fff;
+    background-color: #f26204;
+    border-color: #f26204;
+}
+
+.el-button--primary.is-active,
+.el-button--primary:active {
+    background: #f1a775;
+    border-color: #f1a775;
+    color: #fff;
+}
+
+.el-button:active {
+    color: #f1a775;
+    border-color: #f1a775;
+    outline: 0;
+}

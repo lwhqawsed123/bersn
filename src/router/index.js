@@ -55,7 +55,17 @@ export default new Router({
               path: '/mgt/pole',
               name: 'pole',
               component: () => import('@/components/mgt/pole/pole.vue')
-            }
+            },
+            {
+              path: '/mgt/lamp',
+              name: 'lamp',
+              component: () => import('@/components/mgt/lamp/lamp.vue')
+            },
+            {
+              path: '/mgt/lampTask',
+              name: 'lampTask',
+              component: () => import('@/components/mgt/lampTask/lampTask.vue')
+            },
           ]
         }
 

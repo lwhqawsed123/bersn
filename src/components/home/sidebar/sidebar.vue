@@ -21,8 +21,8 @@
         <el-submenu index="2">
           <template slot="title">照明设施管理</template>
           <el-menu-item index="/mgt/concent">集中器管理</el-menu-item>
-          <el-menu-item index="2-2">灯杆管理</el-menu-item>
-          <el-menu-item index="2-3">光源管理</el-menu-item>
+          <el-menu-item index="/mgt/pole">灯杆管理</el-menu-item>
+          <el-menu-item index="/mgt/lamp">光源管理</el-menu-item>
         </el-submenu>
         <div class="asset_title">
           <span class="iconfont icon-jiankongmianban-mianxing iconfont_color iconfont_asset"></span>
@@ -30,7 +30,7 @@
         </div>
         <el-submenu index="3">
           <template slot="title">定时任务</template>
-          <el-menu-item index="3-1">调光任务</el-menu-item>
+          <el-menu-item index="/mgt/lampTask">调光任务</el-menu-item>
           <el-menu-item index="3-2">调光计划</el-menu-item>
         </el-submenu>
         <el-submenu index="4">

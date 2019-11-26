@@ -1,8 +1,8 @@
 <template>
   <div class="el_header">
     <Menu @menu="getMenuStatus" />
-    <div class="top_logo">
-      <img src="../../../assets/img/index/logo.png" alt class="logo" />
+    <div class="top_logo" >
+      <img src="../../../assets/img/index/logo.png" alt class="logo" @click="toIndex" />
       <span class="logo_line"></span>
       <img src="../../../assets/img/index/fenlei-2.png" alt class="logo_icon" @click="openMenu" />
     </div>
@@ -72,6 +72,9 @@ export default {
       }else{
         localStorage.setItem('locale','en')
       }
+    },
+    toIndex(){
+      this.$router.push('/index')
     }
   },
 

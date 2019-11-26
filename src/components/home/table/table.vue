@@ -14,6 +14,13 @@
       class="table_content"
       :header-cell-style="{background:'#f1f1f1',color:'#666666'}"
     >
+      <el-table-column v-if="workState" label="工作状态" prop="workState">
+        <template slot-scope="scope">
+          <span v-if="scope.row.workState=='NORMAL'" class="success">正常</span>
+          <span v-if="scope.row.workState=='ALARM'" class="warning">警告</span>
+          <span v-if="scope.row.workState=='OFFLINE'" class="offline">离线</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-for="item in columnArray"
         :key="item.prop"
@@ -23,6 +30,14 @@
 
       <el-table-column label="操作" width="116">
         <template slot-scope="scope">
+          <img
+            v-if="tiaoshi"
+            class="edit"
+            src="../../../assets/img/mgt/-tiaoshi.png"
+            style="margin-right:15px;cursor: pointer;"
+            alt
+            @click="open_tiaoshi(scope.row)"
+          />
           <img
             class="edit"
             src="../../../assets/img/mgt/bianji.png"
@@ -67,7 +82,10 @@ export default {
     "_edit",
     "_delete",
     "pageChange",
-    "openAdd"
+    "openAdd",
+    "workState",
+    "tiaoshi",
+    "_tiaoshi"
   ],
   data() {
     return {
@@ -93,20 +111,20 @@ export default {
     handleSizeChange(val) {
       this.pageSize = val;
       if (this.pageChange) {
-        this.pageChange(this.currentPage,val);
+        this.pageChange("event", this.currentPage, val);
       }
     },
     // 当前页变化
     handleCurrentChange(val) {
       this.currentPage = val;
       if (this.pageChange) {
-        this.pageChange(val, this.pageSize);
+        this.pageChange("event", val, this.pageSize);
       }
     },
     // 打开弹框
-    open_add(){
-      if(this.openAdd){
-        this.openAdd()
+    open_add() {
+      if (this.openAdd) {
+        this.openAdd();
       }
     },
     // 修改品牌
@@ -114,6 +132,10 @@ export default {
       if (this._edit) {
         this._edit(row);
       }
+    },
+    //打开调试
+    open_tiaoshi(row) {
+      this._tiaoshi(row);
     },
     // 删除品牌
     T_delete(row) {

@@ -22,35 +22,46 @@
     >
       <div class="search_box">
         <span>集中器编号：</span>
-        <el-input class="search_input" clearable v-model="search.concentCode" placeholder="全部" @keyup.enter.native="getAllconcent" @clear='getAllconcent'></el-input>
+        <el-input
+          class="search_input"
+          clearable
+          v-model="search.concentCode"
+          placeholder="全部"
+          @keyup.enter.native="getAllconcent"
+          @clear="getAllconcent"
+        ></el-input>
         <span class="search_road">道路：</span>
         <el-select
           v-model="search.roadOptValue"
           clearable
           placeholder="全部"
           popper-class="myselect search_select"
-           class="search_input"
+          class="search_input"
           @change="getAllconcent"
         >
           <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
             <el-option
+              :label="group.optText"
+              :value="group.optValue"
+            ></el-option>
+            <el-option
               v-for="item in group.children"
               :key="item.id"
               :label="item.optText"
-              :value="item.id"
+              :value="item.optValue"
             ></el-option>
           </el-option-group>
         </el-select>
         <span class="search_workStates">工作状态：</span>
-        <el-select v-model="search.workState" clearable placeholder="全部" class="search_input" @change="getAllconcent">
+        <el-select
+          v-model="search.workState"
+          clearable
+          placeholder="全部"
+          class="search_input"
+          @change="getAllconcent"
+        >
           <el-option
-            v-for="item in [{
-                value: 1,
-                label: '正常'
-              }, {
-                value: 2,
-                label: '警告'
-              }]"
+            v-for="item in workStateOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -149,7 +160,8 @@ export default {
       concentArray: [], // 列表
       concentTotal: 0, // 总数
       concentRules: {
-        concentId: [{ required: true, message: "不能为空", trigger: "blur" }],
+        concentName: [{ required: true, message: "不能为空", trigger: "blur" }],
+        roadId: [{ required: true, message: "不能为空", trigger: "change" }],
         addressField: [
           { required: true, message: "不能为空", trigger: "blur" }
         ],
@@ -157,6 +169,20 @@ export default {
         address: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
       roadOptions: [], // 集中器下拉列表
+      workStateOptions: [
+        {
+          value: 'NORMAL',
+          label: "正常"
+        },
+        {
+          value: 'ALARM',
+          label: "警告"
+        },
+        {
+          value: 'OFFLINE',
+          label: "离线"
+        }
+      ],
       search: {
         concentCode: "",
         roadOptValue: "",
@@ -182,13 +208,13 @@ export default {
   methods: {
     // ============集中器==================
     // 获取所有集中器数据
-    async getAllconcent(val,currentPage = 1, size = 5) {
+    async getAllconcent(val, currentPage = 1, size = 5) {
       let data = {
         pageNo: currentPage,
         pageSize: size,
-        'concent.roadId':this.search.roadOptValue,
-        'concent.addressField':this.search.concentCode,
-        'concent.workState':this.search.workState,
+        "concent.optValue": this.search.roadOptValue,
+        "concent.addressField": this.search.concentCode,
+        "concent.workState": this.search.workState
       };
       let res = await get_all_concent({ data });
       if (res) {
@@ -225,13 +251,16 @@ export default {
     },
     // 打开修改集中器弹框
     openeditconcent(row) {
-      this.$router.push({ name: 'detail', params: { addressField: row.concentId }})
+      this.$router.push({
+        name: "detail",
+        params: { addressField: row.concentId }
+      });
     },
 
     // 关闭窗口
     colseDialog() {
       this.concentisShow = false;
-      this.concentForm = {};
+      this.$refs["concentForm"].resetFields();
     },
     // 获取下拉列表(仅子节点)
     async getAllSelect() {
