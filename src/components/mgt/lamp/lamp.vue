@@ -115,7 +115,8 @@
           label-position="top"
         >
           <el-form-item label="控制器编号" prop="termUid">
-            <el-input v-model="lampForm.termUid"></el-input>
+            <el-input v-model="lampForm.termUid" maxlength="100"
+              @input="e => lampForm.termUid = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="集中器" prop="concentId">
             <el-select v-model="lampForm.concentId" placeholder="请选择" popper-class="myselect">
@@ -174,7 +175,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="lampForm.remark"></el-input>
+            <el-input v-model="lampForm.remark" maxlength="200"
+              @input="e => lampForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>

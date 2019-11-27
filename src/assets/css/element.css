@@ -2,3 +2,11 @@
 .el-textarea .el-textarea__inner{ 
   resize: none;
 }
+.el-tooltip__popper{
+  max-width: 500px;
+}
+.el-tooltip__popper.is-dark{
+  background-color: #fff;
+  color: #333333;
+  box-shadow:1px 6px 6px 0px rgba(0,0,0,0.2);
+}

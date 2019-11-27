@@ -79,15 +79,6 @@ export const add_light = (options) => {
         data: form
     })
 }
-// 查询所有光源类型
-export const get_annex_select = (options) => {
-    var options = options || {}
-    var method = options.method || 'POST'
-    return request({
-        url: `/api/select/annex`,
-        method,
-    })
-}
 
 // 查询所有灯具
 export const get_all_light = (options) => {

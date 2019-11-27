@@ -43,10 +43,12 @@
           label-position="top"
         >
           <el-form-item label="区域名称" prop="regionName">
-            <el-input v-model="regionForm.regionName"></el-input>
+            <el-input v-model="regionForm.regionName" maxlength="100"
+              @input="e => regionForm.regionName = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="regionForm.remark"></el-input>
+            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="regionForm.remark" maxlength="200"
+              @input="e => regionForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -63,7 +65,8 @@
           label-position="top"
         >
           <el-form-item label="道路名称" prop="roadName">
-            <el-input v-model="roadForm.roadName"></el-input>
+            <el-input v-model="roadForm.roadName" maxlength="100"
+              @input="e => roadForm.roadName = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="区域" prop="regionId">
             <el-select
@@ -90,10 +93,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="道路长度" prop="roadLength">
-            <el-input v-model="roadForm.roadLength"></el-input>
+            <el-input v-model="roadForm.roadLength" maxlength="100"
+              @input="e => roadForm.roadLength = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="roadForm.remark"></el-input>
+            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="roadForm.remark" maxlength="200"
+              @input="e => roadForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>

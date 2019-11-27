@@ -63,10 +63,20 @@
           label-position="top"
         >
           <el-form-item label="品牌名称" prop="brandName">
-            <el-input v-model="brandForm.brandName"></el-input>
+            <el-input
+              v-model="brandForm.brandName"
+              id="input-sum"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="brandForm.remark"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="brandForm.remark"
+              maxlength="200"
+              @input="e => brandForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -82,10 +92,21 @@
           label-position="top"
         >
           <el-form-item label="品牌名称" prop="brandName">
-            <el-input v-model="editBrandForm.brandName"></el-input>
+            <el-input
+              v-model="editBrandForm.brandName"
+              maxlength="100"
+              @input="e => editBrandForm.brandName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="editBrandForm.remark"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="editBrandForm.remark"
+              maxlength="200"
+              @input="e => editBrandForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -101,7 +122,11 @@
           label-position="top"
         >
           <el-form-item label="光源型号" prop="lightModel">
-            <el-input v-model="lightForm.lightModel"></el-input>
+            <el-input
+              v-model="lightForm.lightModel"
+              maxlength="100"
+              @input="e => lightForm.lightModel = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="品牌" prop="brandId">
             <el-select v-model="lightForm.brandId" placeholder="请选择品牌" class="brand_select">
@@ -118,22 +143,29 @@
               <el-option
                 v-for="item in lampOptions"
                 :key="item.id"
-                :label="item.optText"
-                :value="item.id"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="标称功率" prop="standardPower">
-            <el-input v-model="lightForm.standardPower"></el-input>
+            <el-input v-model.number="lightForm.standardPower"></el-input>
           </el-form-item>
           <el-form-item label="额定寿命" prop="avgLife">
-            <el-input v-model="lightForm.avgLife"></el-input>
+            <el-input v-model.number="lightForm.avgLife" maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="采购单价" prop="procurementPrice">
-            <el-input v-model="lightForm.procurementPrice"></el-input>
+            <el-input v-model.number="lightForm.procurementPrice"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="lightForm.remark"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="lightForm.remark"
+              maxlength="200"
+              @input="e => lightForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -149,10 +181,11 @@
           label-position="top"
         >
           <el-form-item label="光源型号" prop="annexModel">
-            <el-input v-model="annexForm.annexModel"></el-input>
+            <el-input v-model="annexForm.annexModel" maxlength="100"
+              @input="e => annexForm.annexModel = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="品牌" prop="brandId">
-            <el-select v-model="annexForm.brandId" placeholder="请选择品牌" class="brand_select">
+            <el-select v-model="annexForm.brandId" placeholder="请选择" class="brand_select">
               <el-option
                 v-for="item in brandOptions"
                 :key="item.brandId"
@@ -162,26 +195,48 @@
             </el-select>
           </el-form-item>
           <el-form-item label="光源类型" prop="lampCategory">
-            <el-select v-model="annexForm.lampCategory" placeholder="请选择光源类型" class="brand_select">
+            <el-select v-model="annexForm.lampCategory" placeholder="请选择" class="brand_select">
               <el-option
                 v-for="item in lampOptions"
                 :key="item.id"
-                :label="item.optText"
-                :value="item.id"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="标称功率" prop="standardPower">
-            <el-input v-model="annexForm.standardPower"></el-input>
+          <el-form-item label="配套电器类型" prop="annexType">
+            <el-select v-model="annexForm.annexType" placeholder="请选择" class="brand_select">
+              <el-option
+                v-for="item in annexTypeOptions"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="额定寿命" prop="avgLife">
-            <el-input v-model="annexForm.avgLife"></el-input>
+          <el-form-item label="调光类型" prop="dimmingType">
+            <el-select v-model="annexForm.dimmingType" placeholder="请选择" class="brand_select">
+              <el-option
+                v-for="item in dimmingTypeOptions"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="采购单价" prop="procurementPrice">
-            <el-input v-model="annexForm.procurementPrice"></el-input>
+          <el-form-item label="调光属性" prop="dimmingAttribute">
+            <el-select v-model="annexForm.dimmingAttribute" placeholder="请选择" class="brand_select">
+              <el-option
+                v-for="item in dimmingAttributeOptions"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="annexForm.remark"></el-input>
+            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="annexForm.remark" maxlength="200"
+              @input="e => annexForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -201,7 +256,6 @@ import {
   get_all_light,
   get_light_byid,
   delete_light,
-  get_annex_select,
   add_annex,
   get_all_annex,
   get_annex_byid,
@@ -239,7 +293,33 @@ export default {
       light_title: "", // 标题
       lightForm: {},
       brandOptions: [], // 品牌下拉列表
-      lampOptions: [], // 光源类型下拉列表
+      lampOptions: [
+        {
+          // 光源类型下拉列表
+          value: "LED",
+          label: "LED"
+        },
+        {
+          value: "HID",
+          label: "HID"
+        },
+        {
+          value: "COSMO",
+          label: "COSMO"
+        },
+        {
+          value: "HIGH_PRESSURE_SODIUM",
+          label: "高压纳灯"
+        },
+        {
+          value: "LOW_PRESSURE_SODIUM",
+          label: "低压纳灯"
+        },
+        {
+          value: "METAL_HALIDE",
+          label: "金卤灯"
+        }
+      ],
       lightArray: [], // 列表
       lightTotal: 0, // 总数
       lightRules: {
@@ -249,9 +329,16 @@ export default {
           { required: true, message: "不能为空", trigger: "change" }
         ],
         standardPower: [
-          { required: true, message: "不能为空", trigger: "blur" }
+          { required: true, message: "不能为空", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
         ],
-        avgLife: [{ required: true, message: "不能为空", trigger: "blur" }]
+        avgLife: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
+        ],
+        procurementPrice: [
+          { type: "number", message: "必须为数字值" }
+        ],
       },
       // =============电源=========
       annexIsShow: false, // 新增弹框
@@ -259,6 +346,43 @@ export default {
       annex_title: "", // 标题
       annexForm: {},
       annexArray: [], // 列表
+      annexTypeOptions: [
+        // 配套电器类型下拉列表
+        {
+          value: "ELECTRONIC_BALLAST",
+          label: "电子整流器"
+        },
+        {
+          value: "DRIVE_POWER",
+          label: "驱动电源"
+        }
+      ],
+      dimmingTypeOptions: [
+        // 调光类型下拉列表
+        {
+          value: "UNDIMMING",
+          label: "不可调光"
+        },
+        {
+          value: "STEP_DIMMING",
+          label: "分档调光"
+        },
+        {
+          value: "STEPLESS_DIMMING",
+          label: "无极调光"
+        }
+      ],
+      dimmingAttributeOptions: [
+        // 调光属性下拉列表
+        {
+          value: "FORWARD",
+          label: "正向调光"
+        },
+        {
+          value: "REVERSE",
+          label: "反向调光"
+        }
+      ],
       annexTotal: 0, // 总数
       annexRules: {
         annexModel: [{ required: true, message: "不能为空", trigger: "blur" }],
@@ -266,10 +390,15 @@ export default {
         lampCategory: [
           { required: true, message: "不能为空", trigger: "change" }
         ],
-        standardPower: [
-          { required: true, message: "不能为空", trigger: "blur" }
+        annexType: [
+          { required: true, message: "不能为空", trigger: "change" }
         ],
-        avgLife: [{ required: true, message: "不能为空", trigger: "blur" }]
+        dimmingType: [
+          { required: true, message: "不能为空", trigger: "change" }
+        ],
+        dimmingAttribute: [
+          { required: true, message: "不能为空", trigger: "change" }
+        ]
       }
     };
   },
@@ -384,6 +513,8 @@ export default {
     colseDialog() {
       // 品牌新增
       if (this.brandisShow) {
+        // console.log(123);
+        // this.brandForm.brandName=''
         this.$refs["brandForm"].resetFields();
         this.brandisShow = false;
       }
@@ -430,18 +561,11 @@ export default {
       let res = await get_all_brand();
       if (res) {
         this.brandOptions = res.data.rows;
-        get_annex_select().then(res => {
-          if (res.data.success) {
-            this.lampOptions = res.data.content;
-          } else {
-            this.$message.error(res.data.msgCode);
-          }
-        });
       } else {
         this.$message.error("服务器未响应");
       }
     },
-    // 新增品牌
+    // 新增
     addLight() {
       this.$refs["light_Form"].validate(async valid => {
         if (valid) {
@@ -449,8 +573,6 @@ export default {
           console.log(data);
 
           let res = await add_light({ data });
-          console.log(res);
-
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
             this.colseDialog();
@@ -466,11 +588,14 @@ export default {
     // 打开修改弹框
     async openeditLight(row) {
       this.light_title = "灯具修改";
-      let data = { id: row.brandId };
+      let data = { id: row.lightId };
       let res = await get_light_byid({ data });
       if (res.data.success) {
         this.getAllSelect();
+        console.log(res.data.content);
+
         this.lightForm = res.data.content;
+        this.lightSubmit = this.addLight;
         this.lightIsShow = true;
       } else {
         this.$message.error(res.data.msgCode);
@@ -478,13 +603,13 @@ export default {
     },
     // 删除灯具
     deleteLight(row) {
-      this.$confirm("是否删除该灯具?", "提示", {
+      this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(async () => {
-          let data = { id: row.brandId };
+          let data = { id: row.lightId };
           let res = await delete_light({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -496,7 +621,7 @@ export default {
         .catch(() => {});
     },
     //==========光源==============
-  
+
     // 获取列表
     async getAllAnnex(currentPage = 1, size = 5) {
       let data = {
@@ -512,8 +637,19 @@ export default {
       }
     },
     // 打开修改
-    openeditAnnex() {},
-    // 修改
+    async openeditAnnex(row) {
+      this.annex_title = "灯具修改";
+      let data = { id: row.annexId };
+      let res = await get_annex_byid({ data });
+      if (res.data.success) {
+        this.getAllSelect();
+        this.annexForm = res.data.content;
+        this.annexSubmit = this.addAnnex;
+        this.annexIsShow = true;
+      } else {
+        this.$message.error(res.data.msgCode);
+      }
+    },
 
     // 打开新增
     openAddAnnex() {
@@ -523,8 +659,42 @@ export default {
       this.annexIsShow = true;
     },
     // 新增
+    addAnnex() {
+      this.$refs["annex_Form"].validate(async valid => {
+        if (valid) {
+          let data = this.annexForm;
+          let res = await add_annex({ data });
+          if (res.data.success) {
+            this.$message.success(res.data.msgCode);
+            this.colseDialog();
+            this.getAllAnnex();
+          } else {
+            this.$message.error(res.data.msgCode);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
     // 删除
-    deleteAnnex() {}
+    deleteAnnex(row) {
+      this.$confirm("是否删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let data = { id: row.annexId };
+          let res = await delete_annex({ data });
+          if (res.data.success) {
+            this.$message.success(res.data.msgCode);
+            this.getAllAnnex();
+          } else {
+            this.$message.error(res.data.msgCode);
+          }
+        })
+        .catch(() => {});
+    }
   },
 
   watch: {}
@@ -543,7 +713,7 @@ export default {
     right: 0;
   }
   .el-form-item__label {
-    line-height: 9px !important ;
+    line-height: 25px !important ;
   }
   .brand_select {
     width: 100%;

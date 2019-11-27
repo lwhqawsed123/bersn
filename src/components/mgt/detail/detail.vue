@@ -37,7 +37,7 @@
       :sizes="[10,20,30,40]"
       :total="lightTotal"
       :pageChange="getAllLight"
-      :_delete='pushLamp'
+      :_delete="pushLamp"
       :operation="true"
       :tongbu="true"
     ></Table>
@@ -89,7 +89,11 @@
           label-position="top"
         >
           <el-form-item label="集中器名称" prop="concentName">
-            <el-input v-model="concentForm.concentName"></el-input>
+            <el-input
+              v-model="concentForm.concentName"
+              maxlength="100"
+              @input="e => concentForm.concentName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="道路" prop="roadId">
             <el-select v-model="concentForm.roadId" placeholder="请选择" popper-class="myselect">
@@ -104,10 +108,18 @@
             </el-select>
           </el-form-item>
           <el-form-item label="集中器地址" prop="addressField">
-            <el-input v-model="concentForm.addressField"></el-input>
+            <el-input
+              v-model="concentForm.addressField"
+              maxlength="100"
+              @input="e => concentForm.addressField = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="SIM卡号" prop="simcard">
-            <el-input v-model="concentForm.simcard"></el-input>
+            <el-input
+              v-model="concentForm.simcard"
+              maxlength="100"
+              @input="e => concentForm.simcard = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item required>
             <el-col :span="11">
@@ -123,10 +135,21 @@
             </el-col>
           </el-form-item>
           <el-form-item label="地址" prop="address">
-            <el-input v-model="concentForm.address"></el-input>
+            <el-input
+              v-model="concentForm.address"
+              maxlength="100"
+              @input="e => concentForm.address = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="concentForm.remark"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="concentForm.remark"
+              maxlength="200"
+              @input="e => concentForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -142,21 +165,37 @@
           label-position="top"
         >
           <el-form-item label="ip地址" prop="mainIp">
-            <el-input v-model="IPForm.mainIp"></el-input>
+            <el-input
+              v-model="IPForm.mainIp"
+              maxlength="100"
+              @input="e => IPForm.mainIp = validSe(e)"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="端口" prop="mainPort">
-            <el-input v-model="IPForm.mainPort"></el-input>
+            <el-input
+              v-model="IPForm.mainPort"
+              maxlength="100"
+              @input="e => IPForm.mainPort = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备用ip" prop="secIp">
-            <el-input v-model="IPForm.secIp"></el-input>
+            <el-input
+              v-model="IPForm.secIp"
+              maxlength="100"
+              @input="e => IPForm.secIp = validSe(e)"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="备用端口" prop="secPort">
-            <el-input v-model="IPForm.secPort"></el-input>
+            <el-input
+              v-model="IPForm.secPort"
+              maxlength="100"
+              @input="e => IPForm.secPort = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="APN" prop="apn">
-            <el-input v-model="IPForm.apn"></el-input>
+            <el-input v-model="IPForm.apn" maxlength="100" @input="e => IPForm.apn = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -179,13 +218,44 @@ export default {
   name: "",
   props: [""],
   data() {
+    var checkLng = (rule, value, callback) => {
+      var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
+      if (!longrg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var checkLat = (rule, value, callback) => {
+      var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
+      if (!latreg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var checkIP = (rule, value, callback) => {
+      var IPreg = /^(\d{1}|[1-9]{1}\d{1}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1}|[1-9]{1}\d{1}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1}|[1-9]{1}\d{1}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1}|[1-9]{1}\d{1}|1\d\d|2[0-4]\d|25[0-5])$/;
+      if (!IPreg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var checkPort = (rule, value, callback) => {
+      var portReg = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/;
+      if (!portReg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
       concentId: 11,
       concentisShow: false, // 新增弹框
-      concentForm: {
-      },
+      concentForm: {},
       concent_title: "", // 标题
       concentSubmit: function() {}, // 提交的默认函数
       concentArray: [], // 列表
@@ -197,7 +267,9 @@ export default {
           { required: true, message: "不能为空", trigger: "blur" }
         ],
         simcard: [{ required: true, message: "不能为空", trigger: "blur" }],
-        address: [{ required: true, message: "不能为空", trigger: "blur" }]
+        address: [{ required: true, message: "不能为空", trigger: "blur" }],
+        lng: [{ validator: checkLng, trigger: "blur" }],
+        lat: [{ validator: checkLat, trigger: "blur" }]
       },
       roadOptions: [], // 集中器下拉列表
       search: {
@@ -212,17 +284,27 @@ export default {
       termInfo: [],
       //=====IP和端口======
       IPisShow: false,
-      IPArray:[],
+      IPArray: [],
       IP_title: "主站ip地址和端口编辑",
       IPSubmit: function() {},
       IPRules: {
-        mainIp: [{ required: true, message: "不能为空", trigger: "blur" }],
-        mainPort: [
-          { required: true, message: "不能为空", trigger: "blur" }
+        mainIp: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { validator: checkIP, trigger: "blur" }
         ],
-        secIp: [{ required: true, message: "不能为空", trigger: "blur" }],
-        secPort: [{ required: true, message: "不能为空", trigger: "blur" }],
-        apn: [{ required: true, message: "不能为空", trigger: "blur" }],
+        mainPort: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { validator: checkPort, trigger: "blur" }
+        ],
+        secIp: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { validator: checkIP, trigger: "blur" }
+        ],
+        secPort: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { validator: checkPort, trigger: "blur" }
+        ],
+        apn: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
       IPForm: {}
     };
@@ -262,12 +344,12 @@ export default {
           let arr = [];
           arr[0] = res.data.content;
           this.concentArray = arr;
-          
+
           let arr1 = [];
           arr1[0] = res.data.content.siteIpPort.data;
           this.IPArray = arr1;
 
-           let arr2 = [];
+          let arr2 = [];
           arr2[0] = res.data.content.termInfo.data;
           this.termInfo = arr2;
         }
@@ -299,10 +381,10 @@ export default {
             remark: this.concentForm.remark
           };
           console.log(data);
-          
+
           let res = await edit_concent({ data });
           console.log(res);
-          
+
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
             this.colseDialog();
@@ -340,12 +422,12 @@ export default {
         conId: this.concentId
       };
       console.log(data);
-      
+
       let res = await push_lamp({ data });
       console.log(res);
       if (res.data.ackState == "SUCCESS") {
         // this.versionInfo = res.data.fnResults[0].data;
-        this.$message.success(res.data.ackState)
+        this.$message.success(res.data.ackState);
       } else {
         this.$message.error(res.data.ackState);
       }
@@ -353,7 +435,7 @@ export default {
     // 获取集中器内所有光源
     async getAllLight(currentPage = 1, size = 5) {
       let data = {
-        concentId:this.concentId,
+        concentId: this.concentId,
         pageNo: currentPage,
         pageSize: size
       };
@@ -367,13 +449,13 @@ export default {
     // 关闭窗口
     colseDialog() {
       this.concentisShow = false;
-      this.$refs['concentForm'].resetFields();
+      this.$refs["concentForm"].resetFields();
       // ===ip===
-      this.IPisShow=false
+      this.IPisShow = false;
     },
     //========打开修改ip弹框==========
-    openEditIP(){
-      this.IPisShow=true
+    openEditIP() {
+      this.IPisShow = true;
     },
     // 获取下拉列表(仅子节点)
     async getAllSelect() {

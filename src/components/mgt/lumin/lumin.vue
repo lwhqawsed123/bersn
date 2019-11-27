@@ -43,10 +43,12 @@
           label-position="top"
         >
           <el-form-item label="照明区域名称" prop="categoryName">
-            <el-input v-model="categoryForm.categoryName"></el-input>
+            <el-input v-model="categoryForm.categoryName" maxlength="100"
+              @input="e => categoryForm.categoryName = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="categoryForm.remark"></el-input>
+            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="categoryForm.remark" maxlength="200"
+              @input="e => categoryForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -78,10 +80,12 @@
           </el-form-item>
          
           <el-form-item label="照明分组名称" prop="luminName">
-            <el-input v-model="groupForm.luminName"></el-input>
+            <el-input v-model="groupForm.luminName" maxlength="100"
+              @input="e => groupForm.luminName= validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="groupForm.remark"></el-input>
+            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="groupForm.remark" maxlength="200"
+              @input="e => groupForm.remark = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>

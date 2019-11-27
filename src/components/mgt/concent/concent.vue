@@ -40,10 +40,7 @@
           @change="getAllconcent"
         >
           <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
-            <el-option
-              :label="group.optText"
-              :value="group.optValue"
-            ></el-option>
+            <el-option :label="group.optText" :value="group.optValue"></el-option>
             <el-option
               v-for="item in group.children"
               :key="item.id"
@@ -87,7 +84,11 @@
           label-position="top"
         >
           <el-form-item label="集中器名称" prop="concentName">
-            <el-input v-model="concentForm.concentName"></el-input>
+            <el-input
+              v-model="concentForm.concentName"
+              maxlength="100"
+              @input="e => concentForm.concentName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="道路" prop="roadId">
             <el-select v-model="concentForm.roadId" placeholder="请选择" popper-class="myselect">
@@ -102,29 +103,52 @@
             </el-select>
           </el-form-item>
           <el-form-item label="集中器地址" prop="addressField">
-            <el-input v-model="concentForm.addressField"></el-input>
+            <el-input
+              v-model="concentForm.addressField"
+              maxlength="100"
+              @input="e => concentForm.addressField = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="SIM卡号" prop="simcard">
-            <el-input v-model="concentForm.simcard"></el-input>
+            <el-input
+              v-model="concentForm.simcard"
+              maxlength="100"
+              @input="e => concentForm.simcard = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item required>
             <el-col :span="11">
               <el-form-item label="经度" prop="lng">
-                <el-input v-model="concentForm.lng"></el-input>
+                <el-input
+                  v-model="concentForm.lng"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
               <el-form-item label="纬度" prop="lat">
-                <el-input v-model="concentForm.lat"></el-input>
+                <el-input
+                  v-model="concentForm.lat"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-form-item>
           <el-form-item label="地址" prop="address">
-            <el-input v-model="concentForm.address"></el-input>
+            <el-input
+              v-model="concentForm.address"
+              maxlength="100"
+              @input="e => concentForm.address = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="concentForm.remark"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="concentForm.remark"
+              maxlength="200"
+              @input="e => concentForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -145,7 +169,24 @@ import {
 export default {
   name: "",
   props: [""],
+
   data() {
+    var checkLng = (rule, value, callback) => {
+      var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
+        if (!longrg.test(value)) {
+          callback(new Error("格式错误"));
+        } else {
+          callback();
+        }
+    };
+    var checkLat = (rule, value, callback) => {
+      var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
+        if (!latreg.test(value)) {
+          callback(new Error("格式错误"));
+        } else {
+          callback();
+        }
+    };
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
@@ -166,20 +207,22 @@ export default {
           { required: true, message: "不能为空", trigger: "blur" }
         ],
         simcard: [{ required: true, message: "不能为空", trigger: "blur" }],
-        address: [{ required: true, message: "不能为空", trigger: "blur" }]
+        address: [{ required: true, message: "不能为空", trigger: "blur" }],
+        lng: [ { validator: checkLng, trigger: 'blur' }],
+        lat: [ { validator: checkLat, trigger: 'blur' }],
       },
       roadOptions: [], // 集中器下拉列表
       workStateOptions: [
         {
-          value: 'NORMAL',
+          value: "NORMAL",
           label: "正常"
         },
         {
-          value: 'ALARM',
+          value: "ALARM",
           label: "警告"
         },
         {
-          value: 'OFFLINE',
+          value: "OFFLINE",
           label: "离线"
         }
       ],

@@ -4,22 +4,59 @@
     <div v-if="!language" v-loading="map_loading" class="gg_map" id="gg_map"></div>
     <div class="selectCard">
       <!-- 道路 -->
-      <el-cascader
+      <!-- <el-cascader
         v-model="selected.road"
         :options="districtOptions"
         :props="{value:'optValue',label:'optText', expandTrigger: 'hover',checkStrictly: true }"
         @change="roadChange"
         class="select123"
-      ></el-cascader>
+      ></el-cascader>-->
+      <el-select
+        v-model="selected.road"
+        clearable
+        placeholder="全部"
+        popper-class="myselect search_select"
+        class="search_input"
+        @clear="roadChange"
+        @change="roadChange"
+      >
+        <el-option-group v-for="group in districtOptions" :key="group.id" :label="group.optText">
+          <el-option :label="group.optText" :value="group.optValue"></el-option>
+          <el-option
+            v-for="item in group.children"
+            :key="item.id"
+            :label="item.optText"
+            :value="item.optValue"
+          ></el-option>
+        </el-option-group>
+      </el-select>
 
       <span class="select_interval"></span>
       <!-- 照明分组 -->
-      <el-cascader
+      <!-- <el-cascader
         v-model="selected.luminGroup"
         :options="luminGroupOptions"
         :props="{ value:'optValue',label:'optText', expandTrigger: 'hover',checkStrictly: true  }"
-      ></el-cascader>
-
+      ></el-cascader>-->
+      <el-select
+        v-model="selected.luminGroup"
+        clearable
+        placeholder="全部"
+        popper-class="myselect search_select"
+        class="search_input"
+        @clear="LuminGroupChange"
+        @change="LuminGroupChange"
+      >
+        <el-option-group v-for="group in luminGroupOptions" :key="group.id" :label="group.optText">
+          <el-option :label="group.optText" :value="group.optValue"></el-option>
+          <el-option
+            v-for="item in group.children"
+            :key="item.id"
+            :label="item.optText"
+            :value="item.optValue"
+          ></el-option>
+        </el-option-group>
+      </el-select>
       <span class="select_interval"></span>
       <div>
         <el-input v-model="selected.ctrCode" clearable placeholder="控制器编号" @clear="mapSearch"></el-input>
@@ -472,8 +509,8 @@ export default {
       map_loading: false, // loading面板
       currentRow: "", //当前选中行
       selected: {
-        road: [""], // 地区/道路
-        luminGroup: [""], // 照明分组
+        road: "", // 地区/道路
+        luminGroup: "", // 照明分组
         ctrCode: "" // 集中器编号
       },
       districtOptions: [], // 地区下拉框
@@ -611,10 +648,7 @@ export default {
     // 页面加载时获取照明分组
     async getLuminGroup() {
       let from = new FormData();
-      from.append(
-        "roadOptValue",
-        this.selected.road[this.selected.road.length - 1]
-      );
+      from.append("roadOptValue", this.selected.road);
       let res = await luminGroup({ data: from });
       if (res.data.success) {
         this.luminGroupOptions = res.data.content;
@@ -629,11 +663,8 @@ export default {
     // 搜索并设置marker
     async mapSearch(refresh = true) {
       let from = new FormData();
-      from.append("road", this.selected.road[this.selected.road.length - 1]);
-      from.append(
-        "luminGroup",
-        this.selected.luminGroup[this.selected.luminGroup.length - 1]
-      );
+      from.append("road", this.selected.road);
+      from.append("luminGroup", this.selected.luminGroup);
       from.append("ctrCode", this.selected.ctrCode);
       let res = await map_search({ data: from });
       if (res.data.success) {
@@ -653,11 +684,8 @@ export default {
     // 仅搜索marker
     async onlySearch() {
       let from = new FormData();
-      from.append("road", this.selected.road[this.selected.road.length - 1]);
-      from.append(
-        "luminGroup",
-        this.selected.luminGroup[this.selected.luminGroup.length - 1]
-      );
+      from.append("road", this.selected.road);
+      from.append("luminGroup", this.selected.luminGroup);
       from.append("ctrCode", this.selected.ctrCode);
       let res = await map_search({ data: from });
       if (res.data.success) {
@@ -671,6 +699,21 @@ export default {
     // 当前选择道路变化
     roadChange() {
       this.getLuminGroup();
+      if (this.language) {
+        this._map.clearOverlays();
+      } else {
+        this.clearMarkers();
+      }
+      this.mapSearch();
+    },
+    // 照明分组变化
+    LuminGroupChange() {
+      if (this.language) {
+        this._map.clearOverlays();
+      } else {
+        this.clearMarkers();
+      }
+      this.mapSearch();
     },
     // 刷新弹框表单
     refresh(id) {},
@@ -707,6 +750,8 @@ export default {
       let list = [];
       let list1 = [];
       if (!this.ctrCodeOptions || this.ctrCodeOptions.length == 0) {
+        this.street_lamp_list = list1;
+        this.concentrator_list = list;
         return;
       }
       this.ctrCodeOptions.forEach(item => {
@@ -736,6 +781,8 @@ export default {
       this.set_concentrator_Marker();
       if (refresh) {
         if (this.concentrator_list.length > 1) {
+          this._map.setZoom(18);
+
           this._map.centerAndZoom(
             new BMap.Point(
               this.concentrator_list[0].lng,

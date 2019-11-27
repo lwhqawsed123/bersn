@@ -111,7 +111,8 @@
           label-position="top"
         >
           <el-form-item label="杠杆编号" prop="lampTaskCode">
-            <el-input v-model="lampTaskForm.lampTaskCode"></el-input>
+            <el-input v-model="lampTaskForm.lampTaskCode" maxlength="100"
+              @input="e => lampTaskForm.lampTaskCode = validSe(e)"></el-input>
           </el-form-item>
           <el-form-item label="道路" prop="roadId">
             <el-select v-model="lampTaskForm.roadId" placeholder="请选择" popper-class="myselect">
@@ -163,7 +164,8 @@
             </el-col>
           </el-form-item>
           <el-form-item label="地址" prop="address">
-            <el-input v-model="lampTaskForm.address"></el-input>
+            <el-input v-model="lampTaskForm.address" maxlength="100"
+              @input="e => lampTaskForm.address = validSe(e)"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -183,6 +185,22 @@ export default {
   name: "",
   props: [""],
   data() {
+     var checkLng = (rule, value, callback) => {
+      var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
+      if (!longrg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
+    var checkLat = (rule, value, callback) => {
+      var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
+      if (!latreg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
@@ -209,7 +227,9 @@ export default {
           { required: true, message: "不能为空", trigger: "change" }
         ],
         address: [{ required: true, message: "不能为空", trigger: "blur" }],
-        roadId: [{ required: true, message: "不能为空", trigger: "change" }]
+        roadId: [{ required: true, message: "不能为空", trigger: "change" }],
+        lng: [{ validator: checkLng, trigger: "blur" }],
+        lat: [{ validator: checkLat, trigger: "blur" }]
       },
       roadOptions: [], // 道路下拉列表
       contentOptions: [], // 集中器下拉列表
