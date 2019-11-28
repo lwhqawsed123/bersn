@@ -56,7 +56,8 @@
       ]"
       :noPagination="true"
       :operation="true"
-      :tongbu="true"
+      :refresh="true"
+      :_delete="getConcentById"
     ></Table>
     <!-- 主站IP地址和端口 -->
     <Table
@@ -70,7 +71,8 @@
       {prop:'apn',label:'APN'}
       ]"
       :noPagination="true"
-      :tongbu="true"
+      :refresh="true"
+      :_delete="getConcentById"
       :_edit="openEditIP"
     ></Table>
     <!-- 集中器弹出框 -->
@@ -167,35 +169,35 @@
           <el-form-item label="ip地址" prop="mainIp">
             <el-input
               v-model="IPForm.mainIp"
-              maxlength="100"
-              @input="e => IPForm.mainIp = validSe(e)"
+              maxlength="20"
+              @input="e => IPForm.mainIp = setIPinput(e)"
             ></el-input>
           </el-form-item>
 
           <el-form-item label="端口" prop="mainPort">
             <el-input
               v-model="IPForm.mainPort"
-              maxlength="100"
-              @input="e => IPForm.mainPort = validSe(e)"
+              maxlength="5"
+              @input="e => IPForm.mainPort = setPort(e)"
             ></el-input>
           </el-form-item>
           <el-form-item label="备用ip" prop="secIp">
             <el-input
               v-model="IPForm.secIp"
-              maxlength="100"
-              @input="e => IPForm.secIp = validSe(e)"
+              maxlength="20"
+              @input="e => IPForm.secIp = setIPinput(e)"
             ></el-input>
           </el-form-item>
 
           <el-form-item label="备用端口" prop="secPort">
             <el-input
               v-model="IPForm.secPort"
-              maxlength="100"
-              @input="e => IPForm.secPort = validSe(e)"
+              maxlength="5"
+              @input="e => IPForm.secPort = setPort(e)"
             ></el-input>
           </el-form-item>
           <el-form-item label="APN" prop="apn">
-            <el-input v-model="IPForm.apn" maxlength="100" @input="e => IPForm.apn = validSe(e)"></el-input>
+            <el-input v-model="IPForm.apn" maxlength="32"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -219,6 +221,9 @@ export default {
   props: [""],
   data() {
     var checkLng = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
       if (!longrg.test(value)) {
         callback(new Error("格式错误"));
@@ -227,6 +232,9 @@ export default {
       }
     };
     var checkLat = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
       if (!latreg.test(value)) {
         callback(new Error("格式错误"));
@@ -253,9 +261,18 @@ export default {
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
-      concentId: 11,
+      concentId: "",
       concentisShow: false, // 新增弹框
-      concentForm: {},
+      concentForm: {
+        concentName: "",
+        roadId: "",
+        addressField: "",
+        simcard: "",
+        lng: "",
+        lat: "",
+        address: "",
+        remark: ""
+      },
       concent_title: "", // 标题
       concentSubmit: function() {}, // 提交的默认函数
       concentArray: [], // 列表
@@ -306,7 +323,13 @@ export default {
         ],
         apn: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
-      IPForm: {}
+      IPForm: {
+        mainIp: "",
+        mainPort: "",
+        secIp: "",
+        secPort: "",
+        apn: ""
+      }
     };
   },
 
@@ -320,8 +343,9 @@ export default {
   beforeMount() {},
   created() {
     // 获取concentId
-    // this.concentId = this.$route.params.addressField;
-    if (this.concentId) {
+    let concentId = sessionStorage.getItem("concentId");
+    if (concentId) {
+      this.concentId = concentId;
       this.getConcentById();
       this.getAllLight();
     }
@@ -335,6 +359,8 @@ export default {
       let data = {
         id: this.concentId
       };
+      console.log(data);
+
       let res = await get_concent_byid({ data });
 
       if (res.data.success) {
@@ -346,8 +372,13 @@ export default {
           this.concentArray = arr;
 
           let arr1 = [];
-          arr1[0] = res.data.content.siteIpPort.data;
+          arr1[0] = JSON.parse(
+            JSON.stringify(res.data.content.siteIpPort.data)
+          );
           this.IPArray = arr1;
+          this.IPForm = JSON.parse(
+            JSON.stringify(res.data.content.siteIpPort.data)
+          );
 
           let arr2 = [];
           arr2[0] = res.data.content.termInfo.data;
@@ -380,11 +411,8 @@ export default {
             address: this.concentForm.address,
             remark: this.concentForm.remark
           };
-          console.log(data);
 
           let res = await edit_concent({ data });
-          console.log(res);
-
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
             this.colseDialog();
@@ -433,7 +461,7 @@ export default {
       }
     },
     // 获取集中器内所有光源
-    async getAllLight(currentPage = 1, size = 5) {
+    async getAllLight(val, currentPage = 1, size = 10) {
       let data = {
         concentId: this.concentId,
         pageNo: currentPage,
@@ -448,13 +476,18 @@ export default {
 
     // 关闭窗口
     colseDialog() {
-      this.concentisShow = false;
-      this.$refs["concentForm"].resetFields();
-      // ===ip===
-      this.IPisShow = false;
+      if (this.concentisShow) {
+        this.$refs["concentForm"].resetFields();
+        this.concentisShow = false;
+      }
+      if (this.IPisShow) {
+        this.$refs["IPForm"].resetFields();
+        this.IPisShow = false;
+      }
     },
     //========打开修改ip弹框==========
     openEditIP() {
+      this.getConcentById();
       this.IPisShow = true;
     },
     // 获取下拉列表(仅子节点)
@@ -480,6 +513,30 @@ export default {
         }
       });
       return arr;
+    },
+    // 输入框ip地址
+    setIPinput(value) {
+      if (!value) {
+        return value;
+      }
+      value = value
+        .replace(
+          /[^\d|.]/g,
+          ""
+        )
+      return value;
+    },
+    // 输入框端口
+    setPort(value) {
+      if (!value) {
+        return value;
+      }
+      value = value
+        .replace(
+          /[^\d]/g,
+          ""
+        )
+      return value;
     }
   },
 

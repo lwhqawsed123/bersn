@@ -90,7 +90,7 @@
           :data="ctrCodeTableList"
           width="100%"
           :header-cell-style="{'background-color':'#F0F0F0'}"
-          max-height="240"
+          height="230"
           highlight-current-row
           @current-change="handleCurrentChange"
         >

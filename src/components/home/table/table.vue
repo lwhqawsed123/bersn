@@ -27,6 +27,7 @@
         :prop="item.prop"
         :label="item.label"
         show-overflow-tooltip
+        class-name="overflow_tooltip"
       ></el-table-column>
 
       <el-table-column label="操作" width="116">

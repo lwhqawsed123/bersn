@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
+import router from '../router'
 import qs from 'qs'
 // const http = axios.create({
 //     baseURL: '/api', // api的base_url
@@ -18,8 +19,63 @@ const http = axios.create({
     headers: {
         'Content-Type': 'application/x-www.from-urlencoded; charset=UTF-8'
     }
-   
+
 })
+// 请求拦截
+http.interceptors.request.use((req) => {
+    // //这个例子中data是loginName和password
+    // let req_DATA = req.data
+    // //统一进行qs模块转换
+    // req.data = qs.stringify(req_DATA)
+    // //再发送给后台
+    if (req.url != '/api/index/login') {
+        let token = window.localStorage.getItem('token')
+        if (!token) {
+            Message.error('请先登录')
+            router.push('/login')
+        } else {
+            req.headers.token = token
+            return req;
+        }
+    } else {
+        return req;
+    }
+
+}, function (error) {
+    // Do something with req error
+    return Promise.reject(error);
+});
+// 响应拦截
+http.interceptors.response.use(
+    response => {
+        if (response.data.msgCode && response.data.msgCode == 'system.session.invalid') {
+            Message.error('系统会话失效')
+            sessionStorage.setItem('fromUrl', router.history.current.fullPath)
+            router.push('/login')
+        } else if (response.data.msgCode && response.data.msgCode == 'system.unauthorized') {
+            Message.error('系统未授权,没有权限访问!')
+        } else if (response.data.msgCode && response.data.msgCode == 'system.error') {
+            Message.error('系统错误')
+        }else{
+            return response
+        }
+    },
+    error => {
+
+        if (error.response) {
+            switch (error.response.status) {
+                case 400:
+                    Message.error('参数错误');
+                    break;
+                // location.reload()
+                case 500:
+                    Message.error('服务器错误');
+                    break;
+            }
+
+        }
+        return Promise.reject(error.response.data)   // 返回接口返回的错误信息
+    })
 // http.defaults.transformRequest = data => {
 //     //=>DATA:就是请求主体中需要传递给服务器的内容（对象）
 //     let str = ``;

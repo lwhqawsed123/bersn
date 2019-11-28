@@ -41,10 +41,7 @@
           @change="getAllpole"
         >
           <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
-             <el-option
-              :label="group.optText"
-              :value="group.optValue"
-            ></el-option>
+            <el-option :label="group.optText" :value="group.optValue"></el-option>
             <el-option
               v-for="item in group.children"
               :key="item.id"
@@ -70,15 +67,18 @@
     <Mydialog :isShow="poleisShow" :tittle="pole_title" :width="'600px'" :submit="poleSubmit">
       <div class="form_box">
         <el-form
-          ref="poleForm"
+          ref="pole_Form"
           :rules="poleRules"
           :model="poleForm"
           label-width="80px"
           label-position="top"
         >
           <el-form-item label="灯杆编号" prop="poleCode">
-            <el-input v-model="poleForm.poleCode" maxlength="100"
-              @input="e => poleForm.poleCode = validSe(e)"></el-input>
+            <el-input
+              v-model="poleForm.poleCode"
+              maxlength="100"
+              @input="e => poleForm.poleCode = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="道路" prop="roadId">
             <el-select v-model="poleForm.roadId" placeholder="请选择" popper-class="myselect">
@@ -112,7 +112,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item >
+          <el-form-item>
             <el-col :span="11">
               <el-form-item label="经度" prop="lng">
                 <el-input v-model="poleForm.lng"></el-input>
@@ -126,8 +126,11 @@
             </el-col>
           </el-form-item>
           <el-form-item label="地址" prop="address">
-            <el-input v-model="poleForm.address" maxlength="100"
-              @input="e => poleForm.address = validSe(e)"></el-input>
+            <el-input
+              v-model="poleForm.address"
+              maxlength="100"
+              @input="e => poleForm.address = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -150,7 +153,10 @@ export default {
   name: "",
   props: [""],
   data() {
-     var checkLng = (rule, value, callback) => {
+    var checkLng = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
       if (!longrg.test(value)) {
         callback(new Error("格式错误"));
@@ -159,6 +165,9 @@ export default {
       }
     };
     var checkLat = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
       if (!latreg.test(value)) {
         callback(new Error("格式错误"));
@@ -168,9 +177,16 @@ export default {
     };
     return {
       requiredMsg: "不能为空",
-      // ===========集中器===========
+      // ===========灯杆===========
       poleisShow: false, // 新增弹框
       poleForm: {
+        poleCode: "",
+        roadId: "",
+        concentId: "",
+        poleType: "",
+        lng: "",
+        lat: "",
+        address: ""
       },
       pole_title: "", // 标题
       poleSubmit: function() {}, // 提交的默认函数
@@ -185,8 +201,8 @@ export default {
         poleType: [{ required: true, message: "不能为空", trigger: "change" }],
         address: [{ required: true, message: "不能为空", trigger: "blur" }],
         roadId: [{ required: true, message: "不能为空", trigger: "change" }],
-        lng: [{ validator: checkLng, trigger: "blur" }],
-        lat: [{ validator: checkLat, trigger: "blur" }]
+        lng: [{ validator: checkLng }],
+        lat: [{ validator: checkLat }]
       },
       roadOptions: [], // 道路下拉列表
       contentOptions: [], // 集中器下拉列表
@@ -274,9 +290,12 @@ export default {
     },
     // 新增集中器
     addpole() {
-      this.$refs["poleForm"].validate(async valid => {
+      console.log(this.poleForm);
+
+      this.$refs["pole_Form"].validate(async valid => {
         if (valid) {
           let data = this.poleForm;
+
           let res = await add_pole({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -329,8 +348,10 @@ export default {
 
     // 关闭窗口
     colseDialog() {
-      this.poleisShow = false;
-      this.$refs['poleForm'].resetFields();
+      this.$refs["pole_Form"].resetFields();
+      setTimeout(() => {
+        this.poleisShow = false;
+      }, 100);
     },
     // 获取下拉列表(仅子节点)
     async getAllSelect() {

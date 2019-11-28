@@ -65,7 +65,8 @@
           <el-form-item label="品牌名称" prop="brandName">
             <el-input
               v-model="brandForm.brandName"
-              id="input-sum"
+              maxlength="100"
+              @input="e => brandForm.brandName = validSe(e)"
             ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
@@ -181,8 +182,11 @@
           label-position="top"
         >
           <el-form-item label="光源型号" prop="annexModel">
-            <el-input v-model="annexForm.annexModel" maxlength="100"
-              @input="e => annexForm.annexModel = validSe(e)"></el-input>
+            <el-input
+              v-model="annexForm.annexModel"
+              maxlength="100"
+              @input="e => annexForm.annexModel = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="品牌" prop="brandId">
             <el-select v-model="annexForm.brandId" placeholder="请选择" class="brand_select">
@@ -235,8 +239,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="annexForm.remark" maxlength="200"
-              @input="e => annexForm.remark = validSe(e)"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="annexForm.remark"
+              maxlength="200"
+              @input="e => annexForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -291,7 +301,14 @@ export default {
       lightIsShow: false, // 新增弹框
       lightSubmit: function() {}, // 提交
       light_title: "", // 标题
-      lightForm: {},
+      lightForm: {
+        lightModel: "",
+        lampCategory: "",
+        standardPower: "",
+        avgLife: "",
+        procurementPrice: "",
+        remark: ""
+      },
       brandOptions: [], // 品牌下拉列表
       lampOptions: [
         {
@@ -336,15 +353,21 @@ export default {
           { required: true, message: "不能为空", trigger: "blur" },
           { type: "number", message: "必须为数字值" }
         ],
-        procurementPrice: [
-          { type: "number", message: "必须为数字值" }
-        ],
+        procurementPrice: [{ type: "number", message: "必须为数字值" }]
       },
       // =============电源=========
       annexIsShow: false, // 新增弹框
       annexSubmit: function() {}, // 提交
       annex_title: "", // 标题
-      annexForm: {},
+      annexForm: {
+        annexModel: "",
+        brandId: "",
+        lampCategory: "",
+        annexType: "",
+        dimmingType: "",
+        dimmingAttribute: "",
+        remark: ""
+      },
       annexArray: [], // 列表
       annexTypeOptions: [
         // 配套电器类型下拉列表
@@ -390,9 +413,7 @@ export default {
         lampCategory: [
           { required: true, message: "不能为空", trigger: "change" }
         ],
-        annexType: [
-          { required: true, message: "不能为空", trigger: "change" }
-        ],
+        annexType: [{ required: true, message: "不能为空", trigger: "change" }],
         dimmingType: [
           { required: true, message: "不能为空", trigger: "change" }
         ],
@@ -421,7 +442,7 @@ export default {
   methods: {
     // ============品牌==================
     // 获取所有品牌数据
-    async getAllBrand(currentPage = 1, size = 5) {
+    async getAllBrand(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
@@ -525,18 +546,18 @@ export default {
       }
       // 灯具
       if (this.lightIsShow) {
-        this.lightIsShow = false;
         this.$refs["light_Form"].resetFields();
+        this.lightIsShow = false;
       }
       // 光源
       if (this.annexIsShow) {
-        this.annexIsShow = false;
         this.$refs["annex_Form"].resetFields();
+        this.annexIsShow = false;
       }
     },
     // ============灯具===================
     // 获取所有灯具数据
-    async getAllLight(currentPage = 1, size = 5) {
+    async getAllLight(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
@@ -561,6 +582,7 @@ export default {
       let res = await get_all_brand();
       if (res) {
         this.brandOptions = res.data.rows;
+        console.log(this.brandOptions);
       } else {
         this.$message.error("服务器未响应");
       }
@@ -623,7 +645,7 @@ export default {
     //==========光源==============
 
     // 获取列表
-    async getAllAnnex(currentPage = 1, size = 5) {
+    async getAllAnnex(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size

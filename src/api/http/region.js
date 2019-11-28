@@ -80,11 +80,11 @@ export const add_road = (options) => {
     })
 }
 // 查询所有光源类型
-export const get_annex_select = (options) => {
+export const get_road_level_select = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     return request({
-        url: `/api/select/annex`,
+        url: `/api/select/enum/roadGrade`,
         method,
     })
 }
@@ -134,3 +134,4 @@ export const delete_road = (options) => {
         data: form
     })
 }
+// 查询道路等级

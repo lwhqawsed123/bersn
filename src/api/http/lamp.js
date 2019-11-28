@@ -78,7 +78,7 @@ export const get_monitor_cmd_lamp_byid = (options) => {
     })
 }
 
-// 调节光源亮度
+// 调节光源亮度(群控)
 export const set_groupLamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -89,6 +89,21 @@ export const set_groupLamp_byid = (options) => {
     })
     return request({
         url: `/monitor/cmd/control/groupLamp`,
+        method,
+        data: form
+    })
+}
+// 调节光源亮度(单控)
+export const set_singleLamp_byid = (options) => {
+    var options = options || {}
+    var method = options.method || 'POST'
+    var data = options.data || {}
+    var form = new FormData()
+    Object.keys(data).forEach(item => {
+        form.append(item, data[item])
+    })
+    return request({
+        url: `/monitor/cmd/control/lamp`,
         method,
         data: form
     })
@@ -120,7 +135,7 @@ export const close_groupLamp_byid = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/monitor/cmd/control/groupLamp`,
+        url: `/monitor/cmd/control/lamp/close`,
         method,
         data: form
     })

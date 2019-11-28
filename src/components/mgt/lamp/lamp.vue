@@ -108,15 +108,18 @@
     <Mydialog :isShow="lampisShow" :tittle="lamp_title" :width="'600px'" :submit="lampSubmit">
       <div class="form_box">
         <el-form
-          ref="lampForm"
+          ref="lamp_Form"
           :rules="lampRules"
           :model="lampForm"
           label-width="80px"
           label-position="top"
         >
           <el-form-item label="控制器编号" prop="termUid">
-            <el-input v-model="lampForm.termUid" maxlength="100"
-              @input="e => lampForm.termUid = validSe(e)"></el-input>
+            <el-input
+              v-model="lampForm.termUid"
+              maxlength="100"
+              @input="e => lampForm.termUid = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="集中器" prop="concentId">
             <el-select v-model="lampForm.concentId" placeholder="请选择" popper-class="myselect">
@@ -175,8 +178,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="lampForm.remark" maxlength="200"
-              @input="e => lampForm.remark = validSe(e)"></el-input>
+             <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="lampForm.remark"
+              maxlength="200"
+              @input="e => lampForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -265,6 +274,7 @@
 <script>
 import Table from "../../home/table/table";
 import Mydialog from "../../my-dialog/my-dialog";
+import { Loading, Switch } from "element-ui";
 import {
   add_lamp,
   get_all_lamp,
@@ -278,7 +288,9 @@ import {
   get_select_annex,
   get_monitor_cmd_lamp_byid,
   set_groupLamp_byid,
-  open_groupLamp_byid
+  open_groupLamp_byid,
+  close_groupLamp_byid,
+  set_singleLamp_byid
 } from "../../../api/http/lamp";
 export default {
   name: "",
@@ -288,7 +300,15 @@ export default {
       requiredMsg: "不能为空",
       // ===========光源===========
       lampisShow: false, // 新增弹框
-      lampForm: {},
+      lampForm: {
+        termUid: "",
+        concentId: "",
+        poleId: "",
+        luminId: "",
+        lightId: "",
+        annexId: "",
+        remark: ""
+      },
       lamp_title: "", // 标题
       lampSubmit: function() {}, // 提交的默认函数
       lampArray: [], // 列表
@@ -366,8 +386,8 @@ export default {
   },
 
   methods: {
-    // ============集中器==================
-    // 获取所有集中器数据
+    // ============光源==================
+    // 获取所有光源数据
     async getAlllamp(val, currentPage = 1, size = 10) {
       let data = {};
       if (this.search.termUid) {
@@ -377,41 +397,44 @@ export default {
           "lamp.termUid": this.search.termUid,
           "lamp.workState": this.search.workState,
           "lamp.concentCode": this.search.concentCode,
-          "lamp.roadOptValue": this.search.roadOptValue,
-          "lamp.luminOptValue": this.search.luminOptValue
+          roadOptValue: this.search.roadOptValue,
+          luminOptValue: this.search.luminOptValue
         };
       } else {
         data = {
           pageNo: currentPage,
-          pageSize: size
+          pageSize: size,
+          "lamp.workState": this.search.workState,
+          "lamp.concentCode": this.search.concentCode,
+          roadOptValue: this.search.roadOptValue,
+          luminOptValue: this.search.luminOptValue
         };
-        // "lamp.workState": this.search.workState,
-        //   "lamp.concentCode": this.search.concentCode,
-        //   "lamp.roadOptValue": this.search.roadOptValue,
-        //   "lamp.luminOptValue": this.search.luminOptValue
       }
+
       let res = await get_all_lamp({ data });
+      console.log(res);
+      
       if (res) {
         this.lampTotal = res.data.total;
         this.lampArray = res.data.rows;
       } else {
-        this.$message.error("服务器未响应");
+        // this.$message.error("服务器未响应");
       }
     },
     // 打开新增弹框
     openAddlamp() {
       this.lamp_title = "光源添加";
-      this.lampSubmit = this.addlamp;
-      this.lampisShow = true;
       this.getConcentSelect();
       this.getPoleSelect();
       this.getLuminGroupSelect();
       this.getLightSelect();
       this.getAnnexSelect();
+      this.lampSubmit = this.addlamp;
+      this.lampisShow = true;
     },
-    // 新增集中器
+    // 新增光源
     addlamp() {
-      this.$refs["lampForm"].validate(async valid => {
+      this.$refs["lamp_Form"].validate(async valid => {
         if (valid) {
           let data = this.lampForm;
           let res = await add_lamp({ data });
@@ -427,7 +450,7 @@ export default {
         }
       });
     },
-    // 打开修改集中器弹框
+    // 打开修改光源弹框
     async openeditlamp(row) {
       this.lamp_title = "光源修改";
       this.lampSubmit = this.addlamp;
@@ -474,40 +497,82 @@ export default {
       let data = {
         lampId: row.lampId
       };
+
+      let loadingInstance = Loading.service();
       let res = await get_monitor_cmd_lamp_byid({ data });
-      console.log(res);
-      if (res.data.ackState == "success") {
-        this.$message.success(res.data.msgCode);
+      if (res.data.ackState == "SUCCESS") {
+        this.$message.success(res.data.ackState);
+        loadingInstance.close();
+        this.controlisShow = true;
       } else {
-        this.$message.error(res.data.ackState);
+        this.$message.error(res.data.msgCode);
+        loadingInstance.close();
+        this.controlisShow = true;
       }
-      this.controlisShow = true;
     },
     // 提交亮度调试
-    async lamp_control() {
+    lamp_control() {
       // lightController: {
       //   lightStatus: true,
       //   intensityControl: 15
       // }
-      if (!dimming) {
-        let data = {
-          lampId: this.thisLmapId.lampId
-        };
-        let res = await open_groupLamp_byid({ data });
-        console.log(res);
-      } else {
-        let data = {
-          conId: this.thisLmapId.concentId,
-          lampId: this.thisLmapId.lampId,
-          dimming: this.lightController.intensityControl
-        };
-        let res = await set_groupLamp_byid({ data });
-        console.log(res);
-      }
-
-      console.log("已调节");
+      this.$confirm("确认提交?", "提示", {
+        confirmButtonText: "保存",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let loadingInstance = Loading.service();
+          if (!this.lightController.intensityControl) {
+            let data = {
+              lampId: this.thisLmapId.lampId
+            };
+            let res = await close_groupLamp_byid({ data });
+            if (res.data.ackState == "SUCCESS") {
+              this.$message.success(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+              this.colseDialog()
+            } else {
+              this.$message.error(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+            }
+          } else if(this.lightController.intensityControl&&this.lightController.intensityControl==100){
+            let data = {
+              lampId: this.thisLmapId.lampId
+            };
+            let res = await open_groupLamp_byid({ data });
+            if (res.data.ackState == "SUCCESS") {
+              this.$message.success(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+              this.colseDialog()
+            } else {
+              this.$message.error(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+            }
+          }else {
+            // let data = {
+            //   conId: this.thisLmapId.concentId,
+            //   lampId: this.thisLmapId.lampId,
+            //   dimming: this.lightController.intensityControl
+            // };
+             let data = {
+              lampId: this.thisLmapId.lampId,
+              dimming: this.lightController.intensityControl
+            };
+            let res = await set_singleLamp_byid({ data });
+            if (res.data.ackState == "SUCCESS") {
+              this.$message.success(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+              this.colseDialog()
+            } else {
+              this.$message.error(this.setAckState(res.data.ackState));
+              loadingInstance.close();
+            }
+          }
+        })
+        .catch(() => {});
     },
-    // 光源调节滑动条
+    // 光源调节开关
     lightChange(val) {
       if (val) {
         this.lightController.intensityControl = 100;
@@ -517,13 +582,18 @@ export default {
     },
     // 关闭窗口
     colseDialog() {
-      this.controlisShow = false;
       if (this.lampisShow) {
+        this.$refs["lamp_Form"].resetFields();
         this.lampisShow = false;
-        this.$refs["lampForm"].resetFields();
+      }
+      if (this.controlisShow) {
+        this.controlisShow = false;
+        // this.lampControl = [];
+        // this.lampLuminance = {};
+        // this.thisLmapId = {};
       }
     },
-    // 获取下拉列表(仅子节点)
+    // 获取下拉列表
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -604,6 +674,26 @@ export default {
         }
       });
       return arr;
+    },
+    // 反馈硬件状态
+    setAckState(state){
+      let str=''
+      switch(state){
+        case 'DISCONNECTED':str='终端未连接';
+        break;
+        case 'SUCCESS':str='操作成功';
+        break;
+        case 'FAILURE':str='操作失败';
+        break;
+        case 'TIME_OUT':str='终端执行超时';
+        break;
+        case 'ERROR':str='服务器内部错误';
+        break;
+        case 'BUSY':str='终端忙';
+        break;
+        default: str='内部错误'
+      }
+      return str
     }
   },
 

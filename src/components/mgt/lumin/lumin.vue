@@ -16,7 +16,7 @@
       :table_title="'照明分组管理'"
       :tableData="groupArray"
       :columnArray="[
-      {prop:'categoryId',label:'照明类型名称'},
+      {prop:'categoryName',label:'照明类型名称'},
       {prop:'luminName',label:'照明分组'}
       ]"
       :size="10"
@@ -43,12 +43,21 @@
           label-position="top"
         >
           <el-form-item label="照明区域名称" prop="categoryName">
-            <el-input v-model="categoryForm.categoryName" maxlength="100"
-              @input="e => categoryForm.categoryName = validSe(e)"></el-input>
+            <el-input
+              v-model="categoryForm.categoryName"
+              maxlength="100"
+              @input="e => categoryForm.categoryName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="categoryForm.remark" maxlength="200"
-              @input="e => categoryForm.remark = validSe(e)"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="categoryForm.remark"
+              maxlength="200"
+              @input="e => categoryForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -78,14 +87,23 @@
               ></el-option>
             </el-select>
           </el-form-item>
-         
+
           <el-form-item label="照明分组名称" prop="luminName">
-            <el-input v-model="groupForm.luminName" maxlength="100"
-              @input="e => groupForm.luminName= validSe(e)"></el-input>
+            <el-input
+              v-model="groupForm.luminName"
+              maxlength="100"
+              @input="e => groupForm.luminName= validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="groupForm.remark" maxlength="200"
-              @input="e => groupForm.remark = validSe(e)"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="groupForm.remark"
+              maxlength="200"
+              @input="e => groupForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -124,15 +142,17 @@ export default {
       categoryArray: [], // 列表
       categoryTotal: 0, // 总数
       categoryRules: {
-        categoryName: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ]
+        categoryName: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
       // =============道路=========
       groupIsShow: false, // 新增弹框
       groupSubmit: function() {}, // 提交
       group_title: "", // 标题
-      groupForm: {},
+      groupForm: {
+        categoryId: "",
+        luminName: "",
+        remark: ""
+      },
       categoryOptions: [], // 区域下拉列表
       groupOptions: [], // 道路等级下拉列表
       groupArray: [], // 列表
@@ -163,7 +183,7 @@ export default {
   methods: {
     // ============区域==================
     // 获取所有区域数据
-    async getAllcategory(currentPage = 1, size = 5) {
+    async getAllcategory(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
@@ -188,15 +208,15 @@ export default {
         if (valid) {
           let data = this.categoryForm;
           console.log(data);
-          
-          // let res = await add_category({ data });
-          // if (res.data.success) {
-          //   this.$message.success(res.data.msgCode);
-          //   this.colseDialog();
-          //   this.getAllcategory();
-          // } else {
-          //   this.$message.error(res.data.msgCode);
-          // }
+
+          let res = await add_category({ data });
+          if (res.data.success) {
+            this.$message.success(res.data.msgCode);
+            this.colseDialog();
+            this.getAllcategory();
+          } else {
+            this.$message.error(res.data.msgCode);
+          }
         } else {
           return false;
         }
@@ -260,19 +280,24 @@ export default {
     },
     // 关闭窗口
     colseDialog() {
-      this.categoryisShow = false;
-      this.categoryForm = {};
-      // 道路
-      this.groupIsShow = false;
-      this.groupForm = {};
+      if (this.categoryisShow) {
+        this.$refs["categoryForm"].resetFields();
+        this.categoryisShow = false;
+      }
+      if (this.groupIsShow) {
+        this.$refs["group_Form"].resetFields();
+        this.groupIsShow = false;
+      }
     },
     // ============道路===================
     // 获取所有道路数据
-    async getAllgroup(currentPage = 1, size = 5) {
+    async getAllgroup(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
       };
+      console.log(data);
+
       let res = await get_all_group({ data });
       if (res) {
         this.groupTotal = res.data.total;

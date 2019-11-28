@@ -14,6 +14,8 @@
       {prop:'address',label:'地址'},
       {prop:'remark',label:'备注'}
       ]"
+      :size="10"
+      :sizes="[10,20,30,40]"
       :_edit="openeditconcent"
       :pageChange="getAllconcent"
       :total="concentTotal"
@@ -101,35 +103,32 @@
                 ></el-option>
               </el-option-group>
             </el-select>
+            {{concentForm.roadId}}
           </el-form-item>
           <el-form-item label="集中器地址" prop="addressField">
             <el-input
               v-model="concentForm.addressField"
-              maxlength="100"
+              maxlength="9"
               @input="e => concentForm.addressField = validSe(e)"
             ></el-input>
           </el-form-item>
           <el-form-item label="SIM卡号" prop="simcard">
             <el-input
               v-model="concentForm.simcard"
-              maxlength="100"
+              maxlength="30"
               @input="e => concentForm.simcard = validSe(e)"
             ></el-input>
           </el-form-item>
           <el-form-item required>
             <el-col :span="11">
               <el-form-item label="经度" prop="lng">
-                <el-input
-                  v-model="concentForm.lng"
-                ></el-input>
+                <el-input v-model="concentForm.lng"></el-input>
               </el-form-item>
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
               <el-form-item label="纬度" prop="lat">
-                <el-input
-                  v-model="concentForm.lat"
-                ></el-input>
+                <el-input v-model="concentForm.lat"></el-input>
               </el-form-item>
             </el-col>
           </el-form-item>
@@ -137,7 +136,7 @@
             <el-input
               v-model="concentForm.address"
               maxlength="100"
-              @input="e => concentForm.address = validSe(e)"
+              @input="e => concentForm.address = addressReg(e)"
             ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
@@ -172,28 +171,38 @@ export default {
 
   data() {
     var checkLng = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
-        if (!longrg.test(value)) {
-          callback(new Error("格式错误"));
-        } else {
-          callback();
-        }
+      if (!longrg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
     };
     var checkLat = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
-        if (!latreg.test(value)) {
-          callback(new Error("格式错误"));
-        } else {
-          callback();
-        }
+      if (!latreg.test(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
     };
     return {
       requiredMsg: "不能为空",
       // ===========集中器===========
       concentisShow: false, // 新增弹框
       concentForm: {
-        // 新增
         concentName: "",
+        addressField: "",
+        simcard: "",
+        lng: "",
+        lat: "",
+        address: "",
         remark: ""
       },
       concent_title: "", // 标题
@@ -208,8 +217,8 @@ export default {
         ],
         simcard: [{ required: true, message: "不能为空", trigger: "blur" }],
         address: [{ required: true, message: "不能为空", trigger: "blur" }],
-        lng: [ { validator: checkLng, trigger: 'blur' }],
-        lat: [ { validator: checkLat, trigger: 'blur' }],
+        lng: [{ validator: checkLng, trigger: "blur" }],
+        lat: [{ validator: checkLat, trigger: "blur" }]
       },
       roadOptions: [], // 集中器下拉列表
       workStateOptions: [
@@ -251,7 +260,7 @@ export default {
   methods: {
     // ============集中器==================
     // 获取所有集中器数据
-    async getAllconcent(val, currentPage = 1, size = 5) {
+    async getAllconcent(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size,
@@ -294,6 +303,7 @@ export default {
     },
     // 打开修改集中器弹框
     openeditconcent(row) {
+      sessionStorage.setItem("concentId",row.concentId)
       this.$router.push({
         name: "detail",
         params: { addressField: row.concentId }
@@ -302,8 +312,8 @@ export default {
 
     // 关闭窗口
     colseDialog() {
-      this.concentisShow = false;
       this.$refs["concentForm"].resetFields();
+      this.concentisShow = false;
     },
     // 获取下拉列表(仅子节点)
     async getAllSelect() {

@@ -88,13 +88,13 @@ export default {
   components: {},
 
   computed: {
-    rules(){
-       const rules={
+    rules() {
+      const rules = {
         account: [
           {
             required: true,
             message: this.$t("login.enterUsername"),
-            trigger: "blur",
+            trigger: "blur"
           }
         ],
         loginpwd: [
@@ -111,8 +111,8 @@ export default {
             trigger: "blur"
           }
         ]
-      }
-      return rules
+      };
+      return rules;
     }
   },
 
@@ -126,7 +126,7 @@ export default {
     logonTo() {
       this.$refs["loginForm"].validate(async valid => {
         if (valid) {
-          this.loginForm.loginpwd=md5(this.loginForm.loginpwd)
+          this.loginForm.loginpwd = md5(this.loginForm.loginpwd);
           let from = new FormData();
           from.append("account", this.loginForm.account);
           from.append("loginpwd", this.loginForm.loginpwd);
@@ -135,7 +135,12 @@ export default {
           if (res.data.success) {
             window.localStorage.setItem("token", res.data.content.token);
             window.localStorage.setItem("lang", this.loginForm.lang);
-            this.$router.push("/");
+            let fromUrl = sessionStorage.getItem("fromUrl");
+            if (fromUrl) {
+              this.$router.push(fromUrl);
+            } else {
+              this.$router.push("/");
+            }
           } else {
             this.$message.error(res.data.msgCode);
           }
@@ -150,8 +155,8 @@ export default {
       this.$i18n.locale = val;
     },
     // 设置rules
-    setFormRules(){
-      this.rules={
+    setFormRules() {
+      this.rules = {
         account: [
           {
             required: true,
@@ -173,7 +178,7 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      };
     }
   },
 

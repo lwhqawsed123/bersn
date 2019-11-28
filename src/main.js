@@ -28,13 +28,17 @@ import './assets/iconfont/iconfont.css'
 // 输入框禁止输入特殊字符(-&除外)
 // 使用方法,<el-input maxlength='15' :value="searchForm.logId" @input='e => searchForm.logId = validSe (e)' placeholder="请输入日志ID"></el-input>
 Vue.prototype.validSe = function (value) {
+  if(!value){
+    return value
+  }
   value = value.replace(/[`～*~!@#$%^*()_+=<>?:"{}|,./;'\\[\]·~！@#￥%……*（）——+={}|《》？：“”【】、；‘’，。、]/g, '').replace(/\s/g, "");
-  // if (value.length >= number) {
-  // this.$message({
-  // type: "warning",
-  // message: `输入内容不能超过${number}个字符`
-  // });
-  // }
+  return value;
+};
+Vue.prototype.addressReg = function (value) {
+  if(!value){
+    return value
+  }
+  value = value.replace(/[`～*~!@#$%^*()_+=<>?:"{}|,./;'\\[\]·~！@#￥%……*（）——+={}|《》？：“”【】、；‘’，。、]/g, '').replace(/\s/g, "");
   return value;
 };
 

@@ -10,46 +10,46 @@
       </div>
       <!-- 搜索框 -->
       <div class="search_box">
-      <span>灯杆编号：</span>
-      <el-input
-        class="search_input"
-        clearable
-        v-model="search.lampTaskCode"
-        placeholder="全部"
-        @keyup.enter.native="getAlllampTask"
-        @clear="getAlllampTask"
-      ></el-input>
-      <span class="search_road">道路：</span>
-      <el-select
-        v-model="search.roadId"
-        clearable
-        placeholder="全部"
-        popper-class="myselect search_select"
-        class="search_input"
-        @change="getAlllampTask"
-      >
-        <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
-          <el-option
-            v-for="item in group.children"
-            :key="item.id"
-            :label="item.optText"
-            :value="item.id"
-          ></el-option>
-        </el-option-group>
-      </el-select>
-      <span class="search_workStates">集中器编号：</span>
-      <el-input
-        class="search_input"
-        clearable
-        v-model="search.concentCode"
-        placeholder="全部"
-        @keyup.enter.native="getAlllampTask"
-        @clear="getAlllampTask"
-      ></el-input>
+        <span>灯杆编号：</span>
+        <el-input
+          class="search_input"
+          clearable
+          v-model="search.lampTaskCode"
+          placeholder="全部"
+          @keyup.enter.native="getAlllampTask"
+          @clear="getAlllampTask"
+        ></el-input>
+        <span class="search_road">道路：</span>
+        <el-select
+          v-model="search.roadId"
+          clearable
+          placeholder="全部"
+          popper-class="myselect search_select"
+          class="search_input"
+          @change="getAlllampTask"
+        >
+          <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
+            <el-option
+              v-for="item in group.children"
+              :key="item.id"
+              :label="item.optText"
+              :value="item.id"
+            ></el-option>
+          </el-option-group>
+        </el-select>
+        <span class="search_workStates">集中器编号：</span>
+        <el-input
+          class="search_input"
+          clearable
+          v-model="search.concentCode"
+          placeholder="全部"
+          @keyup.enter.native="getAlllampTask"
+          @clear="getAlllampTask"
+        ></el-input>
 
-      <button class="search_button" @click="getAlllampTask">搜索</button>
-    </div>
-    <!-- 搜索框结束 -->
+        <button class="search_button" @click="getAlllampTask">搜索</button>
+      </div>
+      <!-- 搜索框结束 -->
       <el-table
         :data="lampTaskArray"
         style="width: 100%"
@@ -94,7 +94,7 @@
         ></el-pagination>
       </div>
     </div>
-    
+
     <!-- 集中器弹出框 -->
     <Mydialog
       :isShow="lampTaskisShow"
@@ -111,8 +111,11 @@
           label-position="top"
         >
           <el-form-item label="杠杆编号" prop="lampTaskCode">
-            <el-input v-model="lampTaskForm.lampTaskCode" maxlength="100"
-              @input="e => lampTaskForm.lampTaskCode = validSe(e)"></el-input>
+            <el-input
+              v-model="lampTaskForm.lampTaskCode"
+              maxlength="100"
+              @input="e => lampTaskForm.lampTaskCode = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="道路" prop="roadId">
             <el-select v-model="lampTaskForm.roadId" placeholder="请选择" popper-class="myselect">
@@ -164,8 +167,11 @@
             </el-col>
           </el-form-item>
           <el-form-item label="地址" prop="address">
-            <el-input v-model="lampTaskForm.address" maxlength="100"
-              @input="e => lampTaskForm.address = validSe(e)"></el-input>
+            <el-input
+              v-model="lampTaskForm.address"
+              maxlength="100"
+              @input="e => lampTaskForm.address = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -185,7 +191,10 @@ export default {
   name: "",
   props: [""],
   data() {
-     var checkLng = (rule, value, callback) => {
+    var checkLng = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var longrg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/;
       if (!longrg.test(value)) {
         callback(new Error("格式错误"));
@@ -194,6 +203,9 @@ export default {
       }
     };
     var checkLat = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
       var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/;
       if (!latreg.test(value)) {
         callback(new Error("格式错误"));
@@ -205,14 +217,22 @@ export default {
       requiredMsg: "不能为空",
       // ===========集中器===========
       lampTaskisShow: false, // 新增弹框
-      lampTaskForm: {},
+      lampTaskForm: {
+        lampTaskCode: "",
+        roadId: "",
+        concentId: "",
+        lampTaskType: "",
+        lng: "",
+        lat: "",
+        address: ""
+      },
       lampTask_title: "", // 标题
       lampTaskSubmit: function() {}, // 提交的默认函数
       lampTaskArray: [], // 列表
       // 分页
       lampTaskTotal: 0, // 总数
       currentPage: 1,
-      sizes: [10,20,30,40],
+      sizes: [10, 20, 30, 40],
       size: 10,
       // 规则
       lampTaskRules: {
@@ -403,14 +423,14 @@ export default {
       });
       return arr;
     },
-    handleSizeChange(val){
-      this.size=val
-      this.getAlllampTask()
+    handleSizeChange(val) {
+      this.size = val;
+      this.getAlllampTask();
     },
-    handleCurrentChange(val){
-      this.currentPage=val
-      this.getAlllampTask()
-    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getAlllampTask();
+    }
   },
 
   watch: {}

@@ -43,12 +43,21 @@
           label-position="top"
         >
           <el-form-item label="区域名称" prop="regionName">
-            <el-input v-model="regionForm.regionName" maxlength="100"
-              @input="e => regionForm.regionName = validSe(e)"></el-input>
+            <el-input
+              v-model="regionForm.regionName"
+              maxlength="100"
+              @input="e => regionForm.regionName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="regionForm.remark" maxlength="200"
-              @input="e => regionForm.remark = validSe(e)"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="regionForm.remark"
+              maxlength="200"
+              @input="e => regionForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -58,15 +67,18 @@
     <Mydialog :isShow="roadIsShow" :tittle="road_title" :width="'600px'" :submit="roadSubmit">
       <div class="form_box">
         <el-form
-          ref="roadForm"
+          ref="road_Form"
           :rules="roadRules"
           :model="roadForm"
           label-width="80px"
           label-position="top"
         >
           <el-form-item label="道路名称" prop="roadName">
-            <el-input v-model="roadForm.roadName" maxlength="100"
-              @input="e => roadForm.roadName = validSe(e)"></el-input>
+            <el-input
+              v-model="roadForm.roadName"
+              maxlength="100"
+              @input="e => roadForm.roadName = validSe(e)"
+            ></el-input>
           </el-form-item>
           <el-form-item label="区域" prop="regionId">
             <el-select
@@ -86,19 +98,24 @@
             <el-select v-model="roadForm.roadGrade" placeholder="请选择道路等级" class="brand_select">
               <el-option
                 v-for="item in roadOptions"
-                :key="item.id"
+                :key="item.optValue"
                 :label="item.optText"
-                :value="item.id"
+                :value="item.optValue"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="道路长度" prop="roadLength">
-            <el-input v-model="roadForm.roadLength" maxlength="100"
-              @input="e => roadForm.roadLength = validSe(e)"></el-input>
+          <el-form-item label="道路长度(Km)" prop="roadLength">
+            <el-input v-model="roadForm.roadLength" maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input type="textarea" :rows="4" class="textarea_ps" v-model="roadForm.remark" maxlength="200"
-              @input="e => roadForm.remark = validSe(e)"></el-input>
+            <el-input
+              type="textarea"
+              :rows="4"
+              class="textarea_ps"
+              v-model="roadForm.remark"
+              maxlength="200"
+              @input="e => roadForm.remark = validSe(e)"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -117,12 +134,24 @@ import {
   add_road,
   get_all_road,
   get_road_byid,
-  delete_road
+  delete_road,
+  get_road_level_select
 } from "../../../api/http/region";
 export default {
   name: "",
   props: [""],
   data() {
+    var checklength = (rule, value, callback) => {
+      if (!value) {
+        callback();
+      }
+      var lengthrg = /^(([^0][0-9]+|0)\.([0-9]{1,3})$)|^([^0][0-9]+|0)$/;
+      if (!lengthrg.test(value)) {
+        callback(new Error("只能为数字,且小数点后最多保留3位"));
+      } else {
+        callback();
+      }
+    };
     return {
       requiredMsg: "不能为空",
       // ===========区域===========
@@ -133,7 +162,10 @@ export default {
       // regionTotal
       // openAddregion
       regionisShow: false, // 新增弹框
-      regionForm: {},
+      regionForm: {
+        regionName: "",
+        remark: ""
+      },
       region_title: "", // 标题
       regionSubmit: function() {}, // 提交的默认函数
       regionArray: [], // 列表
@@ -147,7 +179,13 @@ export default {
       roadIsShow: false, // 新增弹框
       roadSubmit: function() {}, // 提交
       road_title: "", // 标题
-      roadForm: {},
+      roadForm: {
+        roadName: "",
+        regionId: "",
+        roadGrade: "",
+        roadLength: "",
+        remark: ""
+      },
       regionOptions: [], // 区域下拉列表
       roadOptions: [], // 道路等级下拉列表
       roadArray: [], // 列表
@@ -156,7 +194,10 @@ export default {
         roadName: [{ required: true, message: "不能为空", trigger: "blur" }],
         regionId: [{ required: true, message: "不能为空", trigger: "change" }],
         roadGrade: [{ required: true, message: "不能为空", trigger: "change" }],
-        roadLength: [{ required: true, message: "不能为空", trigger: "blur" }]
+        roadLength: [
+          { required: true, message: "不能为空", trigger: "blur" },
+          { validator: checklength}
+        ]
       }
     };
   },
@@ -178,7 +219,7 @@ export default {
   methods: {
     // ============区域==================
     // 获取所有区域数据
-    async getAllregion(currentPage = 1, size = 5) {
+    async getAllregion(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
@@ -254,7 +295,7 @@ export default {
     },
     // 删除区域
     deleteregion(row) {
-      this.$confirm("是否删除该区域?", "提示", {
+      this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -276,7 +317,7 @@ export default {
       if (this.regionisShow) {
         this.$refs["regionForm"].resetFields();
       } else {
-        this.$refs["roadForm"].resetFields();
+        this.$refs["road_Form"].resetFields();
       }
       // 区域
       this.regionisShow = false;
@@ -285,7 +326,7 @@ export default {
     },
     // ============道路===================
     // 获取所有道路数据
-    async getAllroad(currentPage = 1, size = 5) {
+    async getAllroad(val, currentPage = 1, size = 5) {
       let data = {
         pageNo: currentPage,
         pageSize: size
@@ -310,29 +351,36 @@ export default {
       let res = await get_all_region();
       if (res) {
         this.regionOptions = res.data.rows;
-        // get_annex_select().then(res => {
-        //   if (res.data.success) {
-        //     this.roadOptions = res.data.content;
-        //   } else {
-        //     this.$message.error(res.data.msgCode);
-        //   }
-        // });
+
+        get_road_level_select().then(res => {
+          if (res.data.success) {
+            this.roadOptions = res.data.content;
+          } else {
+            this.$message.error(res.data.msgCode);
+          }
+        });
       } else {
         this.$message.error("服务器未响应");
       }
     },
-    // 新增区域
+    // 新增道路
     addroad() {
       this.$refs["road_Form"].validate(async valid => {
         if (valid) {
+          // let data ={
+          //   roadName:this.roadForm.roadName,
+          //   regionId:this.roadForm.regionId,
+          //   roadGrade:this.roadForm.roadGrade,
+          //   roadLength:this.roadForm.roadLength,
+          //   remark:this.roadForm.remark
+          // } ;
           let data = this.roadForm;
           console.log(data);
 
           let res = await add_road({ data });
-          console.log(res);
-
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
+
             this.colseDialog();
             this.getAllroad();
           } else {
@@ -357,6 +405,33 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
+    // 新增道路
+    editroad(row) {
+      this.$refs["road_Form"].validate(async valid => {
+        if (valid) {
+          let data = {
+            roadName: this.roadForm.roadName,
+            regionId: this.roadForm.regionId,
+            roadGrade: this.roadForm.roadGrade,
+            roadLength: this.roadForm.roadLength,
+            remark: this.roadForm.remark
+          };
+          console.log(data);
+
+          let res = await add_road({ data });
+          if (res.data.success) {
+            this.$message.success(res.data.msgCode);
+
+            this.colseDialog();
+            this.getAllroad();
+          } else {
+            this.$message.error(res.data.msgCode);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
     // 删除道路
     deleteroad(row) {
       this.$confirm("是否删除该道路?", "提示", {
@@ -365,7 +440,7 @@ export default {
         type: "warning"
       })
         .then(async () => {
-          let data = { id: row.brandId };
+          let data = { id: row.roadId };
           let res = await delete_road({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);

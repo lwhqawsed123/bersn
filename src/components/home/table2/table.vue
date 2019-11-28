@@ -5,9 +5,10 @@
         <span class="table_header_left_line"></span>
         <span class="table_title">{{table_title}}</span>
       </span>
-      <button v-if="!delete_button&&!tongbu" class="add_button" @click="open_add">+ 添加</button>
+      <button v-if="!delete_button&&!tongbu&&!refresh" class="add_button" @click="open_add">+ 添加</button>
       <button v-if="delete_button&&!tongbu" class="add_button delete_button" @click="delete_fn">删除</button>
       <button v-if="!delete_button&&tongbu" class="delete_button tongbu_button" @click="delete_fn">同步信息</button>
+      <button v-if="!delete_button&&refresh" class="delete_button tongbu_button" @click="delete_fn">刷新</button>
     </div>
     <slot></slot>
     <el-table
@@ -75,7 +76,8 @@ export default {
     "noPagination",   // 是否 不显示页码
     "workState",      // 是否 不显示工作状态
     "operation",      // 是否 不显示操作栏
-    "tongbu"          // 是否为同步按钮(右上)
+    "tongbu",          // 是否为同步按钮(右上)
+    "refresh",          // 是否为刷新按钮(右上)
   ],
   data() {
     return {
@@ -103,14 +105,14 @@ export default {
     handleSizeChange(val) {
       this.pageSize = val;
       if (this.pageChange) {
-        this.pageChange(this.currentPage, val);
+        this.pageChange('event',this.currentPage, val);
       }
     },
     // 当前页变化
     handleCurrentChange(val) {
       this.currentPage = val;
       if (this.pageChange) {
-        this.pageChange(val, this.pageSize);
+        this.pageChange('event',val, this.pageSize);
       }
     },
     // 打开弹框
