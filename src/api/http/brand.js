@@ -1,5 +1,4 @@
 import request from '../../utils/request.js'
-// 新增品牌
 export const add_brand = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -15,7 +14,6 @@ export const add_brand = (options) => {
     })
 }
 
-// 查询所有品牌
 export const get_all_brand = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -30,7 +28,6 @@ export const get_all_brand = (options) => {
         data: form
     })
 }
-// 根据id查询品牌
 export const get_brand_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -46,7 +43,6 @@ export const get_brand_byid = (options) => {
     })
 }
 
-// 删除品牌
 export const delete_brand = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -63,8 +59,6 @@ export const delete_brand = (options) => {
 }
 
 
-// ===============灯具========================
-// 新增灯具
 export const add_light = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -79,8 +73,6 @@ export const add_light = (options) => {
         data: form
     })
 }
-
-// 查询所有灯具
 export const get_all_light = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -95,7 +87,6 @@ export const get_all_light = (options) => {
         data: form
     })
 }
-// 根据id查询灯具
 export const get_light_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -110,7 +101,6 @@ export const get_light_byid = (options) => {
         data: form
     })
 }
-// 删除灯具
 export const delete_light = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -127,8 +117,6 @@ export const delete_light = (options) => {
 }
 
 
-// =========光源================
-// 新增光源
 export const add_annex = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -144,7 +132,6 @@ export const add_annex = (options) => {
     })
 }
 
-// 查询所有光源
 export const get_all_annex = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -159,7 +146,6 @@ export const get_all_annex = (options) => {
         data: form
     })
 }
-// 根据id查询灯光源
 export const get_annex_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -174,7 +160,6 @@ export const get_annex_byid = (options) => {
         data: form
     })
 }
-// 删除灯光源
 export const delete_annex = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

@@ -1,5 +1,5 @@
 import request from '../../utils/request.js'
-// 新增光源
+
 export const add_lamp = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -61,7 +61,6 @@ export const delete_lamp = (options) => {
         data: form
     })
 }
-// ==========光源调节===============
 // 根据id查询 光源数据(硬件)
 export const get_monitor_cmd_lamp_byid = (options) => {
     var options = options || {}
@@ -78,7 +77,6 @@ export const get_monitor_cmd_lamp_byid = (options) => {
     })
 }
 
-// 调节光源亮度(群控)
 export const set_groupLamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -93,7 +91,6 @@ export const set_groupLamp_byid = (options) => {
         data: form
     })
 }
-// 调节光源亮度(单控)
 export const set_singleLamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -109,7 +106,7 @@ export const set_singleLamp_byid = (options) => {
     })
 }
 
-// 开启光源
+
 export const open_groupLamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -125,7 +122,7 @@ export const open_groupLamp_byid = (options) => {
     })
 }
 
-// 关闭光源
+
 export const close_groupLamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -141,8 +138,6 @@ export const close_groupLamp_byid = (options) => {
     })
 }
 
-//=============下拉列表==================
-// 道路列表
 export const get_select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -152,7 +147,7 @@ export const get_select_road = (options) => {
     })
 }
 
-// 照明分组列表
+
 export const get_select_luminGroup = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -161,7 +156,7 @@ export const get_select_luminGroup = (options) => {
         method
     })
 }
-// 集中器列表
+
 export const get_select_concent = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -170,7 +165,7 @@ export const get_select_concent = (options) => {
         method
     })
 }
-// 灯杆列表
+
 export const get_select_pole = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -179,7 +174,7 @@ export const get_select_pole = (options) => {
         method
     })
 }
-// 光源类型列表
+
 export const get_select_light = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -188,7 +183,7 @@ export const get_select_light = (options) => {
         method
     })
 }
-// 电源类型列表
+
 export const get_select_annex = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

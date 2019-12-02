@@ -62,22 +62,22 @@
 export default {
   name: "",
   props: [
-    "table_title",  // 表格标题
-    "tableData",    // 表格数据
-    "sizes",        // 可选页容量
-    "size",         // 当前页容量
-    "total",        // 数据总数
-    "columnArray",  // 表头
-    "_edit",        // 打开修改弹框
-    "pageChange",   // 页码发生改变(重新获取数据)
-    "openAdd",      // 打开新增弹框(右上)
-    "delete_button",  // 是否显示删除按钮(右上) 不显示为true
-    "_delete",        // 删除
-    "noPagination",   // 是否 不显示页码
-    "workState",      // 是否 不显示工作状态
-    "operation",      // 是否 不显示操作栏
-    "tongbu",          // 是否为同步按钮(右上)
-    "refresh",          // 是否为刷新按钮(右上)
+    "table_title",  
+    "tableData",    
+    "sizes",        
+    "size",         
+    "total",        
+    "columnArray",  
+    "_edit",        
+    "pageChange",   
+    "openAdd",     
+    "delete_button",  
+    "_delete",        
+    "noPagination",    
+    "workState",       
+    "operation",      
+    "tongbu",         
+    "refresh",         
   ],
   data() {
     return {
@@ -101,33 +101,28 @@ export default {
     total() {}
   },
   methods: {
-    // 页容量变化
     handleSizeChange(val) {
       this.pageSize = val;
       if (this.pageChange) {
         this.pageChange('event',this.currentPage, val);
       }
     },
-    // 当前页变化
     handleCurrentChange(val) {
       this.currentPage = val;
       if (this.pageChange) {
         this.pageChange('event',val, this.pageSize);
       }
     },
-    // 打开弹框
     open_add() {
       if (this.openAdd) {
         this.openAdd();
       }
     },
-    // 修改
     open_editBrand(row) {
       if (this._edit) {
         this._edit(row);
       }
     },
-    // 删除
     delete_fn(row){
        if (this._delete) {
         this._delete(row);

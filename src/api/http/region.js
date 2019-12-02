@@ -1,5 +1,4 @@
 import request from '../../utils/request.js'
-// 新增区域
 export const add_region = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -15,7 +14,7 @@ export const add_region = (options) => {
     })
 }
 
-// 查询所有区域
+
 export const get_all_region = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -30,7 +29,7 @@ export const get_all_region = (options) => {
         data: form
     })
 }
-// 根据id查询区域
+
 export const get_region_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -46,7 +45,7 @@ export const get_region_byid = (options) => {
     })
 }
 
-// 删除区域
+
 export const delete_region = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -63,8 +62,6 @@ export const delete_region = (options) => {
 }
 
 
-// ===============道路========================
-// 新增道路
 export const add_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -79,7 +76,7 @@ export const add_road = (options) => {
         data: form
     })
 }
-// 查询所有光源类型
+
 export const get_road_level_select = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -89,7 +86,7 @@ export const get_road_level_select = (options) => {
     })
 }
 
-// 查询所有道路
+
 export const get_all_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -104,7 +101,7 @@ export const get_all_road = (options) => {
         data: form
     })
 }
-// 根据id查询道路
+
 export const get_road_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -119,7 +116,6 @@ export const get_road_byid = (options) => {
         data: form
     })
 }
-// 删除道路
 export const delete_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -134,4 +130,3 @@ export const delete_road = (options) => {
         data: form
     })
 }
-// 查询道路等级

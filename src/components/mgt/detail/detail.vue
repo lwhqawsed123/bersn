@@ -1,6 +1,5 @@
 <template>
   <div class="brand_box">
-    <!-- 集中器表格 -->
     <Table
       :table_title="'集中器管理'"
       :tableData="concentArray"
@@ -21,7 +20,6 @@
       :_edit="openEditconcent"
       :workState="true"
     ></Table>
-    <!-- 光源信息 -->
     <Table
       :table_title="'光源信息'"
       :tableData="lightArray"
@@ -41,7 +39,6 @@
       :operation="true"
       :tongbu="true"
     ></Table>
-    <!-- 终端信息 -->
     <Table
       :table_title="'终端信息'"
       :tableData="termInfo"
@@ -59,7 +56,6 @@
       :refresh="true"
       :_delete="getConcentById"
     ></Table>
-    <!-- 主站IP地址和端口 -->
     <Table
       :table_title="'主站IP地址和端口'"
       :tableData="IPArray"
@@ -75,7 +71,6 @@
       :_delete="getConcentById"
       :_edit="openEditIP"
     ></Table>
-    <!-- 集中器弹出框 -->
     <Mydialog
       :isShow="concentisShow"
       :tittle="concent_title"
@@ -156,7 +151,6 @@
         </el-form>
       </div>
     </Mydialog>
-    <!-- 主站ip地址和端口编辑 -->
     <Mydialog :isShow="IPisShow" :tittle="IP_title" :width="'600px'" :submit="IPSubmit">
       <div class="form_box">
         <el-form
@@ -260,9 +254,8 @@ export default {
     };
     return {
       requiredMsg: "不能为空",
-      // ===========集中器===========
       concentId: "",
-      concentisShow: false, // 新增弹框
+      concentisShow: false, 
       concentForm: {
         concentName: "",
         roadId: "",
@@ -273,10 +266,10 @@ export default {
         address: "",
         remark: ""
       },
-      concent_title: "", // 标题
-      concentSubmit: function() {}, // 提交的默认函数
-      concentArray: [], // 列表
-      concentTotal: 0, // 总数
+      concent_title: "", 
+      concentSubmit: function() {}, 
+      concentArray: [], 
+      concentTotal: 0, 
       concentRules: {
         concentName: [{ required: true, message: "不能为空", trigger: "blur" }],
         roadId: [{ required: true, message: "不能为空", trigger: "change" }],
@@ -288,18 +281,15 @@ export default {
         lng: [{ validator: checkLng, trigger: "blur" }],
         lat: [{ validator: checkLat, trigger: "blur" }]
       },
-      roadOptions: [], // 集中器下拉列表
+      roadOptions: [], 
       search: {
         concentCode: "",
         roadOptValue: "",
         workState: ""
       },
-      // =======光源=======
       lightArray: [],
       lightTotal: 0,
-      // =======终端信息===
       termInfo: [],
-      //=====IP和端口======
       IPisShow: false,
       IPArray: [],
       IP_title: "主站ip地址和端口编辑",
@@ -342,7 +332,6 @@ export default {
 
   beforeMount() {},
   created() {
-    // 获取concentId
     let concentId = sessionStorage.getItem("concentId");
     if (concentId) {
       this.concentId = concentId;
@@ -353,13 +342,10 @@ export default {
   mounted() {},
 
   methods: {
-    // ============集中器==================
-    // 获取集中器数据
     async getConcentById(edit) {
       let data = {
         id: this.concentId
       };
-      console.log(data);
 
       let res = await get_concent_byid({ data });
 
@@ -388,7 +374,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开修改弹框
+    
     openEditconcent() {
       this.concent_title = "集中器编辑";
       this.concentSubmit = this.editconcent;
@@ -396,7 +382,7 @@ export default {
       this.getAllSelect();
       this.concentisShow = true;
     },
-    // 修改集中器
+    
     editconcent() {
       this.$refs["concentForm"].validate(async valid => {
         if (valid) {
@@ -425,7 +411,7 @@ export default {
         }
       });
     },
-    // 删除集中器
+    
     deleteConcent() {
       this.$confirm("是否删除该集中器?", "提示", {
         confirmButtonText: "确定",
@@ -444,7 +430,7 @@ export default {
         })
         .catch(() => {});
     },
-    // 同步光源信息
+    
     async pushLamp() {
       let data = {
         conId: this.concentId
@@ -454,13 +440,12 @@ export default {
       let res = await push_lamp({ data });
       console.log(res);
       if (res.data.ackState == "SUCCESS") {
-        // this.versionInfo = res.data.fnResults[0].data;
         this.$message.success(res.data.ackState);
       } else {
         this.$message.error(res.data.ackState);
       }
     },
-    // 获取集中器内所有光源
+    
     async getAllLight(val, currentPage = 1, size = 10) {
       let data = {
         concentId: this.concentId,
@@ -474,7 +459,7 @@ export default {
       }
     },
 
-    // 关闭窗口
+    
     colseDialog() {
       if (this.concentisShow) {
         this.$refs["concentForm"].resetFields();
@@ -485,12 +470,10 @@ export default {
         this.IPisShow = false;
       }
     },
-    //========打开修改ip弹框==========
     openEditIP() {
       this.getConcentById();
       this.IPisShow = true;
     },
-    // 获取下拉列表(仅子节点)
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -501,7 +484,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 删除数组中为空的children
+    
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {
@@ -514,7 +497,7 @@ export default {
       });
       return arr;
     },
-    // 输入框ip地址
+    
     setIPinput(value) {
       if (!value) {
         return value;
@@ -526,7 +509,6 @@ export default {
         )
       return value;
     },
-    // 输入框端口
     setPort(value) {
       if (!value) {
         return value;

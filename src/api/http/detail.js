@@ -1,7 +1,7 @@
 import request from '../../utils/request.js'
 
 
-// 根据id查询集中器
+
 export const get_concent_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -18,7 +18,7 @@ export const get_concent_byid = (options) => {
 }
 
 
-// 修改集中器
+
 export const edit_concent = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -34,7 +34,7 @@ export const edit_concent = (options) => {
     })
 }
 
-// 删除集中器
+
 export const delete_concent = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -50,7 +50,7 @@ export const delete_concent = (options) => {
     })
 }
 
-// 道路下拉列表
+
 export const get_select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -60,7 +60,7 @@ export const get_select_road = (options) => {
     })
 }
 
-// 道路下拉列表
+
 export const get_all_light = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -77,7 +77,7 @@ export const get_all_light = (options) => {
 }
 
 
-// 查询集中器终端信息
+
 export const get_concentVersionInfo = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -93,7 +93,7 @@ export const get_concentVersionInfo = (options) => {
     })
 }
 
-// 同步光源信息
+
 export const push_lamp = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

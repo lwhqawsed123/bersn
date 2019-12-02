@@ -2,6 +2,8 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import router from '../router'
 import qs from 'qs'
+import { Loading } from "element-ui";
+
 // const http = axios.create({
 //     baseURL: '/api', // api的base_url
 //     timeout: 15000, // 请求超时时间
@@ -21,8 +23,13 @@ const http = axios.create({
     }
 
 })
+let MyLoading=null
 // 请求拦截
 http.interceptors.request.use((req) => {
+    // 全局设置 提交 接口的loading
+    if(req.url.indexOf('/save')!==-1){
+        MyLoading = Loading.service()
+    }
     // //这个例子中data是loginName和password
     // let req_DATA = req.data
     // //统一进行qs模块转换
@@ -48,6 +55,10 @@ http.interceptors.request.use((req) => {
 // 响应拦截
 http.interceptors.response.use(
     response => {
+        if(MyLoading){
+            MyLoading.close()
+            MyLoading=null
+        }
         if (response.data.msgCode && response.data.msgCode == 'system.session.invalid') {
             Message.error('系统会话失效')
             sessionStorage.setItem('fromUrl', router.history.current.fullPath)
@@ -61,7 +72,10 @@ http.interceptors.response.use(
         }
     },
     error => {
-
+        if(MyLoading){
+            MyLoading.close()
+            MyLoading=null
+        }
         if (error.response) {
             switch (error.response.status) {
                 case 400:

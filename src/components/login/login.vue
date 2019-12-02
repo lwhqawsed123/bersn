@@ -119,7 +119,6 @@ export default {
   beforeMount() {},
 
   mounted() {
-    // this.setFormRules()
   },
 
   methods: {
@@ -149,12 +148,10 @@ export default {
         }
       });
     },
-    // 切换语言
     changeLanguage(val) {
       localStorage.setItem("locale", val);
       this.$i18n.locale = val;
     },
-    // 设置rules
     setFormRules() {
       this.rules = {
         account: [
@@ -183,10 +180,6 @@ export default {
   },
 
   watch: {
-    //监听语言切换
-    // "$i18n.locale": function() {
-    //   this.setFormRules();
-    // }
   }
 };
 </script>

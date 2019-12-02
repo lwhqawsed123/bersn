@@ -1,6 +1,6 @@
 import request from '../../utils/request.js'
 import qs from 'qs'
-// 道路下拉列表
+
 export const select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -9,7 +9,7 @@ export const select_road = (options) => {
         method
     })
 }
-// 照明分组下拉列表
+
 export const luminGroup = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -20,7 +20,7 @@ export const luminGroup = (options) => {
         data
     })
 }
-// 搜索框
+
 export const map_search = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -31,7 +31,7 @@ export const map_search = (options) => {
         data
     })
 }
-// 修改或者标记集中器
+
 export const edit_concentrator = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -42,7 +42,7 @@ export const edit_concentrator = (options) => {
         data
     })
 }
-// 标记灯杆
+
 export const merker_pole = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -54,7 +54,7 @@ export const merker_pole = (options) => {
     })
 }
 
-// 批量修改灯杆
+
 export const merker_pole_array = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -69,7 +69,7 @@ export const merker_pole_array = (options) => {
     })
 }
 
-// id查询集中器
+
 export const get_concentrator_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -81,7 +81,7 @@ export const get_concentrator_byid = (options) => {
     })
 }
 
-// id查询灯杆
+
 export const get_lamp_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -93,7 +93,7 @@ export const get_lamp_byid = (options) => {
     })
 }
 
-// id查询灯源
+
 export const get_lamp_linght_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -108,7 +108,7 @@ export const get_lamp_linght_byid = (options) => {
         data:form
     })
 }
-// 关闭光源
+
 export const close_lamp_linght_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -124,7 +124,7 @@ export const close_lamp_linght_byid = (options) => {
     })
 }
 
-// 开启光源
+
 export const open_lamp_linght_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -139,7 +139,7 @@ export const open_lamp_linght_byid = (options) => {
         data:form
     })
 }
-// 单灯调光
+
 export const dimming_lamp_linght_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -155,7 +155,6 @@ export const dimming_lamp_linght_byid = (options) => {
     })
 }
 
-// 群体调光(传单灯id也可以控制单灯)
 export const dimming_lamp_linght_all = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

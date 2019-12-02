@@ -50,7 +50,7 @@
             ></el-option>
           </el-option-group>
         </el-select>
-        <span class="search_workStates">集中器编号：</span>
+        <span class="search_road">集中器编号：</span>
         <el-input
           class="search_input"
           clearable
@@ -63,7 +63,6 @@
         <button class="search_button" @click="getAllpole">搜索</button>
       </div>
     </Table>
-    <!-- 集中器弹出框 -->
     <Mydialog :isShow="poleisShow" :tittle="pole_title" :width="'600px'" :submit="poleSubmit">
       <div class="form_box">
         <el-form
@@ -177,8 +176,7 @@ export default {
     };
     return {
       requiredMsg: "不能为空",
-      // ===========灯杆===========
-      poleisShow: false, // 新增弹框
+      poleisShow: false, 
       poleForm: {
         poleCode: "",
         roadId: "",
@@ -188,10 +186,10 @@ export default {
         lat: "",
         address: ""
       },
-      pole_title: "", // 标题
-      poleSubmit: function() {}, // 提交的默认函数
-      poleArray: [], // 列表
-      poleTotal: 0, // 总数
+      pole_title: "", 
+      poleSubmit: function() {}, 
+      poleArray: [], 
+      poleTotal: 0, 
       poleRules: {
         poleCode: [{ required: true, message: "不能为空", trigger: "blur" }],
         addressField: [
@@ -204,8 +202,8 @@ export default {
         lng: [{ validator: checkLng }],
         lat: [{ validator: checkLat }]
       },
-      roadOptions: [], // 道路下拉列表
-      contentOptions: [], // 集中器下拉列表
+      roadOptions: [], 
+      contentOptions: [], 
       poleOptions: [
         {
           value: "MIDDLE_POLE",
@@ -243,8 +241,6 @@ export default {
   },
 
   methods: {
-    // ============集中器==================
-    // 获取所有集中器数据
     async getAllpole(val, currentPage = 1, size = 10) {
       let data = {};
       if (this.search.poleCode) {
@@ -281,16 +277,15 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
+    
     openAddpole() {
       this.pole_title = "新增集中器";
       this.poleSubmit = this.addpole;
       this.getAllSelect();
       this.poleisShow = true;
     },
-    // 新增集中器
+    
     addpole() {
-      console.log(this.poleForm);
 
       this.$refs["pole_Form"].validate(async valid => {
         if (valid) {
@@ -309,7 +304,7 @@ export default {
         }
       });
     },
-    // 打开修改集中器弹框
+    
     async openeditpole(row) {
       this.pole_title = "集中器修改";
       this.poleSubmit = this.addpole;
@@ -326,7 +321,7 @@ export default {
       }
     },
 
-    // 删除灯杆
+    
     deletepole(row) {
       this.$confirm("是否删除该灯杆?", "提示", {
         confirmButtonText: "确定",
@@ -346,14 +341,13 @@ export default {
         .catch(() => {});
     },
 
-    // 关闭窗口
+    
     colseDialog() {
       this.$refs["pole_Form"].resetFields();
       setTimeout(() => {
         this.poleisShow = false;
       }, 100);
     },
-    // 获取下拉列表(仅子节点)
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -369,7 +363,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 删除数组中为空的children
+    
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {

@@ -1,5 +1,5 @@
 import request from '../../utils/request.js'
-// 新增灯杆
+
 export const add_pole = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -15,7 +15,7 @@ export const add_pole = (options) => {
     })
 }
 
-// 查询所有灯杆
+
 export const get_all_pole = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -30,7 +30,7 @@ export const get_all_pole = (options) => {
         data: form
     })
 }
-// 根据id查询灯杆
+
 export const get_pole_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -46,7 +46,7 @@ export const get_pole_byid = (options) => {
     })
 }
 
-// 删除灯杆
+
 export const delete_pole = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -62,7 +62,7 @@ export const delete_pole = (options) => {
     })
 }
 
-// 道路列表
+
 export const get_select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -72,7 +72,7 @@ export const get_select_road = (options) => {
     })
 }
 
-// 集中器列表
+
 export const get_select_content = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

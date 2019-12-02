@@ -8,7 +8,6 @@
         </span>
         <button class="add_button" @click="openAddlampTask">+ 添加</button>
       </div>
-      <!-- 搜索框 -->
       <div class="search_box">
         <span>灯杆编号：</span>
         <el-input
@@ -49,7 +48,6 @@
 
         <button class="search_button" @click="getAlllampTask">搜索</button>
       </div>
-      <!-- 搜索框结束 -->
       <el-table
         :data="lampTaskArray"
         style="width: 100%"
@@ -95,7 +93,6 @@
       </div>
     </div>
 
-    <!-- 集中器弹出框 -->
     <Mydialog
       :isShow="lampTaskisShow"
       :tittle="lampTask_title"
@@ -215,8 +212,7 @@ export default {
     };
     return {
       requiredMsg: "不能为空",
-      // ===========集中器===========
-      lampTaskisShow: false, // 新增弹框
+      lampTaskisShow: false, 
       lampTaskForm: {
         lampTaskCode: "",
         roadId: "",
@@ -226,15 +222,15 @@ export default {
         lat: "",
         address: ""
       },
-      lampTask_title: "", // 标题
-      lampTaskSubmit: function() {}, // 提交的默认函数
-      lampTaskArray: [], // 列表
-      // 分页
-      lampTaskTotal: 0, // 总数
+      lampTask_title: "", 
+      lampTaskSubmit: function() {}, 
+      lampTaskArray: [], 
+      
+      lampTaskTotal: 0, 
       currentPage: 1,
       sizes: [10, 20, 30, 40],
       size: 10,
-      // 规则
+      
       lampTaskRules: {
         lampTaskCode: [
           { required: true, message: "不能为空", trigger: "blur" }
@@ -251,8 +247,8 @@ export default {
         lng: [{ validator: checkLng, trigger: "blur" }],
         lat: [{ validator: checkLat, trigger: "blur" }]
       },
-      roadOptions: [], // 道路下拉列表
-      contentOptions: [], // 集中器下拉列表
+      roadOptions: [], 
+      contentOptions: [], 
       lampTaskOptions: [
         {
           value: "MIDDLE_lampTask",
@@ -289,8 +285,6 @@ export default {
   },
 
   methods: {
-    // ============集中器==================
-    // 获取所有集中器数据
     async getAlllampTask() {
       let data = {};
       if (this.search.lampTaskCode) {
@@ -327,14 +321,14 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
+    
     openAddlampTask() {
       this.lampTask_title = "新增集中器";
       this.lampTaskSubmit = this.addlampTask;
       this.getAllSelect();
       this.lampTaskisShow = true;
     },
-    // 新增集中器
+    
     addlampTask() {
       this.$refs["lampTaskForm"].validate(async valid => {
         if (valid) {
@@ -352,7 +346,7 @@ export default {
         }
       });
     },
-    // 打开修改集中器弹框
+    
     async openeditlampTask(row) {
       this.lampTask_title = "集中器修改";
       this.lampTaskSubmit = this.addlampTask;
@@ -369,7 +363,7 @@ export default {
       }
     },
 
-    // 删除灯杆
+    
     deletelampTask(row) {
       this.$confirm("是否删除该灯杆?", "提示", {
         confirmButtonText: "确定",
@@ -389,12 +383,11 @@ export default {
         .catch(() => {});
     },
 
-    // 关闭窗口
+    
     colseDialog() {
       this.lampTaskisShow = false;
       this.$refs["lampTaskForm"].resetFields();
     },
-    // 获取下拉列表(仅子节点)
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -410,7 +403,6 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 删除数组中为空的children
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {

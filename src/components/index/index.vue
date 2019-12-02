@@ -3,14 +3,6 @@
     <div v-if="language" v-loading="map_loading" class="bd_map" id="bd_map"></div>
     <div v-if="!language" v-loading="map_loading" class="gg_map" id="gg_map"></div>
     <div class="selectCard">
-      <!-- 道路 -->
-      <!-- <el-cascader
-        v-model="selected.road"
-        :options="districtOptions"
-        :props="{value:'optValue',label:'optText', expandTrigger: 'hover',checkStrictly: true }"
-        @change="roadChange"
-        class="select123"
-      ></el-cascader>-->
       <el-select
         v-model="selected.road"
         clearable
@@ -32,12 +24,6 @@
       </el-select>
 
       <span class="select_interval"></span>
-      <!-- 照明分组 -->
-      <!-- <el-cascader
-        v-model="selected.luminGroup"
-        :options="luminGroupOptions"
-        :props="{ value:'optValue',label:'optText', expandTrigger: 'hover',checkStrictly: true  }"
-      ></el-cascader>-->
       <el-select
         v-model="selected.luminGroup"
         clearable
@@ -106,7 +92,7 @@
               >{{scope.row.addressField}}</span>
             </template>
           </el-table-column>
-          <el-table-column type="expand" width="15">
+          <el-table-column type="expand" width="15" >
             <template slot-scope="scope">
               <div v-for="item in scope.row.poleList" :key="item.poleId" class="controller_inside">
                 <div class="lamp_post_list">
@@ -207,6 +193,7 @@
       :visible.sync="linght_Dialog_card"
       width="866px"
       :modal="false"
+      :close-on-click-modal="false"
       v-loading="lamp_loading"
       ref="single_lamp"
     >
@@ -300,7 +287,7 @@
         <img src="../../assets/img/index/tishi.png" alt class="light_controller_icon" />
         <span>调光值：</span>
         <div class="intensity_control">
-          <el-slider v-model="lightController.intensityControl" :max="100"></el-slider>
+          <el-slider v-model="lightController.intensityControl" @change="lightChange" :max="100"></el-slider>
         </div>
         <div class="intensity_inputnumber">
           <el-input-number
@@ -324,6 +311,7 @@
       :visible.sync="concentrator_dialogVisible"
       width="554px"
       :modal="false"
+      :close-on-click-modal="false"
       class="concentrator_dialogVisible"
     >
       <!-- 集中器 -->
@@ -381,6 +369,7 @@
       :visible.sync="street_lamp_Dialog_card"
       width="554px"
       :modal="false"
+      :close-on-click-modal="false"
     >
       <div class="clearfix dialog_card_header">
         <div class="header_left"></div>
@@ -445,15 +434,13 @@
 </template>
 
 <script>
-// import BaiduMap from "vue-baidu-map/components/map/Map.vue";
-// import BmMarker from "vue-baidu-map/components/overlays/Marker"; //点标注
 import BMap from "BMap";
 import echarts from "echarts";
-import old_lamp_icon from "../../assets/img/index/dingwei.png"; // 集中器(修改状态)
-import light_lamp_icon from "../../assets/img/index/tishi@2x(1).png"; // 路灯(修改状态)
-import street_lamp_icon from "../../assets/img/index/ludeng-green.png"; // 路灯绿
-import street_lamp_icon_red from "../../assets/img/index/ludeng-red.png"; // 路灯红
-import concentrator_icon from "../../assets/img/index/集中器.png"; // 集中器
+import old_lamp_icon from "../../assets/img/index/dingwei.png"; 
+import light_lamp_icon from "../../assets/img/index/tishi@2x(1).png"; 
+import street_lamp_icon from "../../assets/img/index/ludeng-green.png"; 
+import street_lamp_icon_red from "../../assets/img/index/ludeng-red.png"; 
+import concentrator_icon from "../../assets/img/index/集中器.png"; 
 import shangsanjiao from "../../assets/img/index/三角形(1).png";
 import xiasanjiao from "../../assets/img/index/三角形@2x(2).png";
 import Bus from "../../utils/bus/bus";
@@ -490,32 +477,32 @@ export default {
       shrinkZoom: 14,
       maxZoom: 18,
       showMap: true,
-      concentrator_Marker: [], // 集中器marker
-      lamp_Marker: [], // 灯杆marker
-      edit_street_lamp_list: [], // 编辑状态的路灯marker
-      street_lamp_icon: street_lamp_icon, // 路灯icon绿
-      street_lamp_icon_red: street_lamp_icon_red, // 路灯icon红
-      concentrator_icon: concentrator_icon, // 集中器icon
-      old_lamp_icon: old_lamp_icon, // 老路灯图标
-      light_lamp_icon: light_lamp_icon, // 老路灯图标
-      street_lamp_list: [], // 所有路灯数据
-      concentrator_list: [], // 所有集中器数据
+      concentrator_Marker: [], 
+      lamp_Marker: [], 
+      edit_street_lamp_list: [],
+      street_lamp_icon: street_lamp_icon, 
+      street_lamp_icon_red: street_lamp_icon_red, 
+      concentrator_icon: concentrator_icon, 
+      old_lamp_icon: old_lamp_icon, 
+      light_lamp_icon: light_lamp_icon, 
+      street_lamp_list: [], 
+      concentrator_list: [], 
       GG_marker_number: [],
-      edit_concentrator_marker_obj: {}, // 编辑(或者标记)的集中器marker记录(axios参数)
-      edit_lamp_marker_array: [], // 编辑后的路灯marker记录(axios参数)
-      new_marker_concentrator: "", // 新标记的集中器marker
-      new_marker_for_lamp: [], // 新标记的路灯marker数组
-      new_marker_for_lamp_array: [], // 新标记的路灯数组(axios参数)
-      map_loading: false, // loading面板
-      currentRow: "", //当前选中行
+      edit_concentrator_marker_obj: {}, 
+      edit_lamp_marker_array: [], 
+      new_marker_concentrator: "", 
+      new_marker_for_lamp: [], 
+      new_marker_for_lamp_array: [], 
+      map_loading: false, 
+      currentRow: "", 
       selected: {
-        road: "", // 地区/道路
-        luminGroup: "", // 照明分组
-        ctrCode: "" // 集中器编号
+        road: "", 
+        luminGroup: "", 
+        ctrCode: "" 
       },
-      districtOptions: [], // 地区下拉框
-      luminGroupOptions: [], // 照明分组下拉框
-      ctrCodeOptions: [], // 控制器信息
+      districtOptions: [], 
+      luminGroupOptions: [], 
+      ctrCodeOptions: [], 
       label_style: {
         "font-size": "9px",
         color: "#fff",
@@ -530,27 +517,21 @@ export default {
         "box-shadow": "2px 2px 5px #ccc",
         cursor: "pointer"
       },
-      // =======左下角集中器列表=========
-      ctrCodeTableList: [], // 左下角集中器列表
-      edit_status: false, // 编辑状态
+      ctrCodeTableList: [], 
+      edit_status: false, 
       lightController: {
-        // 光源亮度
         lightStatus: true,
         intensityControl: 5
       },
 
-      // 集中器和灯源警告状态
       concentMonitor_warning: false,
       lightLamp_warning: false,
-      // ========集中器弹框==========
       concentrator_dialogVisible: false,
-      concentrator_dialog_item: {}, // 当前集中器对象
+      concentrator_dialog_item: {}, 
       concentrator_dialog_array: [],
       concentrator_Dialog_card: false,
-      // 路灯弹框
-      street_lamp_Dialog_card: false, //
+      street_lamp_Dialog_card: false, 
       lamp_Marker_dialog_item: {},
-      // 灯源弹框
       lamp_loading: false,
       single_lamp_loading: false,
       linght_Dialog_card: false,
@@ -558,16 +539,13 @@ export default {
       linght_Dialog_item_obj: {},
       single_linght_lampId: "",
       single_concent_Id: "",
-      fn: "", // 储存点击事件函数
-      lampFn: "", // 储存点击事件函数
-      cursor: "", // 储存鼠标图标
+      fn: "", 
+      lampFn: "", 
+      cursor: "", 
 
-      // =====WebSocket=======
-      // WebSocket_path: "ws://47.106.141.162:8888/scoket/webServer/123",
       WebSocket_path:
         "ws://websocket.eclight.com/scoket/webServer/e10adc3949ba59abbe56e057f20f883e",
       socket: "",
-      // ========echarts===========
       // 1
       lampMonitor: {},
       // 2
@@ -576,14 +554,11 @@ export default {
       alarmStatistics: {},
       // 4
       lightRateStatistics: {},
-      // 语言
       yuyan: ""
     };
   },
 
   components: {
-    // BaiduMap,
-    // BmMarker
   },
 
   computed: {
@@ -603,24 +578,15 @@ export default {
 
   beforeMount() {},
   created() {
-    // Bus.$on('language',language=>{
-    //   if(language=='中文(简体)'){
-    //   this.language=true
-    //   }else{
-    //   this.language=false
-    //   }
-    //   console.log(this.language);
-    // })
   },
   watch: {
     newLanguage: function(newVal) {
-      // console.log(newVal);
     },
     languageZh(val) {}
   },
   mounted() {
-    this.getRoad(); // 道路
-    this.getLuminGroup(); // 灯组
+    this.getRoad(); 
+    this.getLuminGroup(); 
     if (this.language) {
       this.initMap();
       this.mapSearch();
@@ -635,7 +601,6 @@ export default {
   },
 
   methods: {
-    // 页面加载时获取道路下拉框内容
     async getRoad() {
       let res = await select_road();
       if (res.data.success) {
@@ -645,7 +610,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 页面加载时获取照明分组
     async getLuminGroup() {
       let from = new FormData();
       from.append("roadOptValue", this.selected.road);
@@ -660,7 +624,6 @@ export default {
     changeMap() {
       this.language = !this.language;
     },
-    // 搜索并设置marker
     async mapSearch(refresh = true) {
       let from = new FormData();
       from.append("road", this.selected.road);
@@ -681,7 +644,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 仅搜索marker
     async onlySearch() {
       let from = new FormData();
       from.append("road", this.selected.road);
@@ -696,7 +658,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 当前选择道路变化
     roadChange() {
       this.getLuminGroup();
       if (this.language) {
@@ -706,7 +667,6 @@ export default {
       }
       this.mapSearch();
     },
-    // 照明分组变化
     LuminGroupChange() {
       if (this.language) {
         this._map.clearOverlays();
@@ -715,12 +675,16 @@ export default {
       }
       this.mapSearch();
     },
-    // 刷新弹框表单
     refresh(id) {},
-    // 亮度调节
-    lightChange() {},
-    //=========百度MAP事件===============
-    // 初始化地图
+    lightChange(val) {
+      if(this.lightController.intensityControl==0){
+        this.lightController.lightStatus=false
+      }else{
+        this.lightController.lightStatus=true
+
+      }
+      
+    },
     initMap() {
       this._map = new BMap.Map("bd_map", {
         enableMapClick: false,
@@ -732,20 +696,17 @@ export default {
       this._map.addEventListener("zoomend", this.zoomend);
       this.cursor = this._map.getDefaultCursor();
     },
-    // 地图缩放
     zoomend(e) {
       console.log(e.target.getZoom());
 
       if (e.target.getZoom() <= this.shrinkZoom) {
-        this._map.clearOverlays(); // 清除
-        this.set_label_overlay(); // 仅集中器(数字)
+        this._map.clearOverlays(); 
+        this.set_label_overlay(); 
       } else {
-        this._map.clearOverlays(); // 清除
-        this.set_lamp_Marker(); // 灯
-        this.set_concentrator_Marker(); // 集中器
+        this._map.clearOverlays(); 
+        this.set_lamp_Marker(); this.set_concentrator_Marker(); 
       }
     },
-    // 页面加载时获取所有marker标记点
     getMarker() {
       let list = [];
       let list1 = [];
@@ -775,7 +736,6 @@ export default {
       this.street_lamp_list = list1;
       this.concentrator_list = list;
     },
-    // 设置marker
     setMarker(refresh) {
       this.set_lamp_Marker();
       this.set_concentrator_Marker();
@@ -802,7 +762,6 @@ export default {
       }
     },
 
-    // 生成集中器marker
     set_concentrator_Marker() {
       if (!this.concentrator_list || this.concentrator_list.length == 0) {
         return;
@@ -816,7 +775,7 @@ export default {
           { anchor: new BMap.Size(12, 23) }
         );
         marker.setIcon(icon);
-        marker.enableMassClear(); // 可以被清除
+        marker.enableMassClear();
         marker.setTitle(
           item.concentName +
             "  id: " +
@@ -837,7 +796,6 @@ export default {
         this._map.addOverlay(marker);
       });
     },
-    // 生成灯杆marker
     set_lamp_Marker() {
       if (!this.street_lamp_list || this.street_lamp_list.length == 0) {
         return;
@@ -871,7 +829,6 @@ export default {
         this._map.addOverlay(marker);
       });
     },
-    // 生成覆盖物Overlay
     set_label_overlay() {
       let color = "#5bd88b";
       if (!this.ctrCodeOptions || this.ctrCodeOptions.length == 0) {
@@ -928,9 +885,7 @@ export default {
         }
       });
     },
-    // =====初始化覆盖物====
     initOverlay(center, width, color, num, map, maxZoom) {
-      // 定义自定义覆盖物的构造函数
       function SquareOverlay(center, length, color, num, map, maxZoom) {
         this._center = center;
         this._length = length;
@@ -939,18 +894,13 @@ export default {
         this._map = map;
         this._maxZoom = maxZoom;
       }
-      // 继承API的BMap.Overlay
       SquareOverlay.prototype = new BMap.Overlay();
-      // 实现初始化方法
       SquareOverlay.prototype.initialize = function() {
-        // 保存map对象实例
-        // 创建div元素，作为自定义覆盖物的容器
         var div = document.createElement("div");
         var span = document.createElement("span");
         span.innerText = this._num;
         div.appendChild(span);
         div.style.position = "absolute";
-        // 可以根据参数设置元素外观
         div.style.width = this._length + "px";
         div.style.height = this._length + "px";
         div.style.background = this._color;
@@ -963,34 +913,25 @@ export default {
           this._map.centerAndZoom(this._center, this._maxZoom);
           this.toggle();
         });
-        // 将div添加到覆盖物容器中
         this._map.getPanes().markerPane.appendChild(div);
-        // 保存div实例
         this._div = div;
-        // 需要将div元素作为方法的返回值，当调用该覆盖物的show、
-        // hide方法，或者对覆盖物进行移除时，API都将操作此元素。
         return div;
       };
-      // 实现绘制方法
       SquareOverlay.prototype.draw = function() {
-        // 根据地理坐标转换为像素坐标，并设置给容器
         var position = this._map.pointToOverlayPixel(this._center);
         this._div.style.left = position.x - this._length / 2 + "px";
         this._div.style.top = position.y - this._length / 2 + "px";
       };
-      // 实现显示方法
       SquareOverlay.prototype.show = function() {
         if (this._div) {
           this._div.style.display = "";
         }
       };
-      // 实现隐藏方法
       SquareOverlay.prototype.hide = function() {
         if (this._div) {
           this._div.style.display = "none";
         }
       };
-      // 添加自定义方法
       SquareOverlay.prototype.toggle = function() {
         if (this._div) {
           if (this._div.style.display == "") {
@@ -1003,7 +944,6 @@ export default {
       var mySquare = new SquareOverlay(center, width, color, num, map, maxZoom);
       this._map.addOverlay(mySquare);
     },
-    // 集中器marker被点击弹框
     async concentratorClick(point, id) {
       if (this.language) {
         this._map.centerAndZoom(point, this.maxZoom);
@@ -1012,7 +952,6 @@ export default {
       }
       this.getconcentratorbyid(id);
     },
-    // 根据id获取集中器信息
     async getconcentratorbyid(id) {
       console.log(id);
       let loadingInstance = Loading.service();
@@ -1031,7 +970,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 路灯marker被点击弹框
     async lamp_MarkerClick(point, id) {
       if (this.language) {
         this._map.centerAndZoom(point, this.maxZoom);
@@ -1040,7 +978,6 @@ export default {
       }
       this.get_lamp_by_id(id);
     },
-    // 根据灯杆id获取信息
     async get_lamp_by_id(id) {
       let loadingInstance = Loading.service();
       let from = new FormData();
@@ -1076,48 +1013,16 @@ export default {
         this.linght_Dialog_item = res.data.fnResults || [];
       }
       if (res.data.ackState != "SUCCESS") {
+        
         this.$message.error(res.data.ackState);
       }
     },
-    // 灯源列表打开单灯
     open_Lamp_Dialog(lampId) {
       this.street_lamp_Dialog_card = false;
       this.get_linght_by_id(lampId);
     },
-    // ====灯源调整=====
     set_light_by_id() {
-      //  lightController: {
-      //   // 光源亮度
-      //   lightStatus: true,
-      //   intensityControl: 5
-      // },
-      // DISCONNECTED, SUCCESS, FAILURE, TIME_OUT, ERROR, BUSY;
-
-      // if (!this.lightController.lightStatus) {
-      //   let data = {
-      //     lampId: row[0].lampId
-      //   };
-      //   close_lamp_linght_byid({ data }).then(res => {
-      //     console.log(res);
-      //     if (res.data.ackState == "SUCCESS") {
-      //       this.$message.success("关闭成功");
-      //     } else {
-      //       this.$message.error(res.data.ackState);
-      //     }
-      //   });
-      // } else {
-      //   let data = {
-      //     lampId: row[0].lampId
-      //   };
-      //   open_lamp_linght_byid({ data }).then(res => {
-      //     console.log(res);
-      //     if (res.data.ackState == "SUCCESS") {
-      //       this.$message.success("关闭成功");
-      //     } else {
-      //       this.$message.error(res.data.ackState);
-      //     }
-      //   });
-      // }
+    
 
       this.lamp_loading = true;
       let dateStart = new Date().getTime();
@@ -1143,17 +1048,12 @@ export default {
         }
       });
     },
-
-    // ===========左下角集中器列表==============
-    // 设置选中行
     handleCurrentChange(val) {
       if (!this.edit_status) {
         this.currentRow = val;
       }
     },
-    // 路灯code被点击
     checkLampByCode(row) {
-      // 居中和缩放
       if (!row.lng && !row.lat) {
         this.concentrator_list.forEach(item => {
           if (item.concentId == row.concentId) {
@@ -1172,7 +1072,6 @@ export default {
         });
         return;
       }
-      // 百度地图
       if (this.language) {
         this._map.centerAndZoom(new BMap.Point(row.lng, row.lat), this.maxZoom);
         let arr = "";
@@ -1189,7 +1088,6 @@ export default {
             }, 3000);
           }
         });
-        // 谷歌地图
       } else {
         this.centerAndZoom({ lat: row.lat, lng: row.lng }, this.maxZoom);
         if (this.lamp_Marker && this.lamp_Marker.length != 0) {
@@ -1204,7 +1102,6 @@ export default {
         }
       }
     },
-    // 打开编辑功能
     openEdit() {
       this.edit_status = true;
       this.searchController(this.currentRow);
@@ -1216,7 +1113,6 @@ export default {
         this.GG_moveConcentrator(this.currentRow);
       }
     },
-    // 取消编辑
     cancelEditAll() {
       this.edit_status = false;
       this.edit_concentrator_marker_arr = {};
@@ -1242,11 +1138,8 @@ export default {
         setTimeout(() => {
           this.setMapOnAll(this.GG_map);
         }, 500);
-        // this.setMapOnAll(this.GG_map);
       }
     },
-    // =========修改====路灯===========
-    // 路灯被拖拽
     street_lamp_dragend(e, id) {
       if (this.language) {
         let { type, target, pixel, point } = e;
@@ -1284,8 +1177,6 @@ export default {
         }
       }
     },
-    // =============点击标记路灯==
-    // 开始标记路灯
     addNewLamp(id) {
       if (this.language) {
         this._map.removeEventListener("zoomend", this.zoomend);
@@ -1300,7 +1191,6 @@ export default {
         this.GG_map.addListener("click", e => {});
       }
     },
-    // 点击地图标记路灯
     mapClickAddLamp(e, id) {
       if (this.language) {
         let marker = new BMap.Marker(e.point);
@@ -1336,7 +1226,6 @@ export default {
 
         this.checkLampPoint(e, id);
       } else {
-        // =======谷歌地图标记==========
         let marker = new google.maps.Marker({
           position: e.latLng,
           map: this.GG_map,
@@ -1374,7 +1263,6 @@ export default {
         this.checkLampPoint(e, id);
       }
     },
-    // 保存标记后的路灯
     checkLampPoint(e, id) {
       if (this.language) {
         let { point } = e;
@@ -1418,8 +1306,6 @@ export default {
         }
       }
     },
-    // ========编辑或修改集中器marker====
-    // 开始标记集中器
     addConcentrator(id) {
       if (this.language) {
         this._map.removeEventListener("zoomend", this.zoomend);
@@ -1435,7 +1321,6 @@ export default {
         });
       }
     },
-    // 点击地图标记集中器
     mapClickAddMarker(e, id) {
       if (this.language) {
         let marker = new BMap.Marker(e.point);
@@ -1482,7 +1367,6 @@ export default {
         this.checkConcentratorPoint(e, id);
       }
     },
-    // 保存标记后的集中器
     checkConcentratorPoint(e, id) {
       if (this.language) {
         let { point } = e;
@@ -1496,7 +1380,6 @@ export default {
         this.edit_concentrator_marker_obj.lat = latLng.lat();
       }
     },
-    // 集中器被拖拽
     concentrator_dragend(e, id) {
       if (this.language) {
         let { type, target, pixel, point } = e;
@@ -1510,7 +1393,6 @@ export default {
         this.edit_concentrator_marker_obj.lat = latLng.lat();
       }
     },
-    // 点击集中器的编号或者标记
     searchController(row) {
       if (!row.lng && !row.lat) {
         return;
@@ -1537,10 +1419,8 @@ export default {
         }
       }
     },
-    // 点击保存
     async editConcentrator() {
       this.map_loading = true;
-      // 已存在的标记进行修改
       if (
         this.edit_concentrator_marker_obj.conId &&
         this.edit_concentrator_marker_obj.lng &&
@@ -1562,7 +1442,6 @@ export default {
         this.sendEditLamp();
       }
     },
-    // 封装的灯杆请求
     sendEditLamp() {
       if (this.edit_lamp_marker_array.length != 0) {
         let data = JSON.stringify(this.edit_lamp_marker_array);
@@ -1582,11 +1461,8 @@ export default {
         this.cancelEditAll();
       }
     },
-    // 准备移动集中器
     moveConcentrator(row) {
       this._map.clearOverlays();
-      // setTimeout(() => {
-      // 设置集中器的marker
       this.concentrator_list.forEach(item => {
         let marker = new BMap.Marker(new BMap.Point(item.lng, item.lat));
         if (item.concentId != row.concentId) {
@@ -1626,23 +1502,8 @@ export default {
             marker.setAnimation();
           }, 3000);
         }
-        // marker.addEventListener("click", () => {
-        //   this.addInfoWindow(
-        //     item.concentName,
-        //     "集中器编号: " +
-        //       item.addressField +
-        //       " ; 灯杆数量: " +
-        //       item.poleAmount +
-        //       " ; 灯源数量: " +
-        //       item.lampAmount +
-        //       " ; 地址: " +
-        //       item.address,
-        //     marker
-        //   );
-        // });
       });
 
-      // 设置路灯的marker
       this.ctrCodeOptions.forEach(item2 => {
         if (item2.concentId != row.concentId) {
           if (item2.poleList && item2.poleList.length != 0) {
@@ -1656,7 +1517,6 @@ export default {
               });
               marker.setIcon(icon);
               this._map.addOverlay(marker);
-              // 保存到数组
               this.edit_street_lamp_list.push({
                 poleId: item.poleId,
                 marker
@@ -1664,7 +1524,6 @@ export default {
             });
           }
         } else {
-          // 移动光源
           if (item2.poleList && item2.poleList.length != 0) {
             item2.poleList.forEach(item => {
               let marker = new BMap.Marker(new BMap.Point(item.lng, item.lat));
@@ -1697,7 +1556,6 @@ export default {
                   marker
                 );
               });
-              // 保存到数组
               this.edit_street_lamp_list.push({
                 poleId: item.poleId,
                 marker
@@ -1706,47 +1564,22 @@ export default {
           }
         }
       });
-
-      // item.marker.setAnimation(BMAP_ANIMATION_BOUNCE);
-      // setTimeout(() => {
-      //   item.marker.setAnimation();
-      // }, 3000);
-      // ===========设置标注的信息窗口
-      // var opts = {
-      //   width: 20, // 信息窗口宽度
-      //   height: 12, // 信息窗口高度
-      //   // title: "海底捞王府井店", // 信息窗口标题
-      //   offset: new BMap.Size(6, -23)
-      // };
-      // var infoWindow = new BMap.InfoWindow("Move This", opts); // 创建信息窗口对象
-      // this._map.openInfoWindow(infoWindow, item.marker.getPosition()); //开启信息窗口
-      // item.marker.addEventListener("dragend", e =>
-      //   this.concentrator_dragend(e, row.concentId)
-      // );
-      // row.poleList.forEach(item2=>{
-
-      // })
-      // }, 1000);
     },
-    // 添加info窗口
     addInfoWindow(title, content, marker) {
       var opts = {
-        width: 220, // 信息窗口宽度
-        height: 60, // 信息窗口高度
-        title: title, // 信息窗口标题
+        width: 220,
+        height: 60, 
+        title: title, 
         offset: new BMap.Size(6, -23)
       };
-      var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象
-      this._map.openInfoWindow(infoWindow, marker.getPosition()); //开启信息窗口
+      var infoWindow = new BMap.InfoWindow(content, opts);
+      this._map.openInfoWindow(infoWindow, marker.getPosition()); 
     },
-    //===========ECHARTS事件====================
-    // echarts图表
     initEcharts(elID, option) {
       var mycharts = echarts.init(document.getElementById(elID));
       mycharts.setOption(option);
     },
 
-    // 设置options-----1
     setOption_one(data, total) {
       var option = {
         title: {
@@ -1816,7 +1649,6 @@ export default {
       };
       return option;
     },
-    // 设置options-----2
     setOption_two(data, total) {
       var option = {
         title: {
@@ -1879,7 +1711,6 @@ export default {
                 show: false,
                 position: "center",
                 color: function(params) {
-                  //自定义颜色
                   var colorList = ["#00FFFF", "#00FF00"];
                   return colorList[params.dataIndex];
                 }
@@ -1892,7 +1723,6 @@ export default {
       };
       return option;
     },
-    // 设置options-----3
     setOption_three(x, y) {
       var option = {
         xAxis: {
@@ -1924,7 +1754,6 @@ export default {
             interval: 0,
             color: "#666666"
           },
-          // max:200,
           splitNumber: 5
         },
         legend: {
@@ -1983,7 +1812,6 @@ export default {
       };
       return option;
     },
-    // 设置options-----4
     setOption_four(x, y) {
       var option = {
         xAxis: {
@@ -2066,25 +1894,18 @@ export default {
       };
       return option;
     },
-    //=========WebSocket接口==============
     WebSocket_init() {
       if (typeof WebSocket === "undefined") {
         alert("您的浏览器不支持socket");
       } else {
-        // 实例化socket
         this.socket = new WebSocket(this.WebSocket_path);
-        // 监听socket连接
         this.socket.onopen = this.WebSocket_open;
-        // 监听socket错误信息
         this.socket.onerror = this.WebSocket_error;
-        // 监听socket消息
         this.socket.onmessage = this.WebSocket_getMessage;
-        // 关闭
         this.socket.onclose = this.WebSocket_close;
       }
     },
     WebSocket_open() {
-      // console.log("socket连接成功");
     },
     WebSocket_error() {
       console.log("连接错误");
@@ -2096,15 +1917,10 @@ export default {
         concentMonitor,
         lightRateStatistics
       } = JSON.parse(msg.data);
-      // this.lampMonitor = lampMonitor;
-      // this.concentMonitor = concentMonitor;
-      // this.alarmStatistics = alarmStatistics;
-      // this.lightRateStatistics = lightRateStatistics;
 
       let echarts_data1 = [];
       if (lampMonitor && lampMonitor.monitorStateList.length != 0) {
         lampMonitor.monitorStateList.forEach((item, i) => {
-          // 设置灯源warning
           if (
             (item.workState == 0 && item.amount != 0) ||
             (item.workState == 2 && item.amount != 0)
@@ -2130,7 +1946,6 @@ export default {
       let echarts_data2 = [];
       if (concentMonitor && concentMonitor.monitorStateList.length != 0) {
         concentMonitor.monitorStateList.forEach((item, i) => {
-          // 设置集中器warning
           if (item.workState == 0 && item.amount != 0) {
             this.concentMonitor_warning = true;
           } else {
@@ -2191,15 +2006,10 @@ export default {
       }
     },
     WebSocket_send() {
-      // this.socket.send(params);
     },
     WebSocket_close() {
       console.log("socket已经关闭");
     },
-    //==========WebSocket接口结束===============
-
-    // =============谷歌地图==========================
-    // 初始化地图
     initGGMap() {
       this.GG_map = new google.maps.Map(document.getElementById("gg_map"), {
         center: { lng: 113.932399, lat: 22.540131 },
@@ -2209,37 +2019,19 @@ export default {
         clickableIcons: false,
         minZoom: this.minZoom
       });
-      // this.GG_map.addListener("click", e => {
-      //   this.gg_addMarker(e.latLng);
-      // });
-
-      // setTimeout(() => {
-      //   // 设置marker
-      //   this.setMapOnAll(this.GG_map);
-
-      //   this.set_label_overlay();
-      // }, 500);
-      // setTimeout(() => {
-      //   this.GG_map.addListener("zoom_changed", () => {
-      //     this.GG_zoomend(this.GG_map.getZoom());
-      //   });
-      // }, 600);
     },
-    // 地图缩放
     GG_zoomend(zoom) {
       if (zoom <= this.shrinkZoom) {
-        this.clearMarkers(); // 清除
-        this.set_label_overlay(); // 仅集中器(数字)
+        this.clearMarkers(); 
+        this.set_label_overlay(); 
       } else {
-        this.clearMarkers(); // 清除
+        this.clearMarkers(); 
         this.setMapOnAll(this.GG_map);
         this.GG_marker_number.forEach(item => {
-          // 清除数字集中器
           item.setMap(null);
         });
       }
     },
-    // 初始化谷歌地图marker
     init_GG_marker() {
       if (this.concentrator_list.length > 1) {
         this.GG_map.setZoom(this.shrinkZoom);
@@ -2260,12 +2052,10 @@ export default {
         this.GG_zoomend(this.GG_map.getZoom());
       });
     },
-    // 初始化地图中心和缩放比例
     centerAndZoom(center, zoom) {
       this.GG_map.setZoom(zoom);
       this.GG_map.setCenter(center);
     },
-    // 循环设置所有marker
     setMapOnAll(map) {
       this.set_GG_concentrator_marker();
       this.set_GG_street_lamp_marker();
@@ -2276,17 +2066,14 @@ export default {
         item.setMap(map);
       });
     },
-    // 清除所有marker
     clearMarkers() {
       this.setMapOnAll(null);
       this.concentrator_Marker = [];
       this.lamp_Marker = [];
     },
-    // 显示所有marker
     showMarkers() {
       this.setMapOnAll(this.GG_map);
     },
-    // 创建集中器marker
     set_GG_concentrator_marker() {
       if (!this.concentrator_list || this.concentrator_list.length == 0) {
         return;
@@ -2307,7 +2094,6 @@ export default {
         this.concentrator_Marker.push(marker);
       });
     },
-    // 创建灯杆marker
     set_GG_street_lamp_marker() {
       if (!this.street_lamp_list || this.street_lamp_list.length == 0) {
         return;
@@ -2326,7 +2112,6 @@ export default {
       });
     },
 
-    // 新增marker
     gg_addMarker(point, icon, id) {
       var marker = new google.maps.Marker({
         position: point,
@@ -2337,9 +2122,7 @@ export default {
       });
       return marker;
     },
-    // 设置谷歌地图Overlay
     init_GG_Overlay(center, width, color, num, map, id) {
-      // 定义自定义覆盖物的构造函数
 
       function SquareOverlay(center, width, color, num, map, id) {
         this.map_ = map;
@@ -2349,18 +2132,13 @@ export default {
         this._num = num;
         this._id = id;
       }
-      // 继承API的BMap.Overlay
       SquareOverlay.prototype = new google.maps.OverlayView();
-      // 实现初始化方法
       SquareOverlay.prototype.onAdd = function() {
-        // 创建div元素，作为自定义覆盖物的容器
         var div = document.createElement("div");
         var span = document.createElement("span");
         var text = `<div id="gg_overlay_event${this._id}" style="border:4px solid #fff;cursor: pointer;width: ${this._length}px;height: ${this._length}px;background-color: ${this._color};text-align: center;line-height: ${this._length}px;box-shadow:0px 0px 4px 0px rgba(0,0,0,0.1) ;border-radius: 50%;">
         ${this._num}
     </div>`;
-        // span.innerText = this._num;
-        // div.appendChild(span);
         div.innerHTML = text;
         var map = this.map_;
 
@@ -2371,32 +2149,21 @@ export default {
           map.setCenter(center);
         };
         div.style.position = "absolute";
-        // 保存div实例
         this._div = div;
-        // 将div添加到覆盖物容器中
         var panes = this.getPanes();
         panes.overlayMouseTarget.appendChild(div);
-
-        // 需要将div元素作为方法的返回值，当调用该覆盖物的show、
-        // hide方法，或者对覆盖物进行移除时，API都将操作此元素。
-        // return div;
       };
-      // 实现绘制方法
       SquareOverlay.prototype.draw = function() {
-        // 根据地理坐标转换为像素坐标，并设置给容器
         var overlayProjection = this.getProjection();
         var latLng = overlayProjection.fromLatLngToDivPixel(this._center);
-        // var size = new google.maps.Size(-26, -42); // 修正坐标的值;
-        var size = new google.maps.Size(-this._length, -this._length); // 修正坐标的值;
+        var size = new google.maps.Size(-this._length, -this._length); 
         this._div.style.left = latLng.x - this._length / 2 + "px";
         this._div.style.top = latLng.y - this._length / 2 + "px";
       };
-      // 当设置 悬浮层的 setMap(null) 会自动调用
       SquareOverlay.prototype.onRemove = function() {
         this._div.parentNode.removeChild(this._div);
         this._div = null;
       };
-      // 添加自定义方法
       SquareOverlay.prototype.toggle = function() {
         if (this._div) {
           if (this._div.style.display == "") {
@@ -2407,23 +2174,14 @@ export default {
         }
       };
       var mySquare = new SquareOverlay(center, width, color, num, map, id);
-      // this.GG_map.setMap(mySquare);
 
       mySquare.setMap(this.GG_map);
-      // this.GG_map.addListener(mySquare,"click",()=>{
-      //   console.log('====');
-
-      // })
       return mySquare;
     },
-    // =======谷歌地图编辑=========
-    // 准备移动集中器
     GG_moveConcentrator(row) {
       this.clearMarkers();
       this.concentrator_Marker = [];
       this.lamp_Marker = [];
-
-      // 设置集中器的marker
       this.concentrator_list.forEach(item => {
         if (item.concentId != row.concentId) {
           let point = { lng: item.lng, lat: item.lat };
@@ -2459,23 +2217,8 @@ export default {
           }, 3000);
           this.concentrator_Marker.push(marker);
         }
-        // marker.addListener("click", () => {
-        //   this.addInfoWindow(
-        //     item.concentName,
-        //     "集中器编号: " +
-        //       item.addressField +
-        //       " ; 灯杆数量: " +
-        //       item.poleAmount +
-        //       " ; 灯源数量: " +
-        //       item.lampAmount +
-        //       " ; 地址: " +
-        //       item.address,
-        //     marker
-        //   );
-        // });
       });
 
-      // 设置路灯的marker
       this.ctrCodeOptions.forEach(item2 => {
         if (item2.concentId != row.concentId) {
           if (item2.poleList && item2.poleList.length != 0) {
@@ -2493,7 +2236,6 @@ export default {
             });
           }
         } else {
-          // 移动光源
           if (item2.poleList && item2.poleList.length != 0) {
             item2.poleList.forEach(item => {
               let marker = new google.maps.Marker({
@@ -2513,45 +2255,12 @@ export default {
                 marker.setAnimation(null);
               }, 3000);
               this.lamp_Marker.push(marker);
-              // marker.addEventListener("click", () => {
-              //   this.addInfoWindow(
-              //     "灯杆:" + item.poleCode,
-              //     "灯杆编号: " +
-              //       item.poleCode +
-              //       " ; 灯源数量: " +
-              //       item.lampList.length +
-              //       " ; 地址: " +
-              //       item.address,
-              //     marker
-              //   );
-              // });
             });
           }
         }
       });
 
-      // item.marker.setAnimation(BMAP_ANIMATION_BOUNCE);
-      // setTimeout(() => {
-      //   item.marker.setAnimation();
-      // }, 3000);
-      // ===========设置标注的信息窗口
-      // var opts = {
-      //   width: 20, // 信息窗口宽度
-      //   height: 12, // 信息窗口高度
-      //   // title: "海底捞王府井店", // 信息窗口标题
-      //   offset: new BMap.Size(6, -23)
-      // };
-      // var infoWindow = new BMap.InfoWindow("Move This", opts); // 创建信息窗口对象
-      // this._map.openInfoWindow(infoWindow, item.marker.getPosition()); //开启信息窗口
-      // item.marker.addEventListener("dragend", e =>
-      //   this.concentrator_dragend(e, row.concentId)
-      // );
-      // row.poleList.forEach(item2=>{
-
-      // })
-      // }, 1000);
     },
-    // 删除数组中为空的children
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {
@@ -2566,7 +2275,6 @@ export default {
     }
   },
   destroyed() {
-    // 销毁监听
     this.socket.onclose = this.close;
   },
   watch: {}

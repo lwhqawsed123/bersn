@@ -1,7 +1,7 @@
 <template>
   <div class="brand_box">
     <Table
-      :table_title="'照明区域管理'"
+      :table_title="'照明类型'"
       :tableData="categoryArray"
       :columnArray="[{prop:'categoryName',label:'照明区域名称'},{prop:'remark',label:'备注'}]"
       :_edit="openeditcategory"
@@ -13,7 +13,7 @@
       :openAdd="openAddcategory"
     />
     <Table
-      :table_title="'照明分组管理'"
+      :table_title="'照明分组'"
       :tableData="groupArray"
       :columnArray="[
       {prop:'categoryName',label:'照明类型名称'},
@@ -27,7 +27,6 @@
       :_edit="openeditgroup"
       :_delete="deletegroup"
     />
-    <!-- 区域弹出框 -->
     <Mydialog
       :isShow="categoryisShow"
       :tittle="category_title"
@@ -63,7 +62,6 @@
       </div>
     </Mydialog>
 
-    <!-- 道路弹框 -->
     <Mydialog :isShow="groupIsShow" :tittle="group_title" :width="'600px'" :submit="groupSubmit">
       <div class="form_box">
         <el-form
@@ -130,33 +128,31 @@ export default {
   data() {
     return {
       requiredMsg: "不能为空",
-      // ===========区域===========
-      categoryisShow: false, // 新增弹框
+      categoryisShow: false, 
       categoryForm: {
-        // 新增
+        
         categoryName: "",
         remark: ""
       },
-      category_title: "", // 标题
-      categorySubmit: function() {}, // 提交的默认函数
-      categoryArray: [], // 列表
-      categoryTotal: 0, // 总数
+      category_title: "", 
+      categorySubmit: function() {}, 
+      categoryArray: [], 
+      categoryTotal: 0, 
       categoryRules: {
         categoryName: [{ required: true, message: "不能为空", trigger: "blur" }]
       },
-      // =============道路=========
-      groupIsShow: false, // 新增弹框
-      groupSubmit: function() {}, // 提交
-      group_title: "", // 标题
+      groupIsShow: false, 
+      groupSubmit: function() {}, 
+      group_title: "", 
       groupForm: {
         categoryId: "",
         luminName: "",
         remark: ""
       },
-      categoryOptions: [], // 区域下拉列表
-      groupOptions: [], // 道路等级下拉列表
-      groupArray: [], // 列表
-      groupTotal: 0, // 总数
+      categoryOptions: [], 
+      groupOptions: [], 
+      groupArray: [], 
+      groupTotal: 0, 
       groupRules: {
         categoryId: [
           { required: true, message: "不能为空", trigger: "change" }
@@ -181,8 +177,7 @@ export default {
   },
 
   methods: {
-    // ============区域==================
-    // 获取所有区域数据
+    
     async getAllcategory(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
@@ -196,13 +191,13 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
+    
     openAddcategory() {
       this.category_title = "新增区域";
       this.categorySubmit = this.addcategory;
       this.categoryisShow = true;
     },
-    // 新增区域
+    
     addcategory() {
       this.$refs["categoryForm"].validate(async valid => {
         if (valid) {
@@ -222,7 +217,7 @@ export default {
         }
       });
     },
-    // 打开修改区域弹框
+    
     async openeditcategory(row) {
       let data = { id: row.categoryId };
 
@@ -236,7 +231,7 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 修改区域
+    
     editcategory() {
       let data = {
         categoryId: this.categoryForm.categoryId,
@@ -259,7 +254,7 @@ export default {
         }
       });
     },
-    // 删除区域
+    
     deletecategory(row) {
       this.$confirm("是否删除该区域?", "提示", {
         confirmButtonText: "确定",
@@ -278,7 +273,7 @@ export default {
         })
         .catch(() => {});
     },
-    // 关闭窗口
+    
     colseDialog() {
       if (this.categoryisShow) {
         this.$refs["categoryForm"].resetFields();
@@ -289,14 +284,11 @@ export default {
         this.groupIsShow = false;
       }
     },
-    // ============道路===================
-    // 获取所有道路数据
     async getAllgroup(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
         pageSize: size
       };
-      console.log(data);
 
       let res = await get_all_group({ data });
       if (res) {
@@ -306,14 +298,14 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增道路
+    
     openAddgroup() {
       this.group_title = "道路增加";
       this.getAllSelect();
       this.groupSubmit = this.addgroup;
       this.groupIsShow = true;
     },
-    // 获取下拉列表
+    
     async getAllSelect() {
       let res = await get_all_category();
       if (res) {
@@ -322,7 +314,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 新增区域
+    
     addgroup() {
       this.$refs["group_Form"].validate(async valid => {
         if (valid) {
@@ -340,7 +332,7 @@ export default {
         }
       });
     },
-    // 打开修改弹框
+    
     async openeditgroup(row) {
       this.group_title = "道路修改";
       let data = { id: row.luminId };
@@ -354,7 +346,7 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 删除道路
+    
     deletegroup(row) {
       this.$confirm("是否删除该道路?", "提示", {
         confirmButtonText: "确定",

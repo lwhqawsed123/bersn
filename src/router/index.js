@@ -66,6 +66,16 @@ export default new Router({
               name: 'lampTask',
               component: () => import('@/components/mgt/lampTask/lampTask.vue')
             },
+            {
+              path: '/mgt/schedule',
+              name: 'schedule',
+              component: () => import('@/components/mgt/schedule/schedule.vue')
+            },
+            {
+              path: '/mgt/schedule/detail',
+              name: 'scheduleDetail',
+              component: () => import('@/components/mgt/schedule/detail/detail.vue')
+            },
           ]
         }
 

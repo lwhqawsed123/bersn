@@ -1,6 +1,7 @@
 import request from '../../utils/request.js'
 
-export const add_concent = (options) => {
+
+export const get_schedule_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -9,14 +10,13 @@ export const add_concent = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/save`,
+        url: `/api/lamp/schedule/find`,
         method,
         data: form
     })
 }
 
-
-export const get_all_concent = (options) => {
+export const get_scheduleSeed_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -25,13 +25,13 @@ export const get_all_concent = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/loadData`,
+        url: `/api/lamp/scheduleSeed/loadData`,
         method,
         data: form
     })
 }
 
-export const get_concent_byid = (options) => {
+export const edit_schedule = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
     var data = options.data || {}
@@ -40,34 +40,9 @@ export const get_concent_byid = (options) => {
         form.append(item, data[item])
     })
     return request({
-        url: `/api/concent/find`,
+        url: `/api/lamp/schedule/save`,
         method,
         data: form
     })
 }
 
-
-export const delete_concent = (options) => {
-    var options = options || {}
-    var method = options.method || 'POST'
-    var data = options.data || {}
-    var form = new FormData()
-    Object.keys(data).forEach(item => {
-        form.append(item, data[item])
-    })
-    return request({
-        url: `/api/concent/delete`,
-        method,
-        data: form
-    })
-}
-
-
-export const get_select_road = (options) => {
-    var options = options || {}
-    var method = options.method || 'POST'
-    return request({
-        url: `/api/select/road`,
-        method
-    })
-}

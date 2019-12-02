@@ -1,5 +1,5 @@
 import request from '../../utils/request.js'
-// 新增照明类型
+
 export const add_lampTask = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -15,7 +15,7 @@ export const add_lampTask = (options) => {
     })
 }
 
-// 查询所有照明类型
+
 export const get_all_lampTask = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -30,7 +30,7 @@ export const get_all_lampTask = (options) => {
         data: form
     })
 }
-// 根据id查询照明类型
+
 export const get_lampTask_byid = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -46,7 +46,7 @@ export const get_lampTask_byid = (options) => {
     })
 }
 
-// 删除照明类型
+
 export const delete_lampTask = (options) => {
     var options = options || {}
     var method = options.method || 'POST'
@@ -62,7 +62,7 @@ export const delete_lampTask = (options) => {
     })
 }
 
-// 道路列表
+
 export const get_select_road = (options) => {
     var options = options || {}
     var method = options.method || 'POST'

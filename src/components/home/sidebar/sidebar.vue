@@ -31,7 +31,7 @@
         <el-submenu index="3">
           <template slot="title">定时任务</template>
           <el-menu-item index="/mgt/lampTask">调光任务</el-menu-item>
-          <el-menu-item index="3-2">调光计划</el-menu-item>
+          <el-menu-item index="/mgt/schedule">调光计划</el-menu-item>
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">实时监控</template>

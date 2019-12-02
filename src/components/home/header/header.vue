@@ -19,7 +19,6 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <!-- <img src="" alt=""> -->
       <span class="user_icon"></span>
       <span class="user_name">Chrissie</span>
       <img src="../../../assets/img/index/tuichu-2.png" alt class="logout" @click="loginOut" />
@@ -53,6 +52,7 @@ export default {
   methods: {
     loginOut() {
       window.localStorage.removeItem("token");
+      window.localStorage.removeItem("fromUrl");
       this.$router.push("/login");
     },
     openMenu() {
@@ -66,7 +66,6 @@ export default {
     },
     choose_Language(value) {
       this.language = value;
-      // Bus.$emit("language", value);
       if(value&&value=='English'){
         localStorage.setItem('locale','zh')
       }else{
@@ -84,7 +83,6 @@ export default {
       if(to.path!=='/index'){
         this.menuStatus=false
         Bus.$emit("openMenu", this.menuStatus);
-      console.log(to);
         
       }
     }

@@ -4,8 +4,8 @@
       :table_title="'集中器管理'"
       :tableData="concentArray"
       :columnArray="[
-      {prop:'regionName',label:'区域'},
       {prop:'concentName',label:'集中器名称'},
+      {prop:'regionName',label:'区域'},
       {prop:'roadName',label:'道路'},
       {prop:'addressField',label:'集中器地址'},
       {prop:'simcard',label:'SIM卡号'},
@@ -51,7 +51,7 @@
             ></el-option>
           </el-option-group>
         </el-select>
-        <span class="search_workStates">工作状态：</span>
+        <span class="search_road">工作状态：</span>
         <el-select
           v-model="search.workState"
           clearable
@@ -70,7 +70,6 @@
         <button class="search_button" @click="getAllconcent">搜索</button>
       </div>
     </Table>
-    <!-- 集中器弹出框 -->
     <Mydialog
       :isShow="concentisShow"
       :tittle="concent_title"
@@ -96,6 +95,11 @@
             <el-select v-model="concentForm.roadId" placeholder="请选择" popper-class="myselect">
               <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
                 <el-option
+                  :key="group.id"
+                  :label="group.optText"
+                  :value="group.id"
+                ></el-option>
+                <el-option
                   v-for="item in group.children"
                   :key="item.id"
                   :label="item.optText"
@@ -103,7 +107,6 @@
                 ></el-option>
               </el-option-group>
             </el-select>
-            {{concentForm.roadId}}
           </el-form-item>
           <el-form-item label="集中器地址" prop="addressField">
             <el-input
@@ -194,8 +197,7 @@ export default {
     };
     return {
       requiredMsg: "不能为空",
-      // ===========集中器===========
-      concentisShow: false, // 新增弹框
+      concentisShow: false, 
       concentForm: {
         concentName: "",
         addressField: "",
@@ -205,10 +207,10 @@ export default {
         address: "",
         remark: ""
       },
-      concent_title: "", // 标题
-      concentSubmit: function() {}, // 提交的默认函数
-      concentArray: [], // 列表
-      concentTotal: 0, // 总数
+      concent_title: "", 
+      concentSubmit: function() {}, 
+      concentArray: [], 
+      concentTotal: 0, 
       concentRules: {
         concentName: [{ required: true, message: "不能为空", trigger: "blur" }],
         roadId: [{ required: true, message: "不能为空", trigger: "change" }],
@@ -220,7 +222,7 @@ export default {
         lng: [{ validator: checkLng, trigger: "blur" }],
         lat: [{ validator: checkLat, trigger: "blur" }]
       },
-      roadOptions: [], // 集中器下拉列表
+      roadOptions: [], 
       workStateOptions: [
         {
           value: "NORMAL",
@@ -258,8 +260,6 @@ export default {
   },
 
   methods: {
-    // ============集中器==================
-    // 获取所有集中器数据
     async getAllconcent(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
@@ -276,14 +276,14 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
+    
     openAddconcent() {
       this.concent_title = "新增集中器";
       this.concentSubmit = this.addconcent;
       this.getAllSelect();
       this.concentisShow = true;
     },
-    // 新增集中器
+    
     addconcent() {
       this.$refs["concentForm"].validate(async valid => {
         if (valid) {
@@ -301,7 +301,7 @@ export default {
         }
       });
     },
-    // 打开修改集中器弹框
+    
     openeditconcent(row) {
       sessionStorage.setItem("concentId",row.concentId)
       this.$router.push({
@@ -310,12 +310,12 @@ export default {
       });
     },
 
-    // 关闭窗口
+    
     colseDialog() {
       this.$refs["concentForm"].resetFields();
       this.concentisShow = false;
     },
-    // 获取下拉列表(仅子节点)
+    
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -326,7 +326,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 删除数组中为空的children
+    
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {

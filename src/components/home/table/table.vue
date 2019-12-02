@@ -109,37 +109,31 @@ export default {
     total() {}
   },
   methods: {
-    // 页容量变化
     handleSizeChange(val) {
       this.pageSize = val;
       if (this.pageChange) {
         this.pageChange("event", this.currentPage, val);
       }
     },
-    // 当前页变化
     handleCurrentChange(val) {
       this.currentPage = val;
       if (this.pageChange) {
         this.pageChange("event", val, this.pageSize);
       }
     },
-    // 打开弹框
     open_add() {
       if (this.openAdd) {
         this.openAdd();
       }
     },
-    // 修改品牌
     open_editBrand(row) {
       if (this._edit) {
         this._edit(row);
       }
     },
-    //打开调试
     open_tiaoshi(row) {
       this._tiaoshi(row);
     },
-    // 删除品牌
     T_delete(row) {
       if (this._delete) {
         this._delete(row);

@@ -52,7 +52,6 @@
       :total="annexTotal"
       :openAdd="openAddAnnex"
     />
-    <!-- 新增品牌弹出框 -->
     <Mydialog :isShow="brandisShow" :tittle="'品牌添加'" :width="'600px'" :submit="addBrand">
       <div class="form_box">
         <el-form
@@ -82,7 +81,6 @@
         </el-form>
       </div>
     </Mydialog>
-    <!-- 修改品牌弹出框 -->
     <Mydialog :isShow="brandeditShow" :tittle="'品牌修改'" :width="'600px'" :submit="editBrand">
       <div class="form_box">
         <el-form
@@ -112,7 +110,6 @@
         </el-form>
       </div>
     </Mydialog>
-    <!-- 灯具弹框 -->
     <Mydialog :isShow="lightIsShow" :tittle="light_title" :width="'600px'" :submit="lightSubmit">
       <div class="form_box">
         <el-form
@@ -171,7 +168,6 @@
         </el-form>
       </div>
     </Mydialog>
-    <!-- 光源弹框 -->
     <Mydialog :isShow="annexIsShow" :tittle="annex_title" :width="'600px'" :submit="annexSubmit">
       <div class="form_box">
         <el-form
@@ -277,30 +273,28 @@ export default {
   data() {
     return {
       requiredMsg: "不能为空",
-      // ===========品牌===========
-      brandisShow: false, // 新增弹框
-      brandeditShow: false, // 修改弹框
+      brandisShow: false, 
+      brandeditShow: false, 
       brandForm: {
-        // 新增
+        
         brandName: "",
         remark: ""
       },
       editBrandForm: {
-        // 修改
+        
         brandName: "",
         remark: ""
       },
-      brandArray: [], // 列表
-      brandTotal: 0, // 总数
+      brandArray: [], 
+      brandTotal: 0, 
       brandRules: {
         brandName: [
           { required: true, message: "请输入品牌名称", trigger: "blur" }
         ]
       },
-      // =============灯具=========
-      lightIsShow: false, // 新增弹框
-      lightSubmit: function() {}, // 提交
-      light_title: "", // 标题
+      lightIsShow: false, 
+      lightSubmit: function() {}, 
+      light_title: "", 
       lightForm: {
         lightModel: "",
         lampCategory: "",
@@ -309,10 +303,10 @@ export default {
         procurementPrice: "",
         remark: ""
       },
-      brandOptions: [], // 品牌下拉列表
+      brandOptions: [], 
       lampOptions: [
         {
-          // 光源类型下拉列表
+          
           value: "LED",
           label: "LED"
         },
@@ -337,8 +331,8 @@ export default {
           label: "金卤灯"
         }
       ],
-      lightArray: [], // 列表
-      lightTotal: 0, // 总数
+      lightArray: [], 
+      lightTotal: 0, 
       lightRules: {
         lightModel: [{ required: true, message: "不能为空", trigger: "blur" }],
         brandId: [{ required: true, message: "不能为空", trigger: "change" }],
@@ -355,10 +349,9 @@ export default {
         ],
         procurementPrice: [{ type: "number", message: "必须为数字值" }]
       },
-      // =============电源=========
-      annexIsShow: false, // 新增弹框
-      annexSubmit: function() {}, // 提交
-      annex_title: "", // 标题
+      annexIsShow: false, 
+      annexSubmit: function() {}, 
+      annex_title: "", 
       annexForm: {
         annexModel: "",
         brandId: "",
@@ -368,9 +361,9 @@ export default {
         dimmingAttribute: "",
         remark: ""
       },
-      annexArray: [], // 列表
+      annexArray: [], 
       annexTypeOptions: [
-        // 配套电器类型下拉列表
+        
         {
           value: "ELECTRONIC_BALLAST",
           label: "电子整流器"
@@ -381,7 +374,7 @@ export default {
         }
       ],
       dimmingTypeOptions: [
-        // 调光类型下拉列表
+        
         {
           value: "UNDIMMING",
           label: "不可调光"
@@ -396,7 +389,7 @@ export default {
         }
       ],
       dimmingAttributeOptions: [
-        // 调光属性下拉列表
+        
         {
           value: "FORWARD",
           label: "正向调光"
@@ -406,7 +399,7 @@ export default {
           label: "反向调光"
         }
       ],
-      annexTotal: 0, // 总数
+      annexTotal: 0, 
       annexRules: {
         annexModel: [{ required: true, message: "不能为空", trigger: "blur" }],
         brandId: [{ required: true, message: "不能为空", trigger: "change" }],
@@ -440,8 +433,6 @@ export default {
   },
 
   methods: {
-    // ============品牌==================
-    // 获取所有品牌数据
     async getAllBrand(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
@@ -455,11 +446,9 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
     openAddBrand() {
       this.brandisShow = true;
     },
-    // 新增品牌
     addBrand() {
       this.$refs["brandForm"].validate(async valid => {
         if (valid) {
@@ -477,7 +466,6 @@ export default {
         }
       });
     },
-    // 打开修改品牌弹框
     async openeditBrand(row) {
       let data = { id: row.brandId };
       let res = await get_brand_byid({ data });
@@ -488,7 +476,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 修改品牌
     editBrand() {
       let data = {
         brandId: this.editBrandForm.brandId,
@@ -511,7 +498,6 @@ export default {
         }
       });
     },
-    // 删除品牌
     deleteBrand(row) {
       this.$confirm("是否删除该品牌?", "提示", {
         confirmButtonText: "确定",
@@ -520,6 +506,7 @@ export default {
       })
         .then(async () => {
           let data = { id: row.brandId };
+
           let res = await delete_brand({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -530,33 +517,24 @@ export default {
         })
         .catch(() => {});
     },
-    // 关闭窗口
     colseDialog() {
-      // 品牌新增
       if (this.brandisShow) {
-        // console.log(123);
-        // this.brandForm.brandName=''
         this.$refs["brandForm"].resetFields();
         this.brandisShow = false;
       }
-      // 品牌修改
       if (this.brandeditShow) {
         this.$refs["editBrand_Form"].resetFields();
         this.brandeditShow = false;
       }
-      // 灯具
       if (this.lightIsShow) {
         this.$refs["light_Form"].resetFields();
         this.lightIsShow = false;
       }
-      // 光源
       if (this.annexIsShow) {
         this.$refs["annex_Form"].resetFields();
         this.annexIsShow = false;
       }
     },
-    // ============灯具===================
-    // 获取所有灯具数据
     async getAllLight(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
@@ -570,29 +548,24 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开新增灯具
     openAddLight() {
       this.light_title = "灯具增加";
       this.getAllSelect();
       this.lightSubmit = this.addLight;
       this.lightIsShow = true;
     },
-    // 获取下拉列表
     async getAllSelect() {
       let res = await get_all_brand();
       if (res) {
         this.brandOptions = res.data.rows;
-        console.log(this.brandOptions);
       } else {
         this.$message.error("服务器未响应");
       }
     },
-    // 新增
     addLight() {
       this.$refs["light_Form"].validate(async valid => {
         if (valid) {
           let data = this.lightForm;
-          console.log(data);
 
           let res = await add_light({ data });
           if (res.data.success) {
@@ -607,15 +580,12 @@ export default {
         }
       });
     },
-    // 打开修改弹框
     async openeditLight(row) {
       this.light_title = "灯具修改";
       let data = { id: row.lightId };
       let res = await get_light_byid({ data });
       if (res.data.success) {
         this.getAllSelect();
-        console.log(res.data.content);
-
         this.lightForm = res.data.content;
         this.lightSubmit = this.addLight;
         this.lightIsShow = true;
@@ -623,7 +593,6 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-    // 删除灯具
     deleteLight(row) {
       this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
@@ -632,6 +601,7 @@ export default {
       })
         .then(async () => {
           let data = { id: row.lightId };
+
           let res = await delete_light({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -642,9 +612,6 @@ export default {
         })
         .catch(() => {});
     },
-    //==========光源==============
-
-    // 获取列表
     async getAllAnnex(val, currentPage = 1, size = 10) {
       let data = {
         pageNo: currentPage,
@@ -658,7 +625,6 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 打开修改
     async openeditAnnex(row) {
       this.annex_title = "灯具修改";
       let data = { id: row.annexId };
@@ -672,19 +638,17 @@ export default {
         this.$message.error(res.data.msgCode);
       }
     },
-
-    // 打开新增
     openAddAnnex() {
       this.annex_title = "电源增加";
       this.getAllSelect();
       this.annexSubmit = this.addAnnex;
       this.annexIsShow = true;
     },
-    // 新增
     addAnnex() {
       this.$refs["annex_Form"].validate(async valid => {
         if (valid) {
           let data = this.annexForm;
+
           let res = await add_annex({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);
@@ -698,7 +662,6 @@ export default {
         }
       });
     },
-    // 删除
     deleteAnnex(row) {
       this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
@@ -707,6 +670,7 @@ export default {
       })
         .then(async () => {
           let data = { id: row.annexId };
+
           let res = await delete_annex({ data });
           if (res.data.success) {
             this.$message.success(res.data.msgCode);

@@ -24,87 +24,97 @@
       :tiaoshi="true"
       :_tiaoshi="openTiaoshi"
     >
-      <div class="search_box">
-        <span>光源编号：</span>
-        <el-input
-          class="search_input"
-          clearable
-          v-model="search.lampCode"
-          placeholder="全部"
-          @keyup.enter.native="getAlllamp"
-          @clear="getAlllamp"
-        ></el-input>
-        <span class="search_road">道路：</span>
-        <el-select
-          v-model="search.roadOptValue"
-          clearable
-          placeholder="全部"
-          popper-class="myselect search_select"
-          class="search_input"
-          @change="getAlllamp"
-        >
-          <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
-            <el-option :label="group.optText" :value="group.optValue"></el-option>
-            <el-option
-              v-for="item in group.children"
-              :key="item.id"
-              :label="item.optText"
-              :value="item.optValue"
-            ></el-option>
-          </el-option-group>
-        </el-select>
-        <span class="search_road">照明分组：</span>
-        <el-select
-          v-model="search.luminOptValue"
-          clearable
-          placeholder="全部"
-          popper-class="myselect search_select"
-          class="search_input"
-          @change="getAlllamp"
-        >
-          <el-option-group
-            v-for="group in luminGroupOptions"
-            :key="group.id"
-            :label="group.optText"
-          >
-            <el-option :label="group.optText" :value="group.optValue"></el-option>
-            <el-option
-              v-for="item in group.children"
-              :key="item.id"
-              :label="item.optText"
-              :value="item.optValue"
-            ></el-option>
-          </el-option-group>
-        </el-select>
-        <span class="search_workStates">集中器编号：</span>
-        <el-input
-          class="search_input"
-          clearable
-          v-model="search.concentCode"
-          placeholder="全部"
-          @keyup.enter.native="getAlllamp"
-          @clear="getAlllamp"
-        ></el-input>
-        <span class="search_workStates">工作状态：</span>
-        <el-select
-          v-model="search.workState"
-          clearable
-          placeholder="全部"
-          class="search_input"
-          @change="getAlllamp"
-        >
-          <el-option
-            v-for="item in workStateOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+      <div class="lamp_search_box">
+        <div class="box_search_flex">
+          <span>光源编号：</span>
+          <el-input
+            class="search_input"
+            clearable
+            v-model="search.lampCode"
             placeholder="全部"
-          ></el-option>
-        </el-select>
+            @keyup.enter.native="getAlllamp"
+            @clear="getAlllamp"
+          ></el-input>
+        </div>
+        <div class="box_search_flex">
+          <span class="search_road">道路：</span>
+          <el-select
+            v-model="search.roadOptValue"
+            clearable
+            placeholder="全部"
+            popper-class="myselect search_select"
+            class="search_input"
+            @change="getAlllamp"
+          >
+            <el-option-group v-for="group in roadOptions" :key="group.id" :label="group.optText">
+              <el-option :label="group.optText" :value="group.optValue"></el-option>
+              <el-option
+                v-for="item in group.children"
+                :key="item.id"
+                :label="item.optText"
+                :value="item.optValue"
+              ></el-option>
+            </el-option-group>
+          </el-select>
+        </div>
+        <div class="box_search_flex">
+          <span class="search_road">照明分组：</span>
+          <el-select
+            v-model="search.luminOptValue"
+            clearable
+            placeholder="全部"
+            popper-class="myselect search_select"
+            class="search_input"
+            @change="getAlllamp"
+          >
+            <el-option-group
+              v-for="group in luminGroupOptions"
+              :key="group.id"
+              :label="group.optText"
+            >
+              <el-option :label="group.optText" :value="group.optValue"></el-option>
+              <el-option
+                v-for="item in group.children"
+                :key="item.id"
+                :label="item.optText"
+                :value="item.optValue"
+              ></el-option>
+            </el-option-group>
+          </el-select>
+        </div>
+        <div class="box_search_flex">
+          <span class="search_road">集中器编号：</span>
+          <el-input
+            class="search_input"
+            clearable
+            v-model="search.concentCode"
+            placeholder="全部"
+            @keyup.enter.native="getAlllamp"
+            @clear="getAlllamp"
+          ></el-input>
+        </div>
+        <div class="box_search_flex">
+          <span class="search_road">工作状态：</span>
+          <el-select
+            v-model="search.workState"
+            clearable
+            placeholder="全部"
+            class="search_input"
+            @change="getAlllamp"
+          >
+            <el-option
+              v-for="item in workStateOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              placeholder="全部"
+            ></el-option>
+          </el-select>
+        </div>
         <button class="search_button" @click="getAlllamp">搜索</button>
       </div>
     </Table>
-    <!-- 集中器弹出框 -->
+    <!-- 弹出框 -->
     <Mydialog :isShow="lampisShow" :tittle="lamp_title" :width="'600px'" :submit="lampSubmit">
       <div class="form_box">
         <el-form
@@ -178,7 +188,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-             <el-input
+            <el-input
               type="textarea"
               :rows="4"
               class="textarea_ps"
@@ -190,7 +200,6 @@
         </el-form>
       </div>
     </Mydialog>
-    <!-- 调光弹框 -->
     <el-dialog
       :modal="false"
       :visible.sync="controlisShow"
@@ -208,7 +217,6 @@
           <span class="el-icon-close close_icon" @click="colseDialog"></span>
         </div>
       </div>
-      <!-- 弹框内表格 -->
       <el-table
         :data="lampControl"
         style="width: 100%"
@@ -223,7 +231,6 @@
           show-overflow-tooltip
         ></el-table-column>
       </el-table>
-      <!-- 光源调节 -->
       <div class="light_controller">
         <span class="light_controller_status">状态：</span>
         <el-switch
@@ -250,6 +257,7 @@
             class="my_intensity_control"
             v-model="lightController.intensityControl"
             :max="100"
+            @change="lightMove"
           ></el-slider>
         </div>
         <div class="intensity_inputnumber">
@@ -258,6 +266,7 @@
             controls-position="right"
             :min="0"
             :max="100"
+            @change='lightMove'
           ></el-input-number>
         </div>
         <span>%</span>
@@ -298,8 +307,7 @@ export default {
   data() {
     return {
       requiredMsg: "不能为空",
-      // ===========光源===========
-      lampisShow: false, // 新增弹框
+      lampisShow: false, 
       lampForm: {
         termUid: "",
         concentId: "",
@@ -309,10 +317,10 @@ export default {
         annexId: "",
         remark: ""
       },
-      lamp_title: "", // 标题
-      lampSubmit: function() {}, // 提交的默认函数
-      lampArray: [], // 列表
-      lampTotal: 0, // 总数
+      lamp_title: "", 
+      lampSubmit: function() {}, 
+      lampArray: [], 
+      lampTotal: 0, 
       lampRules: {
         termUid: [{ required: true, message: "不能为空", trigger: "blur" }],
         concentId: [{ required: true, message: "不能为空", trigger: "change" }],
@@ -321,12 +329,12 @@ export default {
         lightId: [{ required: true, message: "不能为空", trigger: "change" }],
         annexId: [{ required: true, message: "不能为空", trigger: "change" }]
       },
-      roadOptions: [], // 道路下拉列表
-      luminGroupOptions: [], // 照明分组列表
-      concentOptions: [], // 集中器下拉列表
-      poleOptions: [], // 灯杆列表
-      lightOptions: [], // 光源类型列表
-      annexOptions: [], // 电源类型列表
+      roadOptions: [], 
+      luminGroupOptions: [], 
+      concentOptions: [], 
+      poleOptions: [], 
+      lightOptions: [], 
+      annexOptions: [], 
       workStateOptions: [
         {
           value: "NORMAL",
@@ -349,7 +357,6 @@ export default {
         luminOptValue: "",
         workState: ""
       },
-      // =====光源调试======
       controlisShow: false,
       lampControl: [],
       lampLuminance: {},
@@ -386,8 +393,6 @@ export default {
   },
 
   methods: {
-    // ============光源==================
-    // 获取所有光源数据
     async getAlllamp(val, currentPage = 1, size = 10) {
       let data = {};
       if (this.search.termUid) {
@@ -412,16 +417,14 @@ export default {
       }
 
       let res = await get_all_lamp({ data });
-      console.log(res);
-      
+
       if (res) {
         this.lampTotal = res.data.total;
         this.lampArray = res.data.rows;
       } else {
-        // this.$message.error("服务器未响应");
+        this.$message.error("服务器未响应");
       }
     },
-    // 打开新增弹框
     openAddlamp() {
       this.lamp_title = "光源添加";
       this.getConcentSelect();
@@ -432,7 +435,6 @@ export default {
       this.lampSubmit = this.addlamp;
       this.lampisShow = true;
     },
-    // 新增光源
     addlamp() {
       this.$refs["lamp_Form"].validate(async valid => {
         if (valid) {
@@ -450,7 +452,6 @@ export default {
         }
       });
     },
-    // 打开修改光源弹框
     async openeditlamp(row) {
       this.lamp_title = "光源修改";
       this.lampSubmit = this.addlamp;
@@ -470,7 +471,6 @@ export default {
       }
     },
 
-    // 删除光源
     deletelamp(row) {
       this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
@@ -489,8 +489,6 @@ export default {
         })
         .catch(() => {});
     },
-    // ==========光源调节================
-    // 打开调试弹框
     async openTiaoshi(row) {
       this.thisLmapId.lampId = row.lampId;
       this.thisLmapId.concentId = row.concentId;
@@ -500,6 +498,7 @@ export default {
 
       let loadingInstance = Loading.service();
       let res = await get_monitor_cmd_lamp_byid({ data });
+      
       if (res.data.ackState == "SUCCESS") {
         this.$message.success(res.data.ackState);
         loadingInstance.close();
@@ -510,12 +509,7 @@ export default {
         this.controlisShow = true;
       }
     },
-    // 提交亮度调试
     lamp_control() {
-      // lightController: {
-      //   lightStatus: true,
-      //   intensityControl: 15
-      // }
       this.$confirm("确认提交?", "提示", {
         confirmButtonText: "保存",
         cancelButtonText: "取消",
@@ -531,12 +525,14 @@ export default {
             if (res.data.ackState == "SUCCESS") {
               this.$message.success(this.setAckState(res.data.ackState));
               loadingInstance.close();
-              this.colseDialog()
             } else {
               this.$message.error(this.setAckState(res.data.ackState));
               loadingInstance.close();
             }
-          } else if(this.lightController.intensityControl&&this.lightController.intensityControl==100){
+          } else if (
+            this.lightController.intensityControl &&
+            this.lightController.intensityControl == 100
+          ) {
             let data = {
               lampId: this.thisLmapId.lampId
             };
@@ -544,18 +540,12 @@ export default {
             if (res.data.ackState == "SUCCESS") {
               this.$message.success(this.setAckState(res.data.ackState));
               loadingInstance.close();
-              this.colseDialog()
             } else {
               this.$message.error(this.setAckState(res.data.ackState));
               loadingInstance.close();
             }
-          }else {
-            // let data = {
-            //   conId: this.thisLmapId.concentId,
-            //   lampId: this.thisLmapId.lampId,
-            //   dimming: this.lightController.intensityControl
-            // };
-             let data = {
+          } else {
+            let data = {
               lampId: this.thisLmapId.lampId,
               dimming: this.lightController.intensityControl
             };
@@ -563,7 +553,6 @@ export default {
             if (res.data.ackState == "SUCCESS") {
               this.$message.success(this.setAckState(res.data.ackState));
               loadingInstance.close();
-              this.colseDialog()
             } else {
               this.$message.error(this.setAckState(res.data.ackState));
               loadingInstance.close();
@@ -572,15 +561,20 @@ export default {
         })
         .catch(() => {});
     },
-    // 光源调节开关
     lightChange(val) {
-      if (val) {
+      if (this.lightController.lightStatus) {
         this.lightController.intensityControl = 100;
       } else {
         this.lightController.intensityControl = 0;
       }
     },
-    // 关闭窗口
+    lightMove(val) {
+      if (this.lightController.intensityControl == 0) {
+        this.lightController.lightStatus = false;
+      } else {
+        this.lightController.lightStatus = true;
+      }
+    },
     colseDialog() {
       if (this.lampisShow) {
         this.$refs["lamp_Form"].resetFields();
@@ -588,12 +582,9 @@ export default {
       }
       if (this.controlisShow) {
         this.controlisShow = false;
-        // this.lampControl = [];
-        // this.lampLuminance = {};
-        // this.thisLmapId = {};
+       
       }
     },
-    // 获取下拉列表
     async getAllSelect() {
       let res = await get_select_road();
       if (res) {
@@ -611,7 +602,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 获取集中器下拉框
+    
     async getConcentSelect() {
       let res = await get_select_concent();
       if (res) {
@@ -621,7 +612,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 获取灯杆下拉框
+    
     async getPoleSelect() {
       let res = await get_select_pole();
       if (res) {
@@ -631,7 +622,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 获取照明分组下拉框
+    
     async getLuminGroupSelect() {
       let res = await get_select_luminGroup();
       if (res) {
@@ -642,7 +633,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 获取光源类型下拉框
+    
     async getLightSelect() {
       let res = await get_select_light();
       if (res) {
@@ -652,7 +643,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 获取电源类型下拉框
+    
     async getAnnexSelect() {
       let res = await get_select_annex();
       if (res) {
@@ -662,7 +653,7 @@ export default {
         this.$message.error("服务器未响应");
       }
     },
-    // 删除数组中为空的children
+    
     remmoveEmpty(arr) {
       arr.forEach(item => {
         if (item.children) {
@@ -675,25 +666,32 @@ export default {
       });
       return arr;
     },
-    // 反馈硬件状态
-    setAckState(state){
-      let str=''
-      switch(state){
-        case 'DISCONNECTED':str='终端未连接';
-        break;
-        case 'SUCCESS':str='操作成功';
-        break;
-        case 'FAILURE':str='操作失败';
-        break;
-        case 'TIME_OUT':str='终端执行超时';
-        break;
-        case 'ERROR':str='服务器内部错误';
-        break;
-        case 'BUSY':str='终端忙';
-        break;
-        default: str='内部错误'
+    
+    setAckState(state) {
+      let str = "";
+      switch (state) {
+        case "DISCONNECTED":
+          str = "终端未连接";
+          break;
+        case "SUCCESS":
+          str = "操作成功";
+          break;
+        case "FAILURE":
+          str = "操作失败";
+          break;
+        case "TIME_OUT":
+          str = "终端执行超时";
+          break;
+        case "ERROR":
+          str = "服务器内部错误";
+          break;
+        case "BUSY":
+          str = "终端忙";
+          break;
+        default:
+          str = "内部错误";
       }
-      return str
+      return str;
     }
   },
 
